@@ -72,3 +72,8 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Local only folders (keep private)
+Content/Variant_Horror/
+Content/Variant_Shooter/
+Content/Weapons/
