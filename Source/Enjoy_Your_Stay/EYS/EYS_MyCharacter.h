@@ -60,7 +60,8 @@ protected:
 	UInputAction* IA_Mission;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Hammer;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Mop;
 
 
 protected:
@@ -81,6 +82,7 @@ protected:
 	UFUNCTION() void OpenMissionList(const FInputActionValue& Value);
 	UFUNCTION() void CloseMissionList(const FInputActionValue& Value);
 	UFUNCTION() void EquipHammer(const FInputActionValue& Value);
+	UFUNCTION() void EquipMop(const FInputActionValue& Value);
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
