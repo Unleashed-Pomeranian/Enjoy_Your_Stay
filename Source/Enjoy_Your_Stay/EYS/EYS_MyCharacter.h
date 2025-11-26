@@ -32,11 +32,12 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetRoot();
 	bool bIsSprinting = false;
 	bool bCanSprinting = true;
 	float Stamina=100.0f;
 	float StaminaRecoveryValue = 0.2f;
-
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Move;
@@ -53,6 +54,15 @@ protected:
 	UInputAction* IA_Action;
 
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Main;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Mission;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Hammer;
+
+
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float walkSpeed = 300.0f;
@@ -66,11 +76,20 @@ protected:
 	UFUNCTION() void StartSprint(const FInputActionValue& Value);
 	UFUNCTION() void StopSprint(const FInputActionValue& Value);
 	UFUNCTION() void StaminaRecovery();
-
+	
+	UFUNCTION() void SetMainPose(const FInputActionValue& Value);
+	UFUNCTION() void OpenMissionList(const FInputActionValue& Value);
+	UFUNCTION() void CloseMissionList(const FInputActionValue& Value);
+	UFUNCTION() void EquipHammer(const FInputActionValue& Value);
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
+	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
 	
 
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
+	int32 PoseNum = 0, LastPoseNum;
 
-
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
+	bool bIsAction=false;
 };
