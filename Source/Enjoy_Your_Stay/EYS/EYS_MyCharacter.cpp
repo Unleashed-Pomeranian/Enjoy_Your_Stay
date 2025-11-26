@@ -147,7 +147,7 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 		
 		Stamina = FMath::Clamp(Stamina - 0.2f, 0.0f, 100.0f);
 		UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::SanitizeFloat(Stamina));
+		
 
 		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Run::StaticClass());
 	}
@@ -212,7 +212,7 @@ void AEYS_MyCharacter::StopSprint(const FInputActionValue& Value)
 void AEYS_MyCharacter::StaminaRecovery()
 {
 	Stamina = FMath::Clamp(Stamina + 1.0f, 0.0f, 100.0f);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::SanitizeFloat(Stamina));
+	
 	if (Stamina == 100)
 	{
 		bCanSprinting = true;
@@ -273,7 +273,7 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 {
 
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "debug msg");
+	
 
 	FHitResult* Hit = new FHitResult();
 	FVector Start = FirstPersonCamera->GetComponentLocation();

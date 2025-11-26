@@ -27,7 +27,7 @@ void AEYS_MoveableObject::BeginPlay()
 	if (MovementCurve)
 	{
 		MainTimeline->AddInterpFloat(MovementCurve, MovementValue);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, "yeee msg");
+		
 
 	}
 	
@@ -76,8 +76,7 @@ void AEYS_MoveableObject::TimelineProgress(float value)
 		FRotator NewRot = FMath::Lerp(StartRot, EndRot, value);
 	
 		SetActorRotation(NewRot);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "debug msg");
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, "yeee msg");
+		
 	
 		
 }

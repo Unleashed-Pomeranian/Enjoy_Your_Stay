@@ -60,7 +60,7 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer)
 void AEYS_Generator::TimerTest()
 {
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "timertest msg");
+	
 
 	fuelAmount = FMath::Clamp(fuelAmount-20, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
