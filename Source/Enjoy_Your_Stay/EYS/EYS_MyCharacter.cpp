@@ -102,6 +102,7 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		}
 		EIC->BindAction(IA_Hammer, ETriggerEvent::Started, this, &AEYS_MyCharacter::EquipHammer);
 		EIC->BindAction(IA_Mop, ETriggerEvent::Started, this, &AEYS_MyCharacter::EquipMop);
+		EIC->BindAction(IA_Fuel, ETriggerEvent::Started, this, &AEYS_MyCharacter::EquipFuel);
 		EIC->BindAction(IA_Main, ETriggerEvent::Started, this, &AEYS_MyCharacter::SetMainPose);
 	}
 
@@ -264,6 +265,16 @@ void AEYS_MyCharacter::EquipMop(const FInputActionValue& Value)
 	if (PoseNum != 3)
 	{
 		PoseNum = 3;
+		LastPoseNum = PoseNum;
+		SetRoot();
+	}
+}
+
+void AEYS_MyCharacter::EquipFuel(const FInputActionValue& Value)
+{
+	if (PoseNum != 4)
+	{
+		PoseNum = 4;
 		LastPoseNum = PoseNum;
 		SetRoot();
 	}

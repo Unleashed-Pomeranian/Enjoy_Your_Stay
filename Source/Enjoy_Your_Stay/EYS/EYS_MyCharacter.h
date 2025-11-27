@@ -62,7 +62,8 @@ protected:
 	UInputAction* IA_Hammer;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Mop;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Fuel;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
@@ -83,6 +84,7 @@ protected:
 	UFUNCTION() void CloseMissionList(const FInputActionValue& Value);
 	UFUNCTION() void EquipHammer(const FInputActionValue& Value);
 	UFUNCTION() void EquipMop(const FInputActionValue& Value);
+	UFUNCTION() void EquipFuel(const FInputActionValue& Value);
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
