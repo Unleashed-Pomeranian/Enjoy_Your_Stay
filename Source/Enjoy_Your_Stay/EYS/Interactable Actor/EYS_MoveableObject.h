@@ -41,10 +41,14 @@ protected:
 public:	
 	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	FRotator StartRot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	FRotator EndRot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	FRotator EndRot ;
+	float RotStartValue;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float RotEndValue;
 	UPROPERTY(EditAnywhere)
 	bool bIsTrigrred = false;
 	

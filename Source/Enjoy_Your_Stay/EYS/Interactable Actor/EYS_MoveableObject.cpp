@@ -51,8 +51,8 @@ void AEYS_MoveableObject::Interact(AEYS_MyCharacter* myPlayer)
 
 		MainTimeline->Play();
 		StartRot = EndRot = GetActorRotation();
-		StartRot.Yaw = 0.0f;
-		EndRot.Yaw = -70.0f;
+		StartRot.Yaw = RotStartValue;
+		EndRot.Yaw = RotEndValue;
 		bIsTrigrred = true;
 
 
