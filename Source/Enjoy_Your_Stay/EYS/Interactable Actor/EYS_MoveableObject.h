@@ -8,16 +8,23 @@
 #include "EYS/EYS_InteractInterface.h"
 #include "EYS_MoveableObject.generated.h"
 
+class UBoxComponent;
 
 class UTimelineComponent;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MoveableObject : public AActor, public IEYS_InteractInterface
 {
 	GENERATED_BODY()
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
 	UCurveFloat* MovementCurve;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* SceneRoot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* TriggerBox;
+
 public:	
 	// Sets default values for this actor's properties
 	AEYS_MoveableObject();
@@ -29,6 +36,7 @@ public:
 
 
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,8 +44,14 @@ protected:
 	UFUNCTION()  void TimelineProgress(float value);
 	UFUNCTION()  void TimelineFinished();
 
+	UFUNCTION(BlueprintCallable)
+	void DoorInteract();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timeline Actor | Mesh")
 	UTimelineComponent* MainTimeline;
+	
+   
+
 public:	
 	
 	
@@ -51,7 +65,8 @@ public:
 	float RotEndValue;
 	UPROPERTY(EditAnywhere)
 	bool bIsTrigrred = false;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsDoorLocked = false;
 
 	
 };

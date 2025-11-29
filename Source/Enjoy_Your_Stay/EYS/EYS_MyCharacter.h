@@ -33,6 +33,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void SetRoot();
+	void Action_ForwardTrace();
+	void Action_MouseTrace();
 	bool bIsSprinting = false;
 	bool bCanSprinting = true;
 	float Stamina=100.0f;
@@ -96,4 +98,13 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	bool bIsAction=false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+	bool bIsKeyMode = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+	bool bIsHaveKey = false;
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+	FVector RoomLock;
+	
 };

@@ -11,6 +11,7 @@
 #include "EYS/Camera Shake/EYS_MyLegacyCameraShake_Run.h"
 #include "Kismet/GamePlayStatics.h"
 #include "Timermanager.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values
 AEYS_MyCharacter::AEYS_MyCharacter()
@@ -127,6 +128,7 @@ void AEYS_MyCharacter::SetRoot()
 		FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	}
 }
+
 
 void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 {
@@ -305,24 +307,62 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::Action(const FInputActionValue& Value)
 {
+	if (bIsKeyMode)
+		Action_MouseTrace();
+	else
+		Action_ForwardTrace();
+}
+
+void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
+{
+	bIsAction = false;
+	
+}
+void AEYS_MyCharacter::Action_ForwardTrace()
+{
 	bIsAction = true;
 	FHitResult* Hit = new FHitResult();
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 	if (Hit->GetActor() != nullptr)
 	{
 		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
 		{
 			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
 			IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this);
-			
+
 		}
 	}
 }
 
-void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
+void AEYS_MyCharacter::Action_MouseTrace()
 {
-	bIsAction = false;
-}
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+
+	if (PlayerController)
+	{
+		FHitResult* Hit = new FHitResult();
+		FVector WorldLocation;
+		FVector WorldDirection;
+		
+		bool bDeprojectSuccess = PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
+		FVector Start = WorldLocation;
+		
+		float TraceDistance = 100.0f;
+		FVector End = Start + (WorldDirection * TraceDistance);
+
+		UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
+			, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		if (Hit->GetActor() != nullptr)
+		{
+			if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
+			{
+				//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
+				IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this);
+
+			}
+		}
+	}
+ }

@@ -29,4 +29,7 @@ class AEYS_MyCharacter;
 
       UFUNCTION(BlueprintNativeEvent, Category = Interact)
       void aInteract(AEYS_MyCharacter* myPlayer);
+
+  public:
+     
   };
