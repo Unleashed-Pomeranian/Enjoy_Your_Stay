@@ -90,6 +90,7 @@ protected:
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
+
 	
 
 public:

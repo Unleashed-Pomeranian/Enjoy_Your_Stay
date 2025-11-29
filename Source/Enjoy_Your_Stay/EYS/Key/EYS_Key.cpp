@@ -45,12 +45,15 @@ void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 
 		if (KeyHolder)
 		{
+			myPlayer->bIsKeyMode = false;
 			KeyHolder->SetPose();   
 			KeyHolder->LastRoomNum = RoomNum;
 			
 		}
 		myPlayer->bIsHaveKey = true;
 		myPlayer->RoomLock = RoomLocation;
+		myPlayer->PoseNum = 2;
+	
 		Destroy();
 		
 	}

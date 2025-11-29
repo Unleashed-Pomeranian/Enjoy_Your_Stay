@@ -16,7 +16,7 @@ class ENJOY_YOUR_STAY_API AEYS_Key : public AActor, public IEYS_InteractInterfac
 	USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Componenets", meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* BoxCollision;
 public:	
 	// Sets default values for this actor's properties
@@ -32,8 +32,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	int32 RoomNum;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FVector RoomLocation;
 };

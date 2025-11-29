@@ -352,15 +352,21 @@ void AEYS_MyCharacter::Action_MouseTrace()
 		
 		float TraceDistance = 100.0f;
 		FVector End = Start + (WorldDirection * TraceDistance);
-
+		
 		UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
 			, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		if (Hit->GetActor() != nullptr)
 		{
+			
 			if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
 			{
 				//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
 				IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this);
+				if (bIsHaveKey)
+				{
+					PoseNum = 2;
+					SetRoot();
+				}
 
 			}
 		}

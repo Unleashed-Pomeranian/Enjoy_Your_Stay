@@ -56,11 +56,13 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 {
 
-	if (bCanInteract)
+	if (bCanInteract&&myPlayer->bIsHaveKey)
 	{
 	   
-		
+		myPlayer->PoseNum = 0;
+		myPlayer->bIsHaveKey = false;
 		CachedAIController->MoveToPoint(myPlayer->RoomLock, 100.0f);
+		bCanInteract = false;
 	
 	}
 
