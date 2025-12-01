@@ -39,6 +39,11 @@
 		{
 			"Name": "PCG",
 			"Enabled": true
+		},
+		{
+			"Name": "QuickDialogues",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/Fab/product/a7551259-f397-443a-9f51-74669e50cab3"
 		}
 	]
 }
