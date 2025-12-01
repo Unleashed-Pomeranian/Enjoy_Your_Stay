@@ -67,6 +67,6 @@ public:
 	bool bIsTrigrred = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsDoorLocked = false;
-
+	 
 	
 };

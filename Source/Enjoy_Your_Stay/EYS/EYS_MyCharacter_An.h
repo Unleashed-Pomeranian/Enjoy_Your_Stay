@@ -36,6 +36,8 @@ protected:
     bool bIsInAir;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anim", meta = (AllowAbstract = "true"))
     bool bIsInAction=false;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anim", meta = (AllowAbstract = "true"))
+    bool bIsDoorLocked = false;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anim", meta = (AllowAbstract = "true"))
     int32 PoseNum;

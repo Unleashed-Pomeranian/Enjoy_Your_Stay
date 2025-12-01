@@ -3,7 +3,7 @@
 
 #include "EYS/Interactable Actor/EYS_MoveableObject.h"
 #include "Components/BoxComponent.h"
-
+#include "EYS/EYS_MyCharacter.h"
 #include "Timermanager.h"
 
 
@@ -50,8 +50,19 @@ void AEYS_MoveableObject::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 void AEYS_MoveableObject::Interact(AEYS_MyCharacter* myPlayer)
 {
-	if(!bIsDoorLocked)
-	DoorInteract();
+	if (!bIsDoorLocked)
+	{
+		DoorInteract();
+		myPlayer->bIsDoorLocked = false;
+	}
+	
+	else
+	{
+		myPlayer->PoseNum = 0;
+		myPlayer->SetRoot();
+		myPlayer->bIsDoorLocked = true;
+		
+	}
 	
 }
 

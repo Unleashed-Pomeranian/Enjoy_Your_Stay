@@ -32,7 +32,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void SetRoot();
+	
 	void Action_ForwardTrace();
 	void Action_MouseTrace();
 	bool bIsSprinting = false;
@@ -90,6 +90,8 @@ protected:
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
+	
+	
 
 	
 
@@ -107,5 +109,9 @@ public:
 	bool bIsHaveKey = false;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	FVector RoomLock;
-	
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+	bool bIsDoorLocked = false;
+public:
+	UFUNCTION() 
+	virtual void SetRoot();
 };
