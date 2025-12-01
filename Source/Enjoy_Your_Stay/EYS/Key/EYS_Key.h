@@ -22,7 +22,7 @@ public:
 	// Sets default values for this actor's properties
 	AEYS_Key();
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void aInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 
 protected:
 	// Called when the game starts or when spawned

@@ -60,7 +60,7 @@ void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 	
 }
 
-void AEYS_Key::aInteract_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_Key::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
 	Interact(myPlayer);
 	

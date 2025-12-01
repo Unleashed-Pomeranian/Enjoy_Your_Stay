@@ -331,8 +331,8 @@ void AEYS_MyCharacter::Action_ForwardTrace()
 		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
 		{
 			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
-			IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this);
-
+			IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this,PoseNum);
+		
 		}
 	}
 }
@@ -361,7 +361,7 @@ void AEYS_MyCharacter::Action_MouseTrace()
 			if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
 			{
 				//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
-				IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this);
+				IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this,PoseNum);
 				if (bIsHaveKey)
 				{
 					PoseNum = 2;

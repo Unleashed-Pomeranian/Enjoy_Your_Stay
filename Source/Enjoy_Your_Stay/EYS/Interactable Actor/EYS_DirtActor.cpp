@@ -33,12 +33,13 @@ void AEYS_DirtActor::BeginPlay()
 	
 }
 
-void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
-	
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " test");
-	Interact(myPlayer);
-
+	if (Value == 3)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " test");
+		Interact(myPlayer);
+	}
 }
 
 

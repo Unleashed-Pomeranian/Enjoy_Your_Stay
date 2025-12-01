@@ -49,12 +49,13 @@ void AEYS_Generator:: Interact(AEYS_MyCharacter* myPlayer)
 	Interact(myPlayer);
 
 }
-void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
-	
-	fuelAmount = FMath::Clamp(fuelAmount+0.5f, 0.0f, 100.0f);
-	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
-
+	if (Value == 4)
+	{
+		fuelAmount = FMath::Clamp(fuelAmount + 0.5f, 0.0f, 100.0f);
+		FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
+	}
 }
 
 void AEYS_Generator::TimerTest()

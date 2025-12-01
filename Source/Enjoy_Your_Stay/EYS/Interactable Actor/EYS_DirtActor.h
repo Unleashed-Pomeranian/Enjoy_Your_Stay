@@ -28,7 +28,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void aInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 
 public:	
 	// Called every frame

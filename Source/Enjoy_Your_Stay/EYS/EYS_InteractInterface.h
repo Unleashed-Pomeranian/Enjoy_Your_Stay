@@ -28,7 +28,7 @@ class AEYS_MyCharacter;
       virtual void Interact(AEYS_MyCharacter* myPlayer)=0;
 
       UFUNCTION(BlueprintNativeEvent, Category = Interact)
-      void aInteract(AEYS_MyCharacter* myPlayer);
+      void aInteract(AEYS_MyCharacter* myPlayer, int32 Value);
 
   public:
      
