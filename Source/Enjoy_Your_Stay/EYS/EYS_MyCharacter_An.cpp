@@ -47,5 +47,6 @@ void UEYS_MyCharacter_An::NativeUpdateAnimation(float DeltaSeconds)
 
     bIsInAction = OwnerCharacter->bIsAction;
 
-    bIsDoorLocked = OwnerCharacter->bIsDoorLocked;
+   
+    
 }

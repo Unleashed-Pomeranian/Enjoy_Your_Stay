@@ -37,6 +37,7 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationPitch = false;
+	KnockDoorMontage = nullptr;
 
 }
 
@@ -130,6 +131,7 @@ void AEYS_MyCharacter::SetRoot()
 }
 
 
+
 void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D input = Value.Get<FVector2D>();
@@ -165,6 +167,7 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 			MoveComp->MaxWalkSpeed = walkSpeed;
 		bCanSprinting = false;
 	}
+	
 
 }
 
@@ -272,6 +275,8 @@ void AEYS_MyCharacter::EquipMop(const FInputActionValue& Value)
 	}
 }
 
+
+
 void AEYS_MyCharacter::EquipFuel(const FInputActionValue& Value)
 {
 	if (PoseNum != 4)
@@ -286,7 +291,7 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 {
 
 
-	
+
 
 	FHitResult* Hit = new FHitResult();
 	FVector Start = FirstPersonCamera->GetComponentLocation();
@@ -372,3 +377,14 @@ void AEYS_MyCharacter::Action_MouseTrace()
 		}
 	}
  }
+
+void AEYS_MyCharacter::PlayMontage()
+{
+	if (UAnimInstance* AnimInst = FirstPersonMesh->GetAnimInstance())
+	{
+	
+		AnimInst->Montage_Play(KnockDoorMontage);
+		PoseNum = 0;
+		SetRoot();
+	}
+}

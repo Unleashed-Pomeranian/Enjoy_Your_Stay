@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Animation/AnimMontage.h"
 #include "EYS_MyCharacter.generated.h"
 
 
@@ -16,13 +17,15 @@ class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 	
-	
+
  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
+
 UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* DefaultMapping;
+
 
 public:
 	AEYS_MyCharacter();
@@ -111,7 +114,9 @@ public:
 	FVector RoomLock;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsDoorLocked = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
+	UAnimMontage* KnockDoorMontage;
 public:
-	UFUNCTION() 
-	virtual void SetRoot();
+	UFUNCTION() virtual void SetRoot();
+	UFUNCTION() virtual void PlayMontage();
 };

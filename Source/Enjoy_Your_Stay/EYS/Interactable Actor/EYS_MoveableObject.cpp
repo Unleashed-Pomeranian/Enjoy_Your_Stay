@@ -53,14 +53,12 @@ void AEYS_MoveableObject::Interact(AEYS_MyCharacter* myPlayer)
 	if (!bIsDoorLocked)
 	{
 		DoorInteract();
-		myPlayer->bIsDoorLocked = false;
+	
 	}
 	
 	else
 	{
-		myPlayer->PoseNum = 0;
-		myPlayer->SetRoot();
-		myPlayer->bIsDoorLocked = true;
+		myPlayer->PlayMontage();
 		
 	}
 	
