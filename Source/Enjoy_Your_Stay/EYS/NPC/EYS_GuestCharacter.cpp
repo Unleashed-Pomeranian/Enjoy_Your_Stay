@@ -43,6 +43,7 @@ void AEYS_GuestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
 void AEYS_GuestCharacter::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	Interact(myPlayer);
@@ -53,18 +54,36 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	bCanInteract = true;
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 }
+
 void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 {
+	if (bCanInteract && !bisDialogueEnd)
+	{
+		StartDialogue(myPlayer);
+		DialogueNum += 1;
+	}
 
-	if (bCanInteract&&myPlayer->bIsHaveKey)
+	if (bCanInteract&&myPlayer->bIsHaveKey&&bisDialogueEnd)
 	{
 	   
 		myPlayer->PoseNum = 0;
 		myPlayer->bIsHaveKey = false;
-		CachedAIController->MoveToPoint(myPlayer->RoomLock, 100.0f);
+		MainLock = myPlayer->RoomLock;
+		MoveTo(MainLock, 100.0f);
 		bCanInteract = false;
-	
+	  
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanInteract");
+}
+
+void AEYS_GuestCharacter::MoveTo(FVector Target, float AccceptanceRadius)
+{
+	CachedAIController->MoveToPoint(Target,AccceptanceRadius);
+}
+
+
+
+void AEYS_GuestCharacter::StartDialogue_Implementation(AEYS_MyCharacter* myPlayer)
+{
 }

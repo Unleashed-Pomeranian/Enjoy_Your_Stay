@@ -9,7 +9,7 @@
 #include "EYS_MoveableObject.generated.h"
 
 class UBoxComponent;
-
+class AEYS_GuestCharacter;
 class UTimelineComponent;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MoveableObject : public AActor, public IEYS_InteractInterface
@@ -24,12 +24,14 @@ class ENJOY_YOUR_STAY_API AEYS_MoveableObject : public AActor, public IEYS_Inter
 	USceneComponent* SceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* TriggerBox;
+	
 
 public:	
 	// Sets default values for this actor's properties
 	AEYS_MoveableObject();
 	
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Door")
+	 AEYS_GuestCharacter* AssignedNPCs;
 
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;

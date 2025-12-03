@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "Timermanager.h"
+#include "EYS/NPC/EYS_GuestCharacter.h"
 
 
 // Sets default values
@@ -59,7 +60,8 @@ void AEYS_MoveableObject::Interact(AEYS_MyCharacter* myPlayer)
 	else
 	{
 		myPlayer->PlayMontage();
-		
+		AssignedNPCs->MoveTo(TriggerBox->GetComponentLocation(), 100.0f);
+		AssignedNPCs->bisDialogueEnd = false;
 	}
 	
 }
