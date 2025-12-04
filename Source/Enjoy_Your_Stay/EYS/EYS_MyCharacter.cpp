@@ -128,6 +128,10 @@ void AEYS_MyCharacter::SetRoot()
 		FirstPersonMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -80.0f));
 		FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	}
+	if (bIsHaveKey&&PoseNum==2)
+	SetEquipmentMesh(5);
+	else
+	SetEquipmentMesh(PoseNum);
 }
 
 
@@ -237,6 +241,7 @@ void AEYS_MyCharacter::SetMainPose(const FInputActionValue& Value)
 		PoseNum = 0;
 		LastPoseNum = PoseNum;
 		SetRoot();
+		
 	}
 }
 
@@ -246,13 +251,14 @@ void AEYS_MyCharacter::OpenMissionList(const FInputActionValue& Value)
 	
 	PoseNum = 1;
 	SetRoot();
+	
 }
 
 void AEYS_MyCharacter::CloseMissionList(const FInputActionValue& Value)
 {
 	PoseNum = LastPoseNum;
 	SetRoot();
-
+	
 }
 
 void AEYS_MyCharacter::EquipHammer(const FInputActionValue& Value)
@@ -262,6 +268,7 @@ void AEYS_MyCharacter::EquipHammer(const FInputActionValue& Value)
 		PoseNum = 2;
 		LastPoseNum = PoseNum;
 		SetRoot();
+		
 	}
 }
 
@@ -272,6 +279,7 @@ void AEYS_MyCharacter::EquipMop(const FInputActionValue& Value)
 		PoseNum = 3;
 		LastPoseNum = PoseNum;
 		SetRoot();
+	
 	}
 }
 
@@ -284,6 +292,7 @@ void AEYS_MyCharacter::EquipFuel(const FInputActionValue& Value)
 		PoseNum = 4;
 		LastPoseNum = PoseNum;
 		SetRoot();
+		
 	}
 }
 
@@ -371,6 +380,7 @@ void AEYS_MyCharacter::Action_MouseTrace()
 				{
 					PoseNum = 2;
 					SetRoot();
+					
 				}
 
 			}
@@ -388,3 +398,9 @@ void AEYS_MyCharacter::PlayMontage()
 		SetRoot();
 	}
 }
+
+void AEYS_MyCharacter::SetEquipmentMesh_Implementation(int32 MeshValue)
+{
+	
+}
+

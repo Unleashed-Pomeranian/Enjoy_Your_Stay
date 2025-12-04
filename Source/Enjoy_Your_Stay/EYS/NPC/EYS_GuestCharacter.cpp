@@ -68,6 +68,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 	   
 		myPlayer->PoseNum = 0;
 		myPlayer->bIsHaveKey = false;
+		myPlayer->SetRoot();
 		MainLock = myPlayer->RoomLock;
 		MoveTo(MainLock, 100.0f);
 		bCanInteract = false;
