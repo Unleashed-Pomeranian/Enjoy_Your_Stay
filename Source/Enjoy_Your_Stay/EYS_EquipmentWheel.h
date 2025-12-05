@@ -51,6 +51,10 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     UImage* FuelTank_Icon;
+    UPROPERTY(meta = (BindWidget))
+    UImage* Hammer_Icon;
+    UPROPERTY(meta = (BindWidget))
+    UImage* Mop_Icon;
 
     virtual void NativeConstruct() override;
 

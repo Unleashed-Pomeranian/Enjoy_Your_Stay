@@ -6,6 +6,7 @@
 #include "EYS/EYS_InteractInterface.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Actor.h"
+#include "EYS_EquipmentWheel.h"
 #include "EYS_Generator.generated.h"
 
 UCLASS()
@@ -34,6 +35,7 @@ protected:
 
 
 	UFUNCTION() void TimerTest();
+	UFUNCTION() void DestroyFuelTank(AEYS_MyCharacter* myPlayer);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

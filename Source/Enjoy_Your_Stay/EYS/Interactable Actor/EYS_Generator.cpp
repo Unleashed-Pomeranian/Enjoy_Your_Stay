@@ -2,6 +2,8 @@
 
 
 #include "EYS/Interactable Actor/EYS_Generator.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
 
 // Sets default values
@@ -47,7 +49,7 @@ void AEYS_Generator::Tick(float DeltaTime)
 void AEYS_Generator:: Interact(AEYS_MyCharacter* myPlayer)
 {
 	Interact(myPlayer);
-
+	
 }
 void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
@@ -55,6 +57,16 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 	{
 		fuelAmount = FMath::Clamp(fuelAmount + 0.5f, 0.0f, 100.0f);
 		FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
+
+		myPlayer->FuelValue = FMath::Clamp(myPlayer->FuelValue - 0.5f, 0.0f, 100.0f);
+
+		if (myPlayer->FuelValue <= 0)
+		{
+			DestroyFuelTank(myPlayer);
+			
+		
+		}
+	
 	}
 }
 
@@ -65,4 +77,14 @@ void AEYS_Generator::TimerTest()
 
 	fuelAmount = FMath::Clamp(fuelAmount-20, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
+}
+
+void AEYS_Generator::DestroyFuelTank(AEYS_MyCharacter* myPlayer)
+{
+	myPlayer->PoseNum = 0;
+	myPlayer->LastPoseNum = 0;
+	myPlayer->SetRoot();
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	PC->EquipmentWheelInstance->EnableButtons(5, false, ESlateVisibility::Hidden);
+	
 }

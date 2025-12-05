@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "Animation/AnimMontage.h"
 #include "EYS_MyCharacter.generated.h"
+ 
 
 
 class UCameraComponent;
@@ -25,14 +26,14 @@ class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
 
 UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* DefaultMapping;
+
 	
 
 
 public:
 	AEYS_MyCharacter();
     virtual void Tick(float DeltaTime) override;
-   
-
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -115,6 +116,10 @@ public:
 	bool bIsDoorLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	UAnimMontage* KnockDoorMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
+	float FuelValue=100;
+
+	
 
 
 public:
