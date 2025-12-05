@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/Image.h"
 #include "EYS_EquipmentWheel.generated.h"
 
 /**
@@ -48,6 +49,8 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* Btn_Slot8;
 
+    UPROPERTY(meta = (BindWidget))
+    UImage* FuelTank_Icon;
 
     virtual void NativeConstruct() override;
 
@@ -73,5 +76,7 @@ private:
     UFUNCTION()
     void OnSlot8() { OnBtnSlotHovered(7); }
 
+public:
+    UFUNCTION() void EnableButtons(int32 Index, bool bIsEnable, ESlateVisibility VisibleIcon);
 	
 };

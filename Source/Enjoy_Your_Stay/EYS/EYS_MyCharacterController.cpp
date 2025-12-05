@@ -98,4 +98,5 @@ void AEYS_MyCharacterController::CloseEquipmentWidget()
 	SetInputMode(FInputModeGameOnly());
 
 	bShowMouseCursor = false;
+	
 }

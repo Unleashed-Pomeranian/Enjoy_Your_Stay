@@ -39,21 +39,24 @@ protected:
 	/** Pointer to the mobile controls widget */
 	TObjectPtr<UUserWidget> MobileControlsWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UEYS_EquipmentWheel> EquipmentWheelClass;
+
+	
+
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
 	/** Input mapping context setup */
 	virtual void SetupInputComponent() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-	TSubclassOf<UEYS_EquipmentWheel> EquipmentWheelClass;
-
-	/** Oluşturulmuş instance */
-	UPROPERTY()
-	UEYS_EquipmentWheel* EquipmentWheelInstance = nullptr;
+	
 
 
 public:
 	UFUNCTION() void OpenEquipmentWidget();
 	UFUNCTION() void CloseEquipmentWidget();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UEYS_EquipmentWheel* EquipmentWheelInstance = nullptr;
 };

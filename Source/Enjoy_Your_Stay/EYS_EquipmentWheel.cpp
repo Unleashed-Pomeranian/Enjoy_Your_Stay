@@ -18,6 +18,8 @@ void UEYS_EquipmentWheel::NativeConstruct()
 	if (Btn_Slot6) Btn_Slot6->OnHovered.AddDynamic(this, &UEYS_EquipmentWheel::OnSlot6);
 	if (Btn_Slot7) Btn_Slot7->OnHovered.AddDynamic(this, &UEYS_EquipmentWheel::OnSlot7);
 	if (Btn_Slot8) Btn_Slot8->OnHovered.AddDynamic(this, &UEYS_EquipmentWheel::OnSlot8);
+
+	
 }
 
 void UEYS_EquipmentWheel::OnBtnSlotHovered(int32 SlotIndex)
@@ -32,3 +34,23 @@ void UEYS_EquipmentWheel::OnBtnSlotHovered(int32 SlotIndex)
 	
 
 }
+
+void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibility VisibleIcon)
+{
+
+	switch (Index)
+	{
+	case 5:
+	{
+		Btn_Slot5->SetIsEnabled(bIsEnable);
+		FuelTank_Icon->SetVisibility(VisibleIcon);
+
+	}
+	default:
+
+		break;
+	}
+	
+
+}
+
