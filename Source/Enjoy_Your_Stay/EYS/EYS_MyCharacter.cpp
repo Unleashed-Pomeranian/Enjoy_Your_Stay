@@ -12,6 +12,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "Timermanager.h"
 #include "GameFramework/PlayerController.h"
+#include "EYS/EYS_MyCharacterController.h"
 
 // Sets default values
 AEYS_MyCharacter::AEYS_MyCharacter()
@@ -56,12 +57,13 @@ void AEYS_MyCharacter::BeginPlay()
 				if (DefaultMapping)
 				{
 					Subsys->AddMappingContext(DefaultMapping, 0);
+					
 				}
 			}
 		}
 	}
 
-
+	
 }
 
 // Called every frame
@@ -97,15 +99,18 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EIC->BindAction(IA_eInteract, ETriggerEvent::Started, this, &AEYS_MyCharacter::Interact);
 		EIC->BindAction(IA_Action, ETriggerEvent::Triggered, this, & AEYS_MyCharacter::Action);
 		EIC->BindAction(IA_Action, ETriggerEvent::Completed, this, &AEYS_MyCharacter::ActionEnd);
-		if (IA_Mission)
-		{
-		EIC->BindAction(IA_Mission, ETriggerEvent::Started, this, &AEYS_MyCharacter::OpenMissionList);
-		EIC->BindAction(IA_Mission, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseMissionList);
-		}
-		EIC->BindAction(IA_Hammer, ETriggerEvent::Started, this, &AEYS_MyCharacter::EquipHammer);
-		EIC->BindAction(IA_Mop, ETriggerEvent::Started, this, &AEYS_MyCharacter::EquipMop);
-		EIC->BindAction(IA_Fuel, ETriggerEvent::Started, this, &AEYS_MyCharacter::EquipFuel);
-		EIC->BindAction(IA_Main, ETriggerEvent::Started, this, &AEYS_MyCharacter::SetMainPose);
+
+		
+			
+			if (IA_EquipmentWheel)
+			{
+				EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Started, this,&AEYS_MyCharacter::OpenEquipmentWidget);
+				EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseEquipmentWidget);
+			}
+		
+
+			
+		
 	}
 
 }
@@ -150,29 +155,31 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 	AddMovementInput(forwardDir, input.Y);
 	AddMovementInput(rightDir, input.X);
 
-    
-	if (bIsSprinting&&bCanSprinting)
+	if (GetVelocity().Size()>0)
 	{
 		
-		Stamina = FMath::Clamp(Stamina - 0.2f, 0.0f, 100.0f);
-		UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
-		
+		if (bIsSprinting && bCanSprinting)
+		{
 
-		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Run::StaticClass());
-	}
-	
-	else
-	{
-		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Walk::StaticClass());
-	}
-	if (Stamina<= 0)
-	{
-		if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-			MoveComp->MaxWalkSpeed = walkSpeed;
-		bCanSprinting = false;
-	}
-	
+			Stamina = FMath::Clamp(Stamina - 0.2f, 0.0f, 100.0f);
+			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
 
+
+			UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Run::StaticClass());
+		}
+
+		else
+		{
+			UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Walk::StaticClass());
+		}
+		if (Stamina <= 0)
+		{
+			if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+				MoveComp->MaxWalkSpeed = walkSpeed;
+			bCanSprinting = false;
+		}
+
+	}
 }
 
 void AEYS_MyCharacter::Look(const FInputActionValue& Value)
@@ -232,69 +239,34 @@ void AEYS_MyCharacter::StaminaRecovery()
 }
 
 
-
-
-void AEYS_MyCharacter::SetMainPose(const FInputActionValue& Value)
+void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 {
-	if (PoseNum != 0)
+	if (!(GetCharacterMovement()->IsFalling()))
 	{
-		PoseNum = 0;
-		LastPoseNum = PoseNum;
-		SetRoot();
-		
+		if (AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetController()))
+		{
+			GetCharacterMovement()->DisableMovement();
+			PC->OpenEquipmentWidget();
+		}
 	}
 }
 
-void AEYS_MyCharacter::OpenMissionList(const FInputActionValue& Value)
+void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 {
-
-	
-	PoseNum = 1;
-	SetRoot();
-	
-}
-
-void AEYS_MyCharacter::CloseMissionList(const FInputActionValue& Value)
-{
+	if (AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetController()))
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		PC->CloseEquipmentWidget();
+	}
 	PoseNum = LastPoseNum;
 	SetRoot();
-	
-}
-
-void AEYS_MyCharacter::EquipHammer(const FInputActionValue& Value)
-{
-	if (PoseNum!=2)
-	{
-		PoseNum = 2;
-		LastPoseNum = PoseNum;
-		SetRoot();
-		
-	}
-}
-
-void AEYS_MyCharacter::EquipMop(const FInputActionValue& Value)
-{
-	if (PoseNum != 3)
-	{
-		PoseNum = 3;
-		LastPoseNum = PoseNum;
-		SetRoot();
-	
-	}
 }
 
 
 
-void AEYS_MyCharacter::EquipFuel(const FInputActionValue& Value)
-{
-	if (PoseNum != 4)
-	{
-		PoseNum = 4;
-		LastPoseNum = PoseNum;
-		SetRoot();
-		
-	}
-}
+
+
+
 
 void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 {

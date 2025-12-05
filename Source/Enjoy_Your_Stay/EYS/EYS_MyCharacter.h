@@ -25,6 +25,7 @@ class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
 
 UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* DefaultMapping;
+	
 
 
 public:
@@ -62,7 +63,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Main;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* IA_Mission;
+	UInputAction* IA_EquipmentWheel;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Hammer;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
@@ -84,12 +85,10 @@ protected:
 	UFUNCTION() void StopSprint(const FInputActionValue& Value);
 	UFUNCTION() void StaminaRecovery();
 	
-	UFUNCTION() void SetMainPose(const FInputActionValue& Value);
-	UFUNCTION() void OpenMissionList(const FInputActionValue& Value);
-	UFUNCTION() void CloseMissionList(const FInputActionValue& Value);
-	UFUNCTION() void EquipHammer(const FInputActionValue& Value);
-	UFUNCTION() void EquipMop(const FInputActionValue& Value);
-	UFUNCTION() void EquipFuel(const FInputActionValue& Value);
+
+	UFUNCTION() void OpenEquipmentWidget(const FInputActionValue& Value);
+	UFUNCTION() void CloseEquipmentWidget(const FInputActionValue& Value);
+	
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
@@ -116,6 +115,8 @@ public:
 	bool bIsDoorLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	UAnimMontage* KnockDoorMontage;
+
+
 public:
 	UFUNCTION() virtual void SetRoot();
 	UFUNCTION() virtual void PlayMontage();
