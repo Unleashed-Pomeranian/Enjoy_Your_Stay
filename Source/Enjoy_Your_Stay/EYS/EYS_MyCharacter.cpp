@@ -135,7 +135,7 @@ void AEYS_MyCharacter::SetRoot()
 		FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	}
 	if (bIsHaveKey&&PoseNum==2)
-	SetEquipmentMesh(5);
+	SetEquipmentMesh(6);
 	else
 	SetEquipmentMesh(PoseNum);
 }

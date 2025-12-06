@@ -55,6 +55,8 @@ protected:
     UImage* Hammer_Icon;
     UPROPERTY(meta = (BindWidget))
     UImage* Mop_Icon;
+    UPROPERTY(meta = (BindWidget))
+    UImage* Flashlight_Icon;
 
     virtual void NativeConstruct() override;
 

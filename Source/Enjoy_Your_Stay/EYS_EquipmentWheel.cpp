@@ -61,6 +61,13 @@ void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibi
 		FuelTank_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
+
+	case 6:
+	{
+		Btn_Slot6->SetIsEnabled(bIsEnable);
+		Flashlight_Icon->SetVisibility(VisibleIcon);
+		break;
+	}
 	default:
 
 		break;
