@@ -49,4 +49,6 @@ public:
 
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);
 	
+
+	
 };
