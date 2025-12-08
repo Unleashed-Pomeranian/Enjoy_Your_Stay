@@ -35,6 +35,6 @@ public:
 	
 	
 
-	float opacityValue = 1.0f;
-	float cleaningValue= 0.004f;
+	float opacityValue = 3.0f;
+	float cleaningValue= 0.012f;
 };

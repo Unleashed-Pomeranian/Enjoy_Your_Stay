@@ -25,7 +25,7 @@ void AEYS_DirtActor::BeginPlay()
 		if (DynMath)
 		{
 			DirtMesh->SetMaterial(0,DynMath);
-			opacityValue = FMath::Clamp(opacityValue, 0.0f, 1.0f);
+			opacityValue = FMath::Clamp(opacityValue, 0.0f, 3.0f);
 		}
 	}
 
@@ -49,9 +49,9 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 	opacityValue -= cleaningValue;
 	DynMath->SetScalarParameterValue("Opacity", opacityValue);
 
-	if (opacityValue <= 0.7f)
+	if (opacityValue <= 2.1f)
 	{
-		cleaningValue = 0.007f;
+		cleaningValue = 0.021f;
 
 		if (opacityValue <= 0.2f)
 		{
