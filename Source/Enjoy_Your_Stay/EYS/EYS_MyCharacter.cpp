@@ -326,10 +326,12 @@ void AEYS_MyCharacter::Action_ForwardTrace()
 
 void AEYS_MyCharacter::Action_MouseTrace()
 {
+	
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 
 	if (PlayerController)
 	{
+		
 		FHitResult* Hit = new FHitResult();
 		FVector WorldLocation;
 		FVector WorldDirection;
@@ -337,16 +339,17 @@ void AEYS_MyCharacter::Action_MouseTrace()
 		bool bDeprojectSuccess = PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
 		FVector Start = WorldLocation;
 		
-		float TraceDistance = 100.0f;
+		float TraceDistance = 150.0f;
 		FVector End = Start + (WorldDirection * TraceDistance);
 		
 		UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
 			, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		if (Hit->GetActor() != nullptr)
 		{
-			
+			;
 			if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
 			{
+			
 				//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
 				IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this,PoseNum);
 				if (bIsHaveKey)

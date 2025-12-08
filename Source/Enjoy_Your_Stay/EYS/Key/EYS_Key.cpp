@@ -37,8 +37,10 @@ void AEYS_Key::Tick(float DeltaTime)
 
 void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 {
+	
 	if (myPlayer->bIsKeyMode)
 	{
+		
 		AEYS_KeyHolder* KeyHolder = Cast<AEYS_KeyHolder>(
 			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_KeyHolder::StaticClass())
 		);
@@ -48,7 +50,7 @@ void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 			myPlayer->bIsKeyMode = false;
 			KeyHolder->SetPose();   
 			KeyHolder->LastRoomNum = RoomNum;
-			
+		
 		}
 		myPlayer->bIsHaveKey = true;
 		myPlayer->RoomLock = RoomLocation;
@@ -63,5 +65,5 @@ void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 void AEYS_Key::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
 	Interact(myPlayer);
-	
+
 }
