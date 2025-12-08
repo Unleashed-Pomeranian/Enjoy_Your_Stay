@@ -13,7 +13,7 @@ void AEYS_GuestAIController::MoveToPoint(const FVector& Destiniton, float Acccep
 
 	FNavPathSharedPtr NavPath;
 	MoveTo(MoveReq, &NavPath);
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "moveto");
+   
 }
 
 void AEYS_GuestAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)

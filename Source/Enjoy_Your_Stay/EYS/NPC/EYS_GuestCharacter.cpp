@@ -58,6 +58,8 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 
 void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 {
+	CachedAIController->MoveToPoint(FVector::ZeroVector, 500.0f);
+
 	if (bCanInteract && !bisDialogueEnd)
 	{
 		StartDialogue(myPlayer);

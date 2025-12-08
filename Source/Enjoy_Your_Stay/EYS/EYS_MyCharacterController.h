@@ -57,6 +57,6 @@ public:
 	UFUNCTION() void OpenEquipmentWidget();
 	UFUNCTION() void CloseEquipmentWidget();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_EquipmentWheel* EquipmentWheelInstance = nullptr;
 };

@@ -37,6 +37,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			UE_LOG(LogEnjoy_Your_Stay, Error, TEXT("Could not spawn mobile controls widget."));
 
 		}
+		
 
 	}
 	EquipmentWheelInstance = CreateWidget<UEYS_EquipmentWheel>(this, EquipmentWheelClass);
@@ -76,24 +77,38 @@ void AEYS_MyCharacterController::SetupInputComponent()
 void AEYS_MyCharacterController::OpenEquipmentWidget()
 {
 
-	EquipmentWheelInstance->AddToViewport(10);
-	SetIgnoreLookInput(true);
-	SetInputMode(FInputModeGameAndUI());
+	if (!EquipmentWheelClass)
+		return;
+	
+	
 		
-	bShowMouseCursor = true;
 	
-	int32 SizeX, SizeY;
 
-	
-	GetViewportSize(SizeX, SizeY);
-	int32 CenterX = SizeX / 2;
-	int32 CenterY = SizeY / 2;
-	SetMouseLocation(CenterX, CenterY);
+	if (!EquipmentWheelInstance->IsInViewport())
+	{
+		
+
+		SetIgnoreLookInput(true);
+		SetInputMode(FInputModeGameAndUI());
+
+		bShowMouseCursor = true;
+
+		int32 SizeX, SizeY;
+
+
+		GetViewportSize(SizeX, SizeY);
+		int32 CenterX = SizeX / 2;
+		int32 CenterY = SizeY / 2;
+		SetMouseLocation(CenterX, CenterY);
+		EquipmentWheelInstance->AddToViewport(10);
+	}
 }
 
 void AEYS_MyCharacterController::CloseEquipmentWidget()
 {
+	if (EquipmentWheelInstance && EquipmentWheelInstance->IsInViewport())
 	EquipmentWheelInstance->RemoveFromParent();
+
 	SetIgnoreLookInput(false);
 	SetInputMode(FInputModeGameOnly());
 
