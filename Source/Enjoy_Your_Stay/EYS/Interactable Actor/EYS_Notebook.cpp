@@ -68,6 +68,7 @@ void AEYS_Notebook::FuelingMission()
 
 void AEYS_Notebook::FixingMission()
 {
+	NotebookWidgetInstance->SetFixingBox(FixingFinished, FixingTotal);
 }
 
 

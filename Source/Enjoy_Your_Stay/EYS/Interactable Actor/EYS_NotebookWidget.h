@@ -31,12 +31,7 @@ class ENJOY_YOUR_STAY_API UEYS_NotebookWidget : public UUserWidget
 	UHorizontalBox* FuelingBox;
 
 
-	UPROPERTY(meta = (BindWidget))
-	UCheckBox* CleaningCheck;
-	UPROPERTY(meta = (BindWidget))
-	UCheckBox* FixingCheck;
-	UPROPERTY(meta = (BindWidget))
-	UCheckBox* FuelingCheck;
+	
 
 
 	UPROPERTY(meta = (BindWidget))

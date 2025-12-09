@@ -43,13 +43,13 @@ public:
 
 	UFUNCTION() void CleaningMission();
 	UFUNCTION() void FuelingMission();
-	UFUNCTION() void FixingMission();
+	UFUNCTION(BlueprintCallable) void FixingMission();
 
 	UPROPERTY()int32 CleaningFinished=0;
 	UPROPERTY()int32 FuelingFinished = 0;
-	UPROPERTY()int32 FixingFinished = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)int32 FixingFinished = 0;
 	UPROPERTY()int32 CleaningTotal = 0;
 	UPROPERTY()int32 FuelingTotal = 0;
-	UPROPERTY()int32 FixingTotal = 0;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)int32 FixingTotal = 0;
 
 };
