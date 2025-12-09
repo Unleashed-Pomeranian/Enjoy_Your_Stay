@@ -28,7 +28,7 @@ void AEYS_Generator::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UKismetSystemLibrary::K2_SetTimer(this, "TimerTest", 4.0f, true, false, 0, 0);
+	UKismetSystemLibrary::K2_SetTimer(this, "TimerTest", 20.0f, true, false, 0, 0);
 	if (FuelText)
 	{
 
@@ -47,6 +47,10 @@ void AEYS_Generator::Tick(float DeltaTime)
 
 }
 
+void AEYS_Generator::testlight_Implementation()
+{
+}
+
 void AEYS_Generator:: Interact(AEYS_MyCharacter* myPlayer)
 {
 	Interact(myPlayer);
@@ -58,7 +62,7 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 	{
 		fuelAmount = FMath::Clamp(fuelAmount + 0.5f, 0.0f, 100.0f);
 		FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
-
+		
 		myPlayer->FuelValue = FMath::Clamp(myPlayer->FuelValue - 0.5f, 0.0f, 100.0f);
 
 		if (myPlayer->FuelValue <= 0)
@@ -66,6 +70,10 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 			DestroyFuelTank(myPlayer);
 			
 		
+		}
+		if (fuelAmount > 95)
+		{
+			testlight();
 		}
 	
 	}
@@ -76,7 +84,7 @@ void AEYS_Generator::TimerTest()
 
 	
 
-	fuelAmount = FMath::Clamp(fuelAmount-20, 0.0f, 100.0f);
+	fuelAmount = FMath::Clamp(fuelAmount-5.0f, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
 
 	if (fuelAmount < 30)
@@ -88,7 +96,7 @@ void AEYS_Generator::TimerTest()
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 			Notebook->FuelingTotal += 1;
 			Notebook->FuelingMission();
-
+			
 		}
 	}
 }

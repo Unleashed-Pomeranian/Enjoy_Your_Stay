@@ -40,7 +40,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UFUNCTION(BlueprintNativeEvent) void testlight();
 
-	float fuelAmount= 100.0f;
+	float fuelAmount= 0.0f;
+
 	
 };
