@@ -27,7 +27,7 @@ void AEYS_GuestCharacter::BeginPlay()
 	Super::BeginPlay();
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
-	CachedAIController->MoveToPoint(FVector::ZeroVector,200.0f);
+	CachedAIController->MoveToPoint(FVector(48439.0f, 29292.0f,2470.0f), 200.0f);
 	
 }
 
