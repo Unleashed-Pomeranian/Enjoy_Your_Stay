@@ -125,5 +125,6 @@ public:
 public:
 	UFUNCTION() virtual void SetRoot();
 	UFUNCTION() virtual void PlayMontage();
+
 	UFUNCTION(BlueprintNativeEvent) void SetEquipmentMesh(int32 MeshValue);
 };
