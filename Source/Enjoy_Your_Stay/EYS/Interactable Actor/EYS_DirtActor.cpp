@@ -2,6 +2,8 @@
 
 
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
+#include "EYS/Interactable Actor/EYS_Notebook.h"
+#include "Kismet/GameplayStatics.h"
 
 AEYS_DirtActor::AEYS_DirtActor()
 {
@@ -12,7 +14,7 @@ AEYS_DirtActor::AEYS_DirtActor()
 	DirtMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DirtMesh"));
 	DirtMesh->SetupAttachment(DefaultSceneRoot);
 
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -29,7 +31,18 @@ void AEYS_DirtActor::BeginPlay()
 		}
 	}
 
-	
+	if (DirtMesh)
+	{
+		AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
+			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
+		if (Notebook)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+			Notebook->CleaningTotal += 1;
+			Notebook->CleaningMission();
+			
+		}
+	}
 	
 }
 
@@ -56,7 +69,17 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 		if (opacityValue <= 0.2f)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " destroyed");
+			AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
+				UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
+			if (Notebook)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+				Notebook->CleaningFinished+=1;
+				Notebook->CleaningMission();
+
+			}
 			Destroy();
+
 		}
 
 	}

@@ -4,6 +4,7 @@
 #include "EYS/Interactable Actor/EYS_Generator.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "EYS/Interactable Actor/EYS_Notebook.h"
 #include "Kismet/GamePlayStatics.h"
 
 // Sets default values
@@ -77,6 +78,19 @@ void AEYS_Generator::TimerTest()
 
 	fuelAmount = FMath::Clamp(fuelAmount-20, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
+
+	if (fuelAmount < 30)
+	{
+		AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
+			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
+		if (Notebook)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+			Notebook->FuelingTotal += 1;
+			Notebook->FuelingMission();
+
+		}
+	}
 }
 
 void AEYS_Generator::DestroyFuelTank(AEYS_MyCharacter* myPlayer)
