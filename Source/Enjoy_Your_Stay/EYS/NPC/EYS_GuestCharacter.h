@@ -33,12 +33,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bisDialogueEnd = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanInteract = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DialogueNum = 0;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere)
-	bool bCanInteract = false;
+	
 	UPROPERTY(BlueprintReadOnly) FVector MainLock;
 public:	
 	// Called every frame

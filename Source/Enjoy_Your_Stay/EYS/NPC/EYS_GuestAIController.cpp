@@ -22,7 +22,7 @@ void AEYS_GuestAIController::OnMoveCompleted(FAIRequestID RequestID, const FPath
 
     if (Result.IsSuccess())
     {
-        UE_LOG(LogTemp, Warning, TEXT("AI Move Completed Successfully!"));
-        OnAIMoveComplete.Broadcast();   //  Karaktere haber ver
+      //  UE_LOG(LogTemp, Warning, TEXT("AI Move Completed Successfully!"));
+        OnAIMoveComplete.Broadcast();   
     }
 }

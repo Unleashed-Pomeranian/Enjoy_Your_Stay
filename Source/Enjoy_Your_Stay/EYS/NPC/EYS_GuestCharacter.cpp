@@ -25,9 +25,10 @@ AEYS_GuestCharacter::AEYS_GuestCharacter()
 void AEYS_GuestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	SpawnDefaultController();
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
-	CachedAIController->MoveToPoint(FVector(48439.0f, 29292.0f,2470.0f), 200.0f);
+	bCanInteract = true;
 	
 }
 
@@ -53,15 +54,23 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 {
 	UE_LOG(LogTemp, Warning, TEXT("NPC Move Completed → Interaction Enabled"));
 	bCanInteract = true;
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+	bisDialogueEnd = false;
+	
 }
 
 void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 {
-	CachedAIController->MoveToPoint(FVector::ZeroVector, 500.0f);
-
+	
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanIsqdsdnteract");
 	if (bCanInteract && !bisDialogueEnd)
 	{
+		FVector NPC_Loc = GetActorLocation();
+		FVector Player_Loc = myPlayer->GetActorLocation();
+		Player_Loc.Z = NPC_Loc.Z;
+		FRotator LookAtRot = (Player_Loc - NPC_Loc).Rotation();
+		
+		SetActorRotation(LookAtRot);
+
 		StartDialogue(myPlayer);
 		DialogueNum += 1;
 	}
@@ -78,12 +87,13 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 	  
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanInteract");
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanInteract");
 }
 
 void AEYS_GuestCharacter::MoveTo(FVector Target, float AccceptanceRadius)
 {
 	CachedAIController->MoveToPoint(Target,AccceptanceRadius);
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "NOVEE");
 }
 
 

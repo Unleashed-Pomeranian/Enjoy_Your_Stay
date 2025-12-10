@@ -37,9 +37,9 @@ void AEYS_DirtActor::BeginPlay()
 			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
 		if (Notebook)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 			Notebook->CleaningTotal += 1;
-			Notebook->CleaningMission();
+			Notebook->CleaningMission(GetActorTransform());
 			
 		}
 	}
@@ -50,7 +50,7 @@ void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 {
 	if (Value == 3)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " test");
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " test");
 		Interact(myPlayer);
 	}
 }
@@ -68,14 +68,14 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 
 		if (opacityValue <= 0.2f)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " destroyed");
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " destroyed");
 			AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
 				UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
 			if (Notebook)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 				Notebook->CleaningFinished+=1;
-				Notebook->CleaningMission();
+				Notebook->CleaningMission(GetActorTransform());
 
 			}
 			Destroy();

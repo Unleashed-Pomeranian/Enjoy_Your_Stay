@@ -30,7 +30,7 @@ void AEYS_Notebook::BeginPlay()
 		NotebookWidgetInstance = Cast<UEYS_NotebookWidget>(Widget);
 		if (NotebookWidgetInstance)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "NotebookWidgetInstance");
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "NotebookWidgetInstance");
 			
 		}
 	}
@@ -46,13 +46,18 @@ void AEYS_Notebook::Tick(float DeltaTime)
 
 }
 
-void AEYS_Notebook::CleaningMission()
+void AEYS_Notebook::CleaningMission(FTransform test)
 {
 
 	if (NotebookWidgetInstance)
 	{
 		
 		NotebookWidgetInstance->SetCleaningBox(CleaningFinished, CleaningTotal);
+	}
+
+	if (CleaningTotal == CleaningFinished)
+	{
+		Closelight(test);
 	}
 }
 
@@ -69,6 +74,10 @@ void AEYS_Notebook::FuelingMission()
 void AEYS_Notebook::FixingMission()
 {
 	NotebookWidgetInstance->SetFixingBox(FixingFinished, FixingTotal);
+}
+
+void AEYS_Notebook::Closelight_Implementation(FTransform test)
+{
 }
 
 

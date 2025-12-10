@@ -279,7 +279,7 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 	if (Hit->GetActor() != nullptr)
 	{
 		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
@@ -312,7 +312,7 @@ void AEYS_MyCharacter::Action_ForwardTrace()
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 	if (Hit->GetActor() != nullptr)
 	{
 		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
@@ -343,7 +343,7 @@ void AEYS_MyCharacter::Action_MouseTrace()
 		FVector End = Start + (WorldDirection * TraceDistance);
 		
 		UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-			, EDrawDebugTrace::ForDuration, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+			, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		if (Hit->GetActor() != nullptr)
 		{
 			;

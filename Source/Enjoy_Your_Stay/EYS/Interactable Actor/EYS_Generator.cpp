@@ -71,7 +71,7 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 			
 		
 		}
-		if (fuelAmount > 95)
+		if (fuelAmount > 80)
 		{
 			testlight();
 		}
@@ -87,18 +87,20 @@ void AEYS_Generator::TimerTest()
 	fuelAmount = FMath::Clamp(fuelAmount-5.0f, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
 
-	if (fuelAmount < 30)
+	/******if (fuelAmount < 30)
 	{
+		
 		AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
 			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
 		if (Notebook)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 			Notebook->FuelingTotal += 1;
 			Notebook->FuelingMission();
 			
 		}
 	}
+	***/
 }
 
 void AEYS_Generator::DestroyFuelTank(AEYS_MyCharacter* myPlayer)
