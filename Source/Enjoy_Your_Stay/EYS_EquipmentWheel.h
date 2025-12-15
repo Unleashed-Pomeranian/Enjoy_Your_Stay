@@ -57,6 +57,8 @@ protected:
     UImage* Mop_Icon;
     UPROPERTY(meta = (BindWidget))
     UImage* Flashlight_Icon;
+    UPROPERTY(meta = (BindWidget))
+    UImage* Shovel_Icon;
 
     virtual void NativeConstruct() override;
 

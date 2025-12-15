@@ -68,6 +68,14 @@ void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibi
 		Flashlight_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
+
+	case 7:
+	{
+		Btn_Slot7->SetIsEnabled(bIsEnable);
+		Shovel_Icon->SetVisibility(VisibleIcon);
+		break;
+	}
+
 	default:
 
 		break;
