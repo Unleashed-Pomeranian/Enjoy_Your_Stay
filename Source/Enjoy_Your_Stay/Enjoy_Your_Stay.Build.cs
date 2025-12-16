@@ -18,8 +18,10 @@ public class Enjoy_Your_Stay : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
-		});
+            "AdvancedWidgets",
+            "Slate",
+            "SlateCore"
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 

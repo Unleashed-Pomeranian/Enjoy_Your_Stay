@@ -9,6 +9,8 @@
 #include "EYS_EquipmentWheel.h"
 #include "EYS_Generator.generated.h"
 
+class UEYS_GeneratorActivateWidget;
+
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractInterface
 {
@@ -19,31 +21,26 @@ class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractIn
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UTextRenderComponent* FuelText;
-
+	UTextRenderComponent* FuelText;	
+	
 public:	
 	// Sets default values for this actor's properties
-
 	AEYS_Generator();
+	float fuelAmount = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) bool bIsWorking = false;
+	UFUNCTION(BlueprintNativeEvent) void testlight();
+	UFUNCTION() void StartStopTimer();
 
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
-
-
-	UFUNCTION() void TimerTest();
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	UFUNCTION() void ReduceFuel();
 	UFUNCTION() void DestroyFuelTank(AEYS_MyCharacter* myPlayer);
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-public:
-	UFUNCTION(BlueprintNativeEvent) void testlight();
-
-	float fuelAmount= 0.0f;
-
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UEYS_GeneratorActivateWidget> GeneratorActivateWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UEYS_GeneratorActivateWidget* GeneratorActivateWidgetInstance = nullptr;
 };

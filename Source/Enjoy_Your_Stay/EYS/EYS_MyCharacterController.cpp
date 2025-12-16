@@ -107,7 +107,7 @@ void AEYS_MyCharacterController::OpenEquipmentWidget()
 void AEYS_MyCharacterController::CloseEquipmentWidget()
 {
 	if (EquipmentWheelInstance && EquipmentWheelInstance->IsInViewport())
-	EquipmentWheelInstance->RemoveFromParent();
+		EquipmentWheelInstance->RemoveFromViewport();
 
 	SetIgnoreLookInput(false);
 	SetInputMode(FInputModeGameOnly());
