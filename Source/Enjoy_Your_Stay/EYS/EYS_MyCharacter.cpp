@@ -39,7 +39,7 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationPitch = false;
-	KnockDoorMontage = nullptr;
+
 
 }
 
@@ -138,6 +138,15 @@ void AEYS_MyCharacter::SetRoot()
 	SetEquipmentMesh(6);
 	else
 	SetEquipmentMesh(PoseNum);
+}
+
+void AEYS_MyCharacter::SetRootBP()
+{
+	FAttachmentTransformRules Rules(EAttachmentRule::KeepWorld, true);
+	FirstPersonMesh->AttachToComponent(FirstPersonCamera, Rules);
+
+	FirstPersonMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -144.0f));
+	FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 }
 
 
@@ -364,15 +373,18 @@ void AEYS_MyCharacter::Action_MouseTrace()
 	}
  }
 
-void AEYS_MyCharacter::PlayMontage()
+void AEYS_MyCharacter::PlayMontage(int32 MontageIndex)
 {
 	if (UAnimInstance* AnimInst = FirstPersonMesh->GetAnimInstance())
 	{
 	
-		AnimInst->Montage_Play(KnockDoorMontage);
+		AnimInst->Montage_Play(MyCharacterMontages[0]);
 		PoseNum = 0;
 		SetRoot();
+		
 	}
+
+
 }
 
 

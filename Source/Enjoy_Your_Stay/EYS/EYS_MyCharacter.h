@@ -21,6 +21,7 @@ class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
 
  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCamera;
+public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
 
@@ -114,8 +115,10 @@ public:
 	FVector RoomLock;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsDoorLocked = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interaction")
+	bool bIsPhoneMode = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
-	UAnimMontage* KnockDoorMontage;
+	TArray<UAnimMontage*> MyCharacterMontages;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	float FuelValue=100;
 
@@ -124,7 +127,8 @@ public:
 
 public:
 	UFUNCTION() virtual void SetRoot();
-	UFUNCTION() virtual void PlayMontage();
+	UFUNCTION(BlueprintCallable) virtual void SetRootBP();
+	UFUNCTION() virtual void PlayMontage(int32 MontageIndex);
 
 	UFUNCTION(BlueprintNativeEvent) void SetEquipmentMesh(int32 MeshValue);
 };

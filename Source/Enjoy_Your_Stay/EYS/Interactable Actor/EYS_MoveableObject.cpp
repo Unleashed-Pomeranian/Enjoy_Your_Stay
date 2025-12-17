@@ -59,7 +59,7 @@ void AEYS_MoveableObject::Interact(AEYS_MyCharacter* myPlayer)
 	
 	else
 	{
-		myPlayer->PlayMontage();
+		myPlayer->PlayMontage(0);
 		AssignedNPCs->MoveTo(TriggerBox->GetComponentLocation(), 50.0f);
 		AssignedNPCs->bisDialogueEnd = false;
 	}
