@@ -36,4 +36,6 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentI", meta = (AllowPrivateAccess = "true"))
 	int32 Index;
+
+	UFUNCTION(BlueprintNativeEvent) void FActionStart();
 };

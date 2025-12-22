@@ -42,6 +42,10 @@ protected:
     bool bIsPhoneOpen = false;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anim", meta = (AllowAbstract = "true"))
     int32 PoseNum;
+
+   
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anim", meta = (AllowAbstract = "true"))
+    int32 ActionNum;
    
    
     

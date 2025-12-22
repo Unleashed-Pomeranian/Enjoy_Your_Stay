@@ -32,6 +32,10 @@ void AEYS_InteractableActor::Tick(float DeltaTime)
 
 }
 
+void AEYS_InteractableActor::FActionStart_Implementation()
+{
+}
+
 void  AEYS_InteractableActor::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	Interact(myPlayer);

@@ -11,6 +11,8 @@
 #include "EYS/Camera Shake/EYS_MyLegacyCameraShake_Run.h"
 #include "Kismet/GamePlayStatics.h"
 #include "Timermanager.h"
+#include "EYS/Interactable Actor/EYS_InteractableActor.h"
+#include "EYS/Interactable Actor/EYS_Notebook.h"
 #include "GameFramework/PlayerController.h"
 #include "EYS/EYS_MyCharacterController.h"
 
@@ -30,6 +32,9 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCamera->SetRelativeLocation(FVector(0.F, 0.f, 64.0f));
 	FirstPersonCamera->bUsePawnControlRotation = true;
+
+	ChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor"));
+	ChildActor->SetupAttachment(FirstPersonMesh, TEXT("RightHand"));
 
 	UCharacterMovementComponent* moveComp = GetCharacterMovement();
 	moveComp->bOrientRotationToMovement = false;
@@ -99,6 +104,7 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	
 		EIC->BindAction(IA_eInteract, ETriggerEvent::Started, this, &AEYS_MyCharacter::Interact);
 		EIC->BindAction(IA_Action, ETriggerEvent::Triggered, this, & AEYS_MyCharacter::Action);
+		EIC->BindAction(IA_Action, ETriggerEvent::Started, this, &AEYS_MyCharacter::ActionStart);
 		EIC->BindAction(IA_Action, ETriggerEvent::Completed, this, &AEYS_MyCharacter::ActionEnd);
 
 		
@@ -138,6 +144,8 @@ void AEYS_MyCharacter::SetRoot()
 	SetEquipmentMesh(6);
 	else
 	SetEquipmentMesh(PoseNum);
+
+
 }
 
 void AEYS_MyCharacter::SetRootBP()
@@ -309,6 +317,19 @@ void AEYS_MyCharacter::Action(const FInputActionValue& Value)
 		Action_ForwardTrace();
 }
 
+void AEYS_MyCharacter::ActionStart(const FInputActionValue& Value)
+{
+	AEYS_InteractableActor* Item =
+		Cast<AEYS_InteractableActor>(ChildActor->GetChildActor());
+	if (Item)
+	{
+		Item->FActionStart();
+	}
+
+	ActionNum++;
+	
+}
+
 void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
 {
 	bIsAction = false;
@@ -389,8 +410,22 @@ void AEYS_MyCharacter::PlayMontage(int32 MontageIndex)
 
 
 
-void AEYS_MyCharacter::SetEquipmentMesh_Implementation(int32 MeshValue)
+void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 {
+
+	if(ChildActor)
+	{
+		if (MeshValue==1)
+		{
+			ChildActor->SetChildActorClass(TSubclassOf<AActor>(NotebookActor));
+		}
+
+		else
+		{
+			ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
+		}
+
+	}
 	
 }
 

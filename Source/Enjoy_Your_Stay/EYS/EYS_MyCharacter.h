@@ -11,6 +11,8 @@
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class AEYS_Notebook;
+class AEYS_InteractableActor;
 
 
 UCLASS(Blueprintable)
@@ -28,7 +30,13 @@ public:
 UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* DefaultMapping;
 
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* ChildActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
+	TArray<TSubclassOf<AEYS_InteractableActor>> InteractableActors;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
+	TSubclassOf<AEYS_Notebook> NotebookActor;
 
 
 public:
@@ -93,6 +101,7 @@ protected:
 	
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
+	UFUNCTION() void ActionStart(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
 	
 	
@@ -102,9 +111,12 @@ protected:
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	int32 PoseNum = 0, LastPoseNum;
+	
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	bool bIsAction=false;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
+	int32 ActionNum = 0;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsKeyMode = false;
@@ -130,5 +142,5 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void SetRootBP();
 	UFUNCTION() virtual void PlayMontage(int32 MontageIndex);
 
-	UFUNCTION(BlueprintNativeEvent) void SetEquipmentMesh(int32 MeshValue);
+	UFUNCTION() void SetEquipmentMesh(int32 MeshValue);
 };
