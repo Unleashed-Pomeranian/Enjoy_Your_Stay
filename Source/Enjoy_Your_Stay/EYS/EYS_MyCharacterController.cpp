@@ -10,7 +10,7 @@
 #include "Enjoy_Your_Stay.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 #include "EYS_EquipmentWheel.h"
-
+#include "EYS/UI/EYS_MyCharacter_UI.h"
 
 AEYS_MyCharacterController::AEYS_MyCharacterController()
 {
@@ -41,6 +41,13 @@ void AEYS_MyCharacterController::BeginPlay()
 
 	}
 	EquipmentWheelInstance = CreateWidget<UEYS_EquipmentWheel>(this, EquipmentWheelClass);
+	MyCharacterUIInstance = CreateWidget<UEYS_MyCharacter_UI>(this, MYCharacterUIClass);
+
+	if (MYCharacterUIClass)
+	{
+		MyCharacterUIInstance->AddToViewport();
+	}
+
 }
 
 void AEYS_MyCharacterController::SetupInputComponent()
@@ -114,4 +121,44 @@ void AEYS_MyCharacterController::CloseEquipmentWidget()
 
 	bShowMouseCursor = false;
 	
+}
+
+void AEYS_MyCharacterController::SetStaminaWidget(float StaminaValue)
+{
+	if (!(MyCharacterUIInstance->Overlay->IsVisible()))
+	{
+		MyCharacterUIInstance->Overlay->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	MyCharacterUIInstance->Stamina_ProgressBar->SetPercent(StaminaValue);
+}
+
+void AEYS_MyCharacterController::CloseStaminaWidget()
+{
+	if ((MyCharacterUIInstance->Overlay->IsVisible()))
+	{
+		MyCharacterUIInstance->Overlay->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+}
+
+void AEYS_MyCharacterController::SetInteractionWidget(FString InterctionText)
+{
+
+	MyCharacterUIInstance->Interaction_Text->SetText(FText::FromString(InterctionText));
+	if (!(MyCharacterUIInstance->Interaction_Text->IsVisible()))
+	{
+		MyCharacterUIInstance->Interaction_Text->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	
+}
+
+void AEYS_MyCharacterController::CloseInteractionWidget()
+{
+	if ((MyCharacterUIInstance->Interaction_Text->IsVisible()))
+	{
+		MyCharacterUIInstance->Interaction_Text->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 }

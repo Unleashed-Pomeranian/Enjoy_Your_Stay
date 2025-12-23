@@ -12,6 +12,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class AEYS_Notebook;
+class AEYS_MyCharacterController;
 class AEYS_InteractableActor;
 
 
@@ -37,7 +38,8 @@ UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TArray<TSubclassOf<AEYS_InteractableActor>> InteractableActors;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
 	TSubclassOf<AEYS_Notebook> NotebookActor;
-
+	UPROPERTY()
+	AEYS_MyCharacterController* MyPC;
 
 public:
 	AEYS_MyCharacter();
@@ -98,7 +100,8 @@ protected:
 
 	UFUNCTION() void OpenEquipmentWidget(const FInputActionValue& Value);
 	UFUNCTION() void CloseEquipmentWidget(const FInputActionValue& Value);
-	
+
+	UFUNCTION() void InteractUI();
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
 	UFUNCTION() void ActionStart(const FInputActionValue& Value);

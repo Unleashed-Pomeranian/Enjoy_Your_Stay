@@ -69,7 +69,8 @@ void AEYS_MyCharacter::BeginPlay()
 		}
 	}
 
-	
+	MyPC = Cast<AEYS_MyCharacterController>(GetController());
+	UKismetSystemLibrary::K2_SetTimer(this, TEXT("InteractUI"), 0.2f, true, false, 0.0f, 0.0f);
 }
 
 // Called every frame
@@ -181,6 +182,7 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 
 			Stamina = FMath::Clamp(Stamina - 0.2f, 0.0f, 100.0f);
 			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
+			MyPC->SetStaminaWidget(Stamina/100);
 
 
 			UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Run::StaticClass());
@@ -247,9 +249,10 @@ void AEYS_MyCharacter::StopSprint(const FInputActionValue& Value)
 void AEYS_MyCharacter::StaminaRecovery()
 {
 	Stamina = FMath::Clamp(Stamina + 1.0f, 0.0f, 100.0f);
-	
+	MyPC->SetStaminaWidget(Stamina / 100);
 	if (Stamina == 100)
 	{
+		MyPC->CloseStaminaWidget();
 		bCanSprinting = true;
 		UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
 	}
@@ -261,20 +264,20 @@ void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 {
 	if (!(GetCharacterMovement()->IsFalling()))
 	{
-		if (AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetController()))
+		if (MyPC)
 		{
 			GetCharacterMovement()->DisableMovement();
-			PC->OpenEquipmentWidget();
+			MyPC->OpenEquipmentWidget();
 		}
 	}
 }
 
 void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 {
-	if (AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetController()))
+	if (MyPC)
 	{
 		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-		PC->CloseEquipmentWidget();
+		MyPC->CloseEquipmentWidget();
 	}
 	PoseNum = LastPoseNum;
 	SetRoot();
@@ -285,6 +288,31 @@ void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 
 
 
+void AEYS_MyCharacter::InteractUI()
+{
+	FHitResult* Hit = new FHitResult();
+	FVector Start = FirstPersonCamera->GetComponentLocation();
+	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
+	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
+		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 1.0f);
+	if (Hit->GetActor() != nullptr)
+	{
+		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
+		{
+			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
+			IEYS_InteractInterface::Execute_InteractUI(Hit->GetActor(), this);
+
+	
+		}
+		else
+			MyPC->CloseInteractionWidget();
+	
+	}
+
+	else
+		MyPC->CloseInteractionWidget();
+	
+}
 
 void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 {
@@ -303,9 +331,14 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 		{
 			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
 			IEYS_InteractInterface::Execute_eInteract(Hit->GetActor(), this);
+
+		
 		}
+		
 	}
 
+	
+		
 
 }
 
@@ -335,6 +368,7 @@ void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
 	bIsAction = false;
 	
 }
+
 void AEYS_MyCharacter::Action_ForwardTrace()
 {
 	bIsAction = true;

@@ -39,6 +39,12 @@ void AEYS_Generator::BeginPlay()
 	}
 
 }
+void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	
+	PC->SetInteractionWidget("[E] Open");
+}
 void AEYS_Generator::Interact(AEYS_MyCharacter* myPlayer)
 {
 	return;
@@ -72,6 +78,7 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 		}
 	}
 }
+
 void AEYS_Generator::StartStopTimer()
 {
 	UKismetSystemLibrary::K2_SetTimer(this, "ReduceFuel", 5.0f, true, false, 0, 0);

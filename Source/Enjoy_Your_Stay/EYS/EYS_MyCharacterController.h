@@ -9,7 +9,9 @@
 
 class UInputMappingContext;
 class UUserWidget;
+class UEYS_MyCharacter_UI;
 class UEYS_EquipmentWheel;
+
  
 UCLASS(abstract)
 class ENJOY_YOUR_STAY_API AEYS_MyCharacterController : public APlayerController
@@ -42,6 +44,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_EquipmentWheel> EquipmentWheelClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UEYS_MyCharacter_UI> MYCharacterUIClass;
 	
 
 	/** Gameplay initialization */
@@ -56,7 +60,15 @@ protected:
 public:
 	UFUNCTION() void OpenEquipmentWidget();
 	UFUNCTION() void CloseEquipmentWidget();
-	
+	UFUNCTION() void SetStaminaWidget(float StaminaValue);
+	UFUNCTION() void CloseStaminaWidget();
+	UFUNCTION() void SetInteractionWidget(FString InterctionText);
+	UFUNCTION() void CloseInteractionWidget();
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_EquipmentWheel* EquipmentWheelInstance = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UEYS_MyCharacter_UI* MyCharacterUIInstance = nullptr;
 };

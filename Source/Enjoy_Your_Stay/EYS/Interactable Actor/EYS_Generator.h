@@ -37,6 +37,7 @@ protected:
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION() void ReduceFuel();
 	UFUNCTION() void DestroyFuelTank(AEYS_MyCharacter* myPlayer);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
