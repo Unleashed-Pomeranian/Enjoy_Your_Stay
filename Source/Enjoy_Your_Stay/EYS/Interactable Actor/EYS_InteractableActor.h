@@ -25,6 +25,7 @@ public:
 
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 
 protected:
 	// Called when the game starts or when spawned

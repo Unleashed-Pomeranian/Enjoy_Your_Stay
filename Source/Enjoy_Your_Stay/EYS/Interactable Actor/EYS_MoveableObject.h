@@ -34,6 +34,7 @@ public:
 	 AEYS_GuestCharacter* AssignedNPCs;
 
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 
 

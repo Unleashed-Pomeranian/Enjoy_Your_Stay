@@ -3,6 +3,8 @@
 
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
 #include "EYS/Interactable Actor/EYS_Notebook.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GameplayStatics.h"
 
 AEYS_DirtActor::AEYS_DirtActor()
@@ -45,7 +47,12 @@ void AEYS_DirtActor::BeginPlay()
 	}
 	
 }
+void AEYS_DirtActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 
+	PC->SetInteractionWidget("[M1] Clean");
+}
 void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
 	if (Value == 3)

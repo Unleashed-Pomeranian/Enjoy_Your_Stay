@@ -4,6 +4,7 @@
 #include "EYS/Interactable Actor/EYS_MoveableObject.h"
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
 #include "Timermanager.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
 
@@ -42,6 +43,16 @@ void AEYS_MoveableObject::BeginPlay()
 	}
  
 	
+}
+
+
+void AEYS_MoveableObject::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	if(!bIsTrigrred)
+	PC->SetInteractionWidget("[E] Open");
+	else
+	PC->SetInteractionWidget("[E] Close");
 }
 
 void AEYS_MoveableObject::eInteract_Implementation(AEYS_MyCharacter* myPlayer)

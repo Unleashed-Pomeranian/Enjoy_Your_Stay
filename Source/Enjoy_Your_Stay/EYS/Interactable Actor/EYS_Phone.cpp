@@ -38,6 +38,12 @@ void AEYS_Phone::Interact(AEYS_MyCharacter* myPlayer)
 {
 	return;
 }
+void AEYS_Phone::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+
+	PC->SetInteractionWidget("[E] Talk");
+}
 
 void AEYS_Phone::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
