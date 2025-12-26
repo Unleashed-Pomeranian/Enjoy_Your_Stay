@@ -94,11 +94,7 @@ void AEYS_MyCharacterController::OpenEquipmentWidget()
 	if (!EquipmentWheelInstance->IsInViewport())
 	{
 		
-
-		SetIgnoreLookInput(true);
-		SetInputMode(FInputModeGameAndUI());
-
-		bShowMouseCursor = true;
+		ImmobilizeCharacter();
 
 		int32 SizeX, SizeY;
 
@@ -116,10 +112,7 @@ void AEYS_MyCharacterController::CloseEquipmentWidget()
 	if (EquipmentWheelInstance && EquipmentWheelInstance->IsInViewport())
 		EquipmentWheelInstance->RemoveFromViewport();
 
-	SetIgnoreLookInput(false);
-	SetInputMode(FInputModeGameOnly());
-
-	bShowMouseCursor = false;
+	MobilizeCharacter();
 	
 }
 
@@ -161,4 +154,22 @@ void AEYS_MyCharacterController::CloseInteractionWidget()
 		MyCharacterUIInstance->Interaction_Text->SetVisibility(ESlateVisibility::Hidden);
 	}
 
+}
+
+
+void AEYS_MyCharacterController::MobilizeCharacter()
+{
+	SetIgnoreLookInput(false);
+	SetInputMode(FInputModeGameOnly());
+
+	bShowMouseCursor = false;
+}
+
+void AEYS_MyCharacterController::ImmobilizeCharacter()
+{
+
+	SetIgnoreLookInput(true);
+	SetInputMode(FInputModeGameAndUI());
+
+	bShowMouseCursor = true;
 }

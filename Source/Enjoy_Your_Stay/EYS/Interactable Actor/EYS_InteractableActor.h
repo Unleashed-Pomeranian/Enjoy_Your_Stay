@@ -4,13 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "EYS/EYS_InteractInterface.h"
-#include "EYS_EquipmentWheel.h"
 #include "EYS_InteractableActor.generated.h"
 
 
 UCLASS()
-class ENJOY_YOUR_STAY_API AEYS_InteractableActor : public AActor, public IEYS_InteractInterface
+class ENJOY_YOUR_STAY_API AEYS_InteractableActor : public AActor
 {
 	GENERATED_BODY()
 
@@ -19,14 +17,11 @@ class ENJOY_YOUR_STAY_API AEYS_InteractableActor : public AActor, public IEYS_In
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
 	
+	
+	
 public:	
 	// Sets default values for this actor's properties
 	AEYS_InteractableActor();
-
-	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,4 +34,5 @@ public:
 	int32 Index;
 
 	UFUNCTION(BlueprintNativeEvent) void FActionStart();
+	UFUNCTION(BlueprintNativeEvent) void FSecondAction();
 };

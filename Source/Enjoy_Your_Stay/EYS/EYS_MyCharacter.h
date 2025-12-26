@@ -70,18 +70,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Action;
-
-
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* IA_Main;
+	UInputAction* IA_Action2;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_EquipmentWheel;
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* IA_Hammer;
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* IA_Mop;
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* IA_Fuel;
+
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
@@ -104,6 +99,7 @@ protected:
 	UFUNCTION() void InteractUI();
 	UFUNCTION() void Interact(const FInputActionValue& Value);
 	UFUNCTION() void Action(const FInputActionValue& Value);
+	UFUNCTION() void Action2(const FInputActionValue& Value);
 	UFUNCTION() void ActionStart(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
 	

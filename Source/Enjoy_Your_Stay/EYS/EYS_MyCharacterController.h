@@ -64,6 +64,8 @@ public:
 	UFUNCTION() void CloseStaminaWidget();
 	UFUNCTION() void SetInteractionWidget(FString InterctionText);
 	UFUNCTION() void CloseInteractionWidget();
+	UFUNCTION() void MobilizeCharacter();
+	UFUNCTION() void ImmobilizeCharacter();
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")

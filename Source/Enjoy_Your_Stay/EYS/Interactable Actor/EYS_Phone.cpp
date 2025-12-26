@@ -58,9 +58,10 @@ void AEYS_Phone::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 	FRotator Rotation = {-48,0,0};
 	Rotation.Yaw = -90.0f;
 	
-
+	PC->ImmobilizeCharacter();
 	myPlayer->SetActorLocation(SetLocation);
 	myPlayer->GetController()->SetControlRotation(Rotation);
+	
 	PlayPhoneMontage(myPlayer);
 	
 }

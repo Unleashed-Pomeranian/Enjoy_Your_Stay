@@ -35,21 +35,7 @@ void AEYS_InteractableActor::Tick(float DeltaTime)
 void AEYS_InteractableActor::FActionStart_Implementation()
 {
 }
-void  AEYS_InteractableActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
-{
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	PC->SetInteractionWidget("[E] Take");
-}
-void  AEYS_InteractableActor::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
-{
-	Interact(myPlayer);
-}
 
-void  AEYS_InteractableActor::Interact(AEYS_MyCharacter* myPlayer)
+void AEYS_InteractableActor::FSecondAction_Implementation()
 {
-	
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	PC->EquipmentWheelInstance->EnableButtons(Index,true,ESlateVisibility::Visible);
-	Destroy();
-
 }

@@ -108,7 +108,8 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EIC->BindAction(IA_Action, ETriggerEvent::Started, this, &AEYS_MyCharacter::ActionStart);
 		EIC->BindAction(IA_Action, ETriggerEvent::Completed, this, &AEYS_MyCharacter::ActionEnd);
 
-		
+		EIC->BindAction(IA_Action2, ETriggerEvent::Started, this, &AEYS_MyCharacter::Action2);
+		EIC->BindAction(IA_Action2, ETriggerEvent::Completed, this, &AEYS_MyCharacter::Action2);
 			
 			if (IA_EquipmentWheel)
 			{
@@ -348,6 +349,18 @@ void AEYS_MyCharacter::Action(const FInputActionValue& Value)
 		Action_MouseTrace();
 	else
 		Action_ForwardTrace();
+}
+
+void AEYS_MyCharacter::Action2(const FInputActionValue& Value)
+{
+	AEYS_InteractableActor* Item =
+		Cast<AEYS_InteractableActor>(ChildActor->GetChildActor());
+	if (Item)
+	{
+		Item->FSecondAction();
+	}
+
+	ActionNum++;
 }
 
 void AEYS_MyCharacter::ActionStart(const FInputActionValue& Value)
