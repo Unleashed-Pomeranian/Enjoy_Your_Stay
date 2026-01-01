@@ -2,7 +2,12 @@
 
 
 #include "EYS/Interactable Actor/EYS_Boiler.h"
+#include "EYS/UI/EYS_Boiler_UI.h"
 #include "Components/BoxComponent.h"
+#include "Blueprint/UserWidget.h"
+
+
+
 
 // Sets default values
 AEYS_Boiler::AEYS_Boiler()
@@ -14,14 +19,24 @@ AEYS_Boiler::AEYS_Boiler()
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
 	SkeletalMesh->SetupAttachment(DefaultSceneRoot);
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
-	BoxCollision->SetupAttachment(SkeletalMesh);
+	BoxCollision->SetupAttachment(SkeletalMesh,FName("Kapak"));
+	WidgetMesh = CreateDefaultSubobject<UWidgetComponent>(TEXT("NoteBook Widget"));
+	WidgetMesh->SetupAttachment(DefaultSceneRoot);
 }
 
 // Called when the game starts or when spawned
 void AEYS_Boiler::BeginPlay()
 {
 	Super::BeginPlay();
+	//WidgetMesh->SetWidgetClass(BoilerWidgetClass);
+	//if (Widget)
 	
+		//NotebookWidgetInstance = Cast<UEYS_NotebookWidget>(Widget);
+	WidgetMesh->SetWidgetClass(BoilerWidgetClass);
+	UUserWidget* Widget = WidgetMesh->GetUserWidgetObject();
+		BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());
+		WidgetMesh->SetWidget(BoilerWidgetInstance);
+		BoilerWidgetInstance->ProgressBar->SetPercent(FuelValue / 100);
 }
 
 // Called every frame
@@ -42,6 +57,8 @@ void   AEYS_Boiler::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 
 void   AEYS_Boiler::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
+
+
 	if (bAnimFlip)
 	{
 		// B
@@ -57,4 +74,11 @@ void   AEYS_Boiler::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 	}
 
 	bAnimFlip = !bAnimFlip; 
+}
+
+
+void AEYS_Boiler::SetFuelAmount(float FuelAddValue)
+{
+	FuelValue =  FMath::Clamp(FuelValue + FuelAddValue, 0.0f, 100.0f);
+	BoilerWidgetInstance->ProgressBar->SetPercent(FuelValue / 100);
 }
