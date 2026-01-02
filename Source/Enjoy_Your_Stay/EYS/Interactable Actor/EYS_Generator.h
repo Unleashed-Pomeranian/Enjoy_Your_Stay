@@ -7,6 +7,7 @@
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Actor.h"
 #include "EYS_EquipmentWheel.h"
+#include "Components/WidgetComponent.h"
 #include "EYS_Generator.generated.h"
 
 class UEYS_GeneratorActivateWidget;
@@ -22,6 +23,8 @@ class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractIn
 	UStaticMeshComponent* StaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UTextRenderComponent* FuelText;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* WidgetMesh;
 	
 public:	
 	// Sets default values for this actor's properties

@@ -9,12 +9,9 @@ void UEYS_GeneratorActivateWidget::NativeConstruct()
 
 {
 	Super::NativeConstruct();
+	bIsWorking = false;
 	
 	
-	RadialValue = 0;
-	UKismetSystemLibrary::K2_SetTimer(this, "StartGenerator", 0.016f, true);
-	 Score = 0;
-	 Score_Text->SetText(FText::FromString(FString::FromInt(Score)));
 }
 
 
@@ -24,7 +21,6 @@ void UEYS_GeneratorActivateWidget::StartGenerator()
 	if (!bIsBetween)
 	{
 		RadialValue += 0.020f;
-		Radial_Slider->SetValue(RadialValue);
 		Slider->SetValue(RadialValue);
 		if (RadialValue >= 0.99)
 			bIsBetween = true;
@@ -32,7 +28,6 @@ void UEYS_GeneratorActivateWidget::StartGenerator()
 	else
 	{
 		RadialValue -= 0.020f;
-		Radial_Slider->SetValue(RadialValue);
 		Slider->SetValue(RadialValue);
 		if (RadialValue <= 0.01)
 			bIsBetween = false;
@@ -41,16 +36,23 @@ void UEYS_GeneratorActivateWidget::StartGenerator()
 
 }
 
-
-
 void UEYS_GeneratorActivateWidget::TimerFTimer()
 {
-
-	FStopTimer();
+	if (!bIsWorking)
+	{
+		RadialValue = 0;
+		UKismetSystemLibrary::K2_SetTimer(this, "StartGenerator", 0.016f, true);
+		Score = 0;
+		Score_Text->SetText(FText::FromString(FString::FromInt(Score)));
+		bIsWorking = true;
+	}
+	else
+	{
+		FStopTimer();
 
 		UKismetSystemLibrary::K2_SetTimer(this, "FStartTimer", 1.0f, false);
+	}
 }
-
 
 void UEYS_GeneratorActivateWidget::FStartTimer()
 {
@@ -61,9 +63,11 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 		Generator->bIsWorking = true;
 		Generator->StartStopTimer();
 		Generator->testlight();
+		
+		Score_Text->SetText(FText::FromString(FString::FromInt(0)));
 
-		RemoveFromParent();
 		UKismetSystemLibrary::K2_ClearTimer(this, "StartGenerator");
+		bIsWorking = false;
 	}
 	else
 	{
@@ -99,3 +103,8 @@ void UEYS_GeneratorActivateWidget::FStopTimer()
 }
 
 
+void UEYS_GeneratorActivateWidget::FSetImageRotation(float Angle)
+{
+	Angle= Angle * 1.8f;
+	Image->SetRenderTransformAngle(Angle);
+}

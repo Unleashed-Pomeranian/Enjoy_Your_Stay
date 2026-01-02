@@ -20,7 +20,8 @@ AEYS_Generator::AEYS_Generator()
 	StaticMesh->SetupAttachment(DefaultSceneRoot);
 	FuelText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("Fuel Amount Text"));
 	FuelText->SetupAttachment(StaticMesh);
-
+	WidgetMesh = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget Mesh"));
+	WidgetMesh->SetupAttachment(DefaultSceneRoot);
 
 }
 
@@ -32,10 +33,23 @@ void AEYS_Generator::BeginPlay()
 	
 	if (FuelText)
 	{
-
 		
 		FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
 		
+		
+	}
+
+	AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
+	if (PC)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
+		GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
+		if (GeneratorActivateWidgetInstance)
+		{
+			WidgetMesh->SetWidget(GeneratorActivateWidgetInstance);
+			GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+		}
 	}
 
 }
@@ -54,28 +68,7 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	if (!bIsWorking&&fuelAmount>10)
 	{
-		if (!GeneratorActivateWidgetInstance)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo11");
-			AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-			if (PC)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
-				GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
-				if (GeneratorActivateWidgetInstance)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo11");
-					GeneratorActivateWidgetInstance->AddToViewport();
-				}
-			}
-		}
-		else
-		{
-			if (GeneratorActivateWidgetInstance->IsInViewport())
-				GeneratorActivateWidgetInstance->TimerFTimer();
-			else
-				GeneratorActivateWidgetInstance->AddToViewport();
-		}
+			GeneratorActivateWidgetInstance->TimerFTimer();
 	}
 }
 
@@ -92,6 +85,7 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 		{
 			fuelAmount = FMath::Clamp(fuelAmount + 0.5f, 0.0f, 100.0f);
 			FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
+			GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 
 			myPlayer->FuelValue = FMath::Clamp(myPlayer->FuelValue - 0.5f, 0.0f, 100.0f);
 
@@ -116,6 +110,7 @@ void AEYS_Generator::ReduceFuel()
 
 	fuelAmount = FMath::Clamp(fuelAmount-10.0f, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
+	GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 
 
 	if (fuelAmount <= 5.0f)
