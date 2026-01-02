@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/RadialSlider.h"
+#include "Components/Slider.h"
 #include "Components/TextBlock.h"
 #include "EYS_GeneratorActivateWidget.generated.h"
 
@@ -22,6 +23,8 @@ protected:
 	URadialSlider* Radial_Slider;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Score_Text;
+	UPROPERTY(meta = (BindWidget))
+	USlider* Slider;
 
 	virtual void NativeConstruct() override;
 
