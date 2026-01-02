@@ -25,6 +25,7 @@ void UEYS_GeneratorActivateWidget::StartGenerator()
 	{
 		RadialValue += 0.020f;
 		Radial_Slider->SetValue(RadialValue);
+		Slider->SetValue(RadialValue);
 		if (RadialValue >= 0.99)
 			bIsBetween = true;
 	}
@@ -32,6 +33,7 @@ void UEYS_GeneratorActivateWidget::StartGenerator()
 	{
 		RadialValue -= 0.020f;
 		Radial_Slider->SetValue(RadialValue);
+		Slider->SetValue(RadialValue);
 		if (RadialValue <= 0.01)
 			bIsBetween = false;
 
