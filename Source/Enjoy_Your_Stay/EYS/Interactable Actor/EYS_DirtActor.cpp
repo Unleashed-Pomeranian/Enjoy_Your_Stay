@@ -68,7 +68,6 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 	
 	opacityValue -= cleaningValue;
 	DynMath->SetScalarParameterValue("Opacity", opacityValue);
-
 	if (opacityValue <= 2.1f)
 	{
 		cleaningValue = 0.021f;

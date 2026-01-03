@@ -57,9 +57,10 @@ void UEYS_GeneratorActivateWidget::TimerFTimer()
 void UEYS_GeneratorActivateWidget::FStartTimer()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, "turrsadasdrrrr");
+	AEYS_Generator* Generator = Cast<AEYS_Generator>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Generator::StaticClass()));
 	if (Score == 3)
 	{
-		AEYS_Generator* Generator = Cast<AEYS_Generator>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Generator::StaticClass()));
+		
 		Generator->bIsWorking = true;
 		Generator->StartStopTimer();
 		Generator->testlight();
@@ -75,7 +76,7 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 		bIsBetween = false;
 		UKismetSystemLibrary::K2_SetTimer(this, "StartGenerator", 0.016f, true);
 	}
-
+	Generator->SetLightColor(Score);
 }
 
 void UEYS_GeneratorActivateWidget::FStopTimer()

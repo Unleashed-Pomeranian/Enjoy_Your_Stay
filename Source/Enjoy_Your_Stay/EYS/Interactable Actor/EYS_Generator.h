@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "EYS_EquipmentWheel.h"
 #include "Components/WidgetComponent.h"
+#include "Components/PointLightComponent.h"
 #include "EYS_Generator.generated.h"
 
 class UEYS_GeneratorActivateWidget;
@@ -25,6 +26,8 @@ class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractIn
 	UTextRenderComponent* FuelText;	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* WidgetMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPointLightComponent* PointLight;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -33,6 +36,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) bool bIsWorking = false;
 	UFUNCTION(BlueprintNativeEvent) void testlight();
 	UFUNCTION() void StartStopTimer();
+	UFUNCTION() void SetLightColor(int32 ColorValue);
 
 	
 protected:
@@ -47,4 +51,5 @@ protected:
 	TSubclassOf<UEYS_GeneratorActivateWidget> GeneratorActivateWidgetClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_GeneratorActivateWidget* GeneratorActivateWidgetInstance = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<FLinearColor> LightColor;
 };

@@ -22,6 +22,8 @@ AEYS_Generator::AEYS_Generator()
 	FuelText->SetupAttachment(StaticMesh);
 	WidgetMesh = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget Mesh"));
 	WidgetMesh->SetupAttachment(DefaultSceneRoot);
+	PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Point Light"));
+	PointLight->SetupAttachment(DefaultSceneRoot);
 
 }
 
@@ -51,6 +53,8 @@ void AEYS_Generator::BeginPlay()
 			GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 		}
 	}
+	
+		PointLight->SetLightColor(LightColor[0]);
 
 }
 void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
@@ -92,7 +96,7 @@ void AEYS_Generator::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 			if (myPlayer->FuelValue <= 0)
 			{
 				DestroyFuelTank(myPlayer);
-
+				
 
 			}
 			
@@ -117,6 +121,7 @@ void AEYS_Generator::ReduceFuel()
 	{
 		UKismetSystemLibrary::K2_ClearTimer(this, "ReduceFuel");
 		bIsWorking = false;
+		PointLight->SetLightColor(LightColor[0]);
 	}
 
 }
@@ -136,4 +141,29 @@ void AEYS_Generator::DestroyFuelTank(AEYS_MyCharacter* myPlayer)
 	PC->EquipmentWheelInstance->EnableButtons(5, false, ESlateVisibility::Hidden);
 
 }
+
+void AEYS_Generator::SetLightColor(int32 ColorValue)
+{
+	switch (ColorValue)
+	{
+	case 0:
+	{
+		PointLight->SetLightColor(LightColor[0]);
+		break;
+	}
+	case 1:
+	{
+		PointLight->SetLightColor(LightColor[1]);
+		break;
+	}
+	case 3:
+	{
+		PointLight->SetLightColor(LightColor[2]);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 
