@@ -30,5 +30,8 @@ public:
 	UPROPERTY(EditAnywhere,meta = (BindWidget))
     UTextBlock* Interaction_Text;
 
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* Money_Text;
+
 
 };

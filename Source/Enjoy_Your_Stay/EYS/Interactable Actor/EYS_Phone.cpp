@@ -2,6 +2,8 @@
 #include "EYS/Interactable Actor/EYS_Phone.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "Kismet/GamePlayStatics.h"
+#include "EYS/UI/EYS_Phone_UI.h"
 
 
 
@@ -24,7 +26,11 @@ AEYS_Phone::AEYS_Phone()
 void AEYS_Phone::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
+
+	PhoneFirstTransform = StaticMesh2->GetRelativeTransform();
 }
 
 // Called every frame
@@ -40,30 +46,28 @@ void AEYS_Phone::Interact(AEYS_MyCharacter* myPlayer)
 }
 void AEYS_Phone::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-
+   
+	if(bCanInteract)
 	PC->SetInteractionWidget("[E] Talk");
+	else
+	PC->SetInteractionWidget("");
+
 }
 
 void AEYS_Phone::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 
-	PC->PlayerCameraManager->StartCameraFade(2.0f, 0.0f, 1.5f, FLinearColor::Black, false, true);
+	if (bCanInteract)
+	{
+		PC->PlayerCameraManager->StartCameraFade(2.0f, 0.0f, 1.5f, FLinearColor::Black, false, true);
+	
 
-	
-	FVector SetLocation = GetActorLocation();
-	SetLocation.Y = GetActorLocation().Y +10;
-	SetLocation.X = GetActorLocation().X + -8;
-	FRotator Rotation = {-48,0,0};
-	Rotation.Yaw = -90.0f;
-	
-	PC->ImmobilizeCharacter();
-	myPlayer->SetActorLocation(SetLocation);
-	myPlayer->GetController()->SetControlRotation(Rotation);
-	
-	PlayPhoneMontage(myPlayer);
-	
+		FRotator Rotation = { -48,-90,0 };
+		PC->SetCharacterPositon(GetActorLocation(), -8, 10, Rotation);
+		PC->MobilizeCharacter(true, true, true);
+		PlayPhoneMontage(myPlayer);
+		bCanInteract = false;
+	}
 }
 
 void AEYS_Phone::SetupAttachment(AEYS_MyCharacter* myPlayer)
@@ -73,7 +77,43 @@ void AEYS_Phone::SetupAttachment(AEYS_MyCharacter* myPlayer)
 
 }
 
+void AEYS_Phone::SetupCloseAttachment(AEYS_MyCharacter* myPlayer)
+{
+	myPlayer->bIsPhoneMode = false;
+	StaticMesh2->AttachToComponent(SceneRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	StaticMesh2->SetRelativeTransform(PhoneFirstTransform);
+	PC->MobilizeCharacter(false, false, false);
+	bCanInteract=true;
+}
+
+void AEYS_Phone::OpenUI()
+{
+	PhoneWidgetInstance = CreateWidget<UEYS_Phone_UI>(PC, PhoneWidgetClass);
+
+	if (PhoneWidgetInstance&& !(PhoneWidgetInstance->IsInViewport()))
+	{
+		PhoneWidgetInstance->AddToViewport();
+		
+	}
+	
+}
+
+void AEYS_Phone::CloseUI()
+{
+	if ((PhoneWidgetInstance->IsInViewport()))
+	{
+		PhoneWidgetInstance->RemoveFromParent();
+		PlayPhoneCloseMontage();
+		
+		
+	}
+}
+
 void AEYS_Phone::PlayPhoneMontage_Implementation(AEYS_MyCharacter* myPlayer)
+{
+}
+
+void AEYS_Phone::PlayPhoneCloseMontage_Implementation()
 {
 }
 

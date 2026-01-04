@@ -152,6 +152,7 @@ void AEYS_MyCharacter::SetRoot()
 
 void AEYS_MyCharacter::SetRootBP()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, "imhere");
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepWorld, true);
 	FirstPersonMesh->AttachToComponent(FirstPersonCamera, Rules);
 
@@ -267,7 +268,6 @@ void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 	{
 		if (MyPC)
 		{
-			GetCharacterMovement()->DisableMovement();
 			MyPC->OpenEquipmentWidget();
 		}
 	}
@@ -277,7 +277,6 @@ void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 {
 	if (MyPC)
 	{
-		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		MyPC->CloseEquipmentWidget();
 	}
 	PoseNum = LastPoseNum;
@@ -446,8 +445,9 @@ void AEYS_MyCharacter::PlayMontage(int32 MontageIndex)
 	if (UAnimInstance* AnimInst = FirstPersonMesh->GetAnimInstance())
 	{
 	
-		AnimInst->Montage_Play(MyCharacterMontages[0]);
+		AnimInst->Montage_Play(MyCharacterMontages[MontageIndex]);
 		PoseNum = 0;
+		if(MontageIndex==0)
 		SetRoot();
 		
 	}

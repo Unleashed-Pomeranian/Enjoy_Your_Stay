@@ -10,6 +10,8 @@
 #include "Enjoy_Your_Stay.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 #include "EYS_EquipmentWheel.h"
+#include "EYS/EYS_MyCharacter.h"
+
 #include "EYS/UI/EYS_MyCharacter_UI.h"
 
 AEYS_MyCharacterController::AEYS_MyCharacterController()
@@ -48,6 +50,9 @@ void AEYS_MyCharacterController::BeginPlay()
 		MyCharacterUIInstance->AddToViewport();
 	}
 
+	OwnerCharacter = Cast<AEYS_MyCharacter>(GetPawn());
+	Money = 1000;
+	SetMoneyWidget(0);
 }
 
 void AEYS_MyCharacterController::SetupInputComponent()
@@ -86,16 +91,11 @@ void AEYS_MyCharacterController::OpenEquipmentWidget()
 
 	if (!EquipmentWheelClass)
 		return;
-	
+
+	//if (!EquipmentWheelInstance->IsInViewport())
 	
 		
-	
-
-	if (!EquipmentWheelInstance->IsInViewport())
-	{
-		
-		ImmobilizeCharacter();
-
+		MobilizeCharacter(true, true, true);
 		int32 SizeX, SizeY;
 
 
@@ -103,16 +103,20 @@ void AEYS_MyCharacterController::OpenEquipmentWidget()
 		int32 CenterX = SizeX / 2;
 		int32 CenterY = SizeY / 2;
 		SetMouseLocation(CenterX, CenterY);
+		if (!EquipmentWheelInstance->IsInViewport())
 		EquipmentWheelInstance->AddToViewport(10);
-	}
+		else
+			EquipmentWheelInstance -> SetVisibility(ESlateVisibility::Visible);
+	
 }
 
 void AEYS_MyCharacterController::CloseEquipmentWidget()
 {
-	if (EquipmentWheelInstance && EquipmentWheelInstance->IsInViewport())
-		EquipmentWheelInstance->RemoveFromViewport();
+	MobilizeCharacter(false, false, false);
+	//if (EquipmentWheelInstance && EquipmentWheelInstance->IsInViewport())
+	EquipmentWheelInstance->SetVisibility(ESlateVisibility::Hidden);
 
-	MobilizeCharacter();
+	
 	
 }
 
@@ -132,6 +136,14 @@ void AEYS_MyCharacterController::CloseStaminaWidget()
 	{
 		MyCharacterUIInstance->Overlay->SetVisibility(ESlateVisibility::Hidden);
 	}
+
+}
+
+void AEYS_MyCharacterController::SetMoneyWidget(int32 AddValue)
+{
+	Money += AddValue;
+	FString MoneyText = FString::FromInt(Money);
+	MyCharacterUIInstance->Money_Text->SetText(FText::FromString(MoneyText));
 
 }
 
@@ -157,19 +169,35 @@ void AEYS_MyCharacterController::CloseInteractionWidget()
 }
 
 
-void AEYS_MyCharacterController::MobilizeCharacter()
+void AEYS_MyCharacterController::MobilizeCharacter(bool bLookInput, bool BIsInputModeUI, bool ShowCursor)
 {
-	SetIgnoreLookInput(false);
-	SetInputMode(FInputModeGameOnly());
+	
+	SetIgnoreLookInput(bLookInput);
+	SetIgnoreMoveInput(bLookInput);
+	if (BIsInputModeUI)
+	{
+		SetInputMode(FInputModeGameAndUI());
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+	}
 
-	bShowMouseCursor = false;
+	bShowMouseCursor = ShowCursor;
+	
+
 }
 
-void AEYS_MyCharacterController::ImmobilizeCharacter()
+void AEYS_MyCharacterController::SetCharacterPositon(FVector ActorLocation, float LocationX, float LocationY, FRotator Rotation)
 {
 
-	SetIgnoreLookInput(true);
-	SetInputMode(FInputModeGameAndUI());
 
-	bShowMouseCursor = true;
+	FVector SetLocation = ActorLocation;
+	//SetLocation.Y = ActorLocation.Y + 10;
+	SetLocation.Y = ActorLocation.Y + LocationY;
+	//SetLocation.X = ActorLocation.X + -8;
+	SetLocation.X = ActorLocation.X + LocationX;
+	OwnerCharacter->SetActorLocation(SetLocation);
+	SetControlRotation(Rotation);
 }
+

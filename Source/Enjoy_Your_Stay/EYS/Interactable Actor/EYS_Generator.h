@@ -12,7 +12,7 @@
 #include "EYS_Generator.generated.h"
 
 class UEYS_GeneratorActivateWidget;
-
+class AEYS_MyCharacterController;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractInterface
 {
@@ -28,6 +28,8 @@ class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractIn
 	UWidgetComponent* WidgetMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UPointLightComponent* PointLight;
+
+
 	
 public:	
 	// Sets default values for this actor's properties
@@ -47,9 +49,12 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION() void ReduceFuel();
 	UFUNCTION() void DestroyFuelTank(AEYS_MyCharacter* myPlayer);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
+	AEYS_MyCharacterController* PC;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_GeneratorActivateWidget> GeneratorActivateWidgetClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_GeneratorActivateWidget* GeneratorActivateWidgetInstance = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<FLinearColor> LightColor;
+	
 };

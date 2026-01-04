@@ -126,7 +126,7 @@ public:
 	FVector RoomLock;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsDoorLocked = false;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interaction")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	bool bIsPhoneMode = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	TArray<UAnimMontage*> MyCharacterMontages;

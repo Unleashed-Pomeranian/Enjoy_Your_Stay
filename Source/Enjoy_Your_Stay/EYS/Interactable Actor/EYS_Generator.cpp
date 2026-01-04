@@ -42,7 +42,7 @@ void AEYS_Generator::BeginPlay()
 	}
 
 	AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
+	 PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
 	if (PC)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
@@ -59,8 +59,6 @@ void AEYS_Generator::BeginPlay()
 }
 void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	
 	PC->SetInteractionWidget("[E] Open");
 }
 void AEYS_Generator::Interact(AEYS_MyCharacter* myPlayer)
@@ -72,12 +70,24 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	if (!bIsWorking&&fuelAmount>10)
 	{
+		
+		if (!(GeneratorActivateWidgetInstance->bIsWorking))
+		{
+			myPlayer->PoseNum = 0;
+			myPlayer->SetRoot();
+			PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
+			PC->SetCharacterPositon(GetActorLocation(), 30, 5, FRotator(-45, -90, 0));
+			PC->MobilizeCharacter(true, false, false);
+		}
+		
+		myPlayer->PlayMontage(2);
 			GeneratorActivateWidgetInstance->TimerFTimer();
 	}
 }
 
 void AEYS_Generator::StartStopTimer()
 {
+	PC->MobilizeCharacter(false, false, false);
 	UKismetSystemLibrary::K2_SetTimer(this, "ReduceFuel", 5.0f, true, false, 0, 0);
 }
 //Fueling
@@ -137,7 +147,6 @@ void AEYS_Generator::DestroyFuelTank(AEYS_MyCharacter* myPlayer)
 	myPlayer->PoseNum = 0;
 	myPlayer->LastPoseNum = 0;
 	myPlayer->SetRoot();
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	PC->EquipmentWheelInstance->EnableButtons(5, false, ESlateVisibility::Hidden);
 
 }

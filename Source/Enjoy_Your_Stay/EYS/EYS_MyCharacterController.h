@@ -7,8 +7,10 @@
 #include "EYS_MyCharacterController.generated.h"
 
 
+
 class UInputMappingContext;
 class UUserWidget;
+class AEYS_MyCharacter;
 class UEYS_MyCharacter_UI;
 class UEYS_EquipmentWheel;
 
@@ -46,8 +48,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_MyCharacter_UI> MYCharacterUIClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player", meta = (AllowAbstract = "true"))
+	AEYS_MyCharacter* OwnerCharacter;
 	
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) int32 Money;
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
@@ -62,10 +66,12 @@ public:
 	UFUNCTION() void CloseEquipmentWidget();
 	UFUNCTION() void SetStaminaWidget(float StaminaValue);
 	UFUNCTION() void CloseStaminaWidget();
+	UFUNCTION() void SetMoneyWidget(int32 AddValue);
 	UFUNCTION() void SetInteractionWidget(FString InterctionText);
 	UFUNCTION() void CloseInteractionWidget();
-	UFUNCTION() void MobilizeCharacter();
-	UFUNCTION() void ImmobilizeCharacter();
+	UFUNCTION(BlueprintCallable) void MobilizeCharacter(bool bLookInput,bool BIsInputModeUI, bool ShowCursor);
+	UFUNCTION() void SetCharacterPositon(FVector ActorLocation,float LocationX,float LocationY,FRotator Rotation);
+	
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
@@ -73,4 +79,5 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_MyCharacter_UI* MyCharacterUIInstance = nullptr;
+	
 };
