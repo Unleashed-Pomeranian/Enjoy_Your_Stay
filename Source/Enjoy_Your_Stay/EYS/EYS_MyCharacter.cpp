@@ -356,10 +356,10 @@ void AEYS_MyCharacter::Action2(const FInputActionValue& Value)
 		Cast<AEYS_InteractableActor>(ChildActor->GetChildActor());
 	if (Item)
 	{
-		Item->FSecondAction();
+		Item->FSecondAction(this);
 	}
 
-	ActionNum++;
+	
 }
 
 void AEYS_MyCharacter::ActionStart(const FInputActionValue& Value)
@@ -368,10 +368,9 @@ void AEYS_MyCharacter::ActionStart(const FInputActionValue& Value)
 		Cast<AEYS_InteractableActor>(ChildActor->GetChildActor());
 	if (Item)
 	{
-		Item->FActionStart();
+		Item->FActionStart(this);
 	}
 
-	ActionNum++;
 	
 }
 
@@ -398,6 +397,8 @@ void AEYS_MyCharacter::Action_ForwardTrace()
 		
 		}
 	}
+
+
 }
 
 void AEYS_MyCharacter::Action_MouseTrace()

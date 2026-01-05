@@ -23,10 +23,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) AActor* test;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UClass*> Orders;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION() void SpawnOrder(UClass* SpawnClass);
+	UFUNCTION() void SetOrderClass(UClass* SpawnClass);
+	UFUNCTION() void SpawnOrder();
 };

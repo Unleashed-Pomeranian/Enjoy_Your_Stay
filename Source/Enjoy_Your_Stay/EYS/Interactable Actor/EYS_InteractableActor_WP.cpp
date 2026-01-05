@@ -17,7 +17,7 @@ AEYS_InteractableActor_WP::AEYS_InteractableActor_WP()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(DefaultSceneRoot);
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-	BoxCollision->SetupAttachment(DefaultSceneRoot);
+	BoxCollision->SetupAttachment(StaticMesh);
 }
 
 void AEYS_InteractableActor_WP::BeginPlay()

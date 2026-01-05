@@ -33,6 +33,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentI", meta = (AllowPrivateAccess = "true"))
 	int32 Index;
 
-	UFUNCTION(BlueprintNativeEvent) void FActionStart();
-	UFUNCTION(BlueprintNativeEvent) void FSecondAction();
+	UFUNCTION(BlueprintNativeEvent) void FActionStart(AEYS_MyCharacter* myPlayer);
+	UFUNCTION(BlueprintNativeEvent) void FSecondAction(AEYS_MyCharacter* myPlayer);
 };

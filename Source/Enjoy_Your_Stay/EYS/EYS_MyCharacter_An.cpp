@@ -50,4 +50,5 @@ void UEYS_MyCharacter_An::NativeUpdateAnimation(float DeltaSeconds)
     bIsPhoneOpen = OwnerCharacter->bIsPhoneMode;
     
     ActionNum = OwnerCharacter->ActionNum;
+    bIsTakeCoal = OwnerCharacter->bIsCoalMode;
 }

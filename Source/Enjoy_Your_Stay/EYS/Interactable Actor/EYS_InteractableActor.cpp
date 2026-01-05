@@ -32,10 +32,10 @@ void AEYS_InteractableActor::Tick(float DeltaTime)
 
 }
 
-void AEYS_InteractableActor::FActionStart_Implementation()
+void AEYS_InteractableActor::FActionStart_Implementation(AEYS_MyCharacter* myPlayer)
 {
 }
 
-void AEYS_InteractableActor::FSecondAction_Implementation()
+void AEYS_InteractableActor::FSecondAction_Implementation(AEYS_MyCharacter* myPlayer)
 {
 }

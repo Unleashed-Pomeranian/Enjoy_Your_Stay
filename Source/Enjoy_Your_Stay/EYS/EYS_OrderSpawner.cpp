@@ -18,7 +18,7 @@ AEYS_OrderSpawner::AEYS_OrderSpawner()
 void AEYS_OrderSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UKismetSystemLibrary::K2_SetTimer(this, "SpawnOrder", 25.0f, true);
 }
 
 // Called every frame
@@ -28,7 +28,7 @@ void AEYS_OrderSpawner::Tick(float DeltaTime)
 
 }
 
-void AEYS_OrderSpawner::SpawnOrder(UClass* SpawnClass)
+void AEYS_OrderSpawner::SetOrderClass(UClass* SpawnClass)
 {
 	/*if (ChildActor && SpawnClass)
 	{
@@ -36,7 +36,18 @@ void AEYS_OrderSpawner::SpawnOrder(UClass* SpawnClass)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "spawnokOk");
 	}
 	*/
-	GetWorld()->SpawnActor<AActor>(SpawnClass, GetActorTransform());
+	Orders.Add(SpawnClass);
 	
+	
+}
+
+void AEYS_OrderSpawner::SpawnOrder()
+{
+	for (int32 i = 0; i < Orders.Num(); i++)
+	{
+		if(Orders[i])
+		GetWorld()->SpawnActor<AActor>(Orders[i], GetActorTransform());
+	}
+	Orders.Empty();
 }
 

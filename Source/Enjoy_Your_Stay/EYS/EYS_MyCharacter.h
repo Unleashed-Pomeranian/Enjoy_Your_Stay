@@ -128,6 +128,9 @@ public:
 	bool bIsDoorLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	bool bIsPhoneMode = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	bool bIsCoalMode= false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	TArray<UAnimMontage*> MyCharacterMontages;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")

@@ -51,7 +51,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player", meta = (AllowAbstract = "true"))
 	AEYS_MyCharacter* OwnerCharacter;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) int32 Money;
+	
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
@@ -71,7 +71,7 @@ public:
 	UFUNCTION() void CloseInteractionWidget();
 	UFUNCTION(BlueprintCallable) void MobilizeCharacter(bool bLookInput,bool BIsInputModeUI, bool ShowCursor);
 	UFUNCTION() void SetCharacterPositon(FVector ActorLocation,float LocationX,float LocationY,FRotator Rotation);
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 Money;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")

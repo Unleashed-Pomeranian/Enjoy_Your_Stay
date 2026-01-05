@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "Kismet/GamePlayStatics.h"
 
 // Sets default values
 AEYS_CoalBox::AEYS_CoalBox()
@@ -38,30 +39,35 @@ void AEYS_CoalBox::Tick(float DeltaTime)
 void  AEYS_CoalBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	PC->SetInteractionWidget("[E] Take");
+	if (CoalAmount>0) {
+		
+		PC->SetInteractionWidget("[M1] Take");
+	}
+	else
+	{
+		PC->SetInteractionWidget("No Coal");
+	}
 }
 
 void  AEYS_CoalBox::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	
-	CoalAmount = FMath::Clamp(CoalAmount + 20, 0, 100);
-	int32 MeshValue = CoalAmount / 20;
-	if (CoalMeshes[MeshValue])
-	{
-		StaticMesh_Coal->SetStaticMesh(CoalMeshes[MeshValue]);
-	}
+	FillingCoal();
 
 }
 void  AEYS_CoalBox::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
-	if (Value == 6)
-	{
-		CoalAmount = FMath::Clamp(CoalAmount - 20, 0, 100);
-		int32 MeshValue = CoalAmount / 20;
 
-		if (CoalMeshes[MeshValue])
+	if (Value == 6&& !(myPlayer->bIsCoalMode))
+	{
+		if (CoalAmount >= 20)
 		{
-			StaticMesh_Coal->SetStaticMesh(CoalMeshes[MeshValue]);
+			myPlayer->bIsCoalMode = true;
+			if (!bisTakeCoal)
+			{
+				UKismetSystemLibrary::K2_SetTimer(this, "DrainingCoal", 0.5f, false);
+				bisTakeCoal = true;
+			}
 		}
 	}
 }
@@ -73,8 +79,19 @@ void  AEYS_CoalBox::Interact(AEYS_MyCharacter* myPlayer)
 void AEYS_CoalBox::FillingCoal()
 {
 	CoalAmount = FMath::Clamp(CoalAmount + 20, 0, 100);
+	SetCoalMeshCoal();
 }
 void AEYS_CoalBox::DrainingCoal()
 {
 	CoalAmount = FMath::Clamp(CoalAmount - 20, 0, 100);
+	SetCoalMeshCoal();
+	bisTakeCoal = false;
+}
+
+void AEYS_CoalBox::SetCoalMeshCoal()
+{
+	
+	int32 MeshValue = CoalAmount / 20;
+	StaticMesh_Coal->SetStaticMesh(CoalMeshes[MeshValue]);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(MeshValue));
 }

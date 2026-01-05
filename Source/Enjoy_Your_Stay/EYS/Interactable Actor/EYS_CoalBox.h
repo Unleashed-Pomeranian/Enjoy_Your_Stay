@@ -39,8 +39,10 @@ protected:
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UFUNCTION() void FillingCoal();
 	UFUNCTION() void DrainingCoal();
+	UFUNCTION() void SetCoalMeshCoal();
 
 	UPROPERTY() int32 CoalAmount = 0.0f;
+	UPROPERTY() bool bisTakeCoal=false;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
