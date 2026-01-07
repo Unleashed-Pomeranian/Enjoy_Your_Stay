@@ -199,13 +199,14 @@ void AEYS_MyCharacterController::MobilizeCharacter(bool bLookInput, bool BIsInpu
 void AEYS_MyCharacterController::SetCharacterPositon(FVector ActorLocation, float LocationX, float LocationY, FRotator Rotation)
 {
 
-
+	
 	FVector SetLocation = ActorLocation;
 	//SetLocation.Y = ActorLocation.Y + 10;
 	SetLocation.Y = ActorLocation.Y + LocationY;
 	//SetLocation.X = ActorLocation.X + -8;
 	SetLocation.X = ActorLocation.X + LocationX;
-	OwnerCharacter->SetActorLocation(SetLocation);
+	OwnerCharacter->SetActorLocation(FVector(SetLocation.X, SetLocation.Y, OwnerCharacter->GetActorLocation().Z));
+	
 	SetControlRotation(Rotation);
 }
 

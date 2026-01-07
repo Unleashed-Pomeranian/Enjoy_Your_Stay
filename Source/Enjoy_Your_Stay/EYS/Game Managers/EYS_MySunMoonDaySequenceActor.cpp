@@ -9,7 +9,7 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 
      PC =Cast<AEYS_MyCharacterController>(UGameplayStatics::GetPlayerController(this, 0));
 
-	SetTimeOfDay(5.0f);
+	SetTimeOfDay(10.0f);
 	SetTimePerCycle(1.0f);
 	Play();
 	
@@ -19,7 +19,7 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 
 void AEYS_MySunMoonDaySequenceActor::FSetTimer()
 {
-	if (GetTimeOfDay() >= 19.0f)
+	if (GetTimeOfDay() >= 22.0f)
 	{
 		Pause();
 	}
@@ -31,7 +31,7 @@ void AEYS_MySunMoonDaySequenceActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::SanitizeFloat(GetTimeOfDay()));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::SanitizeFloat(GetTimeOfDay()));
 	
 }
 

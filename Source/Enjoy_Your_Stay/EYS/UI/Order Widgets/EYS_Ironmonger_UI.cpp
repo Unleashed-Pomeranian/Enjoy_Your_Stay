@@ -32,7 +32,7 @@ void UEYS_Ironmonger_UI::OnBtnSlotOrder(int32 SlotIndex, int32 Price)
 			AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass()));
 			if (OrderSpawner && SpawnActor[SlotIndex])
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "UIOk");
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "UIOk");
 				OrderSpawner->SetOrderClass(SpawnActor[SlotIndex]);
 			}
 		}
@@ -48,7 +48,7 @@ void UEYS_Ironmonger_UI::SetEquipmentText()
 {
 	FString HammerText = "Hammer (" + FString(TEXT("\u20BD")) + FString::FromInt(HammerPrice) + ")";
 	Text_Hammer->SetText((FText::FromString(HammerText)));
-	FString ShovelText = "Hammer (" + FString(TEXT("\u20BD")) +  FString::FromInt(ShovelPrice) + ")";
+	FString ShovelText = "Shovel (" + FString(TEXT("\u20BD")) +  FString::FromInt(ShovelPrice) + ")";
 	Text_Shovel->SetText((FText::FromString(ShovelText)));
 	FString FuelTankText = "FuelTank (" + FString(TEXT("\u20BD")) + FString::FromInt(FuelTankPrice) + ")";
 	Text_FuelTank->SetText((FText::FromString(FuelTankText)));

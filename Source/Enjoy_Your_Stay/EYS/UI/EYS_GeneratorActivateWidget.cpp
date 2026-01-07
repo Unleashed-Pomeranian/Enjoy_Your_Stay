@@ -56,7 +56,7 @@ void UEYS_GeneratorActivateWidget::TimerFTimer()
 
 void UEYS_GeneratorActivateWidget::FStartTimer()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, "turrsadasdrrrr");
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, "turrsadasdrrrr");
 	AEYS_Generator* Generator = Cast<AEYS_Generator>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Generator::StaticClass()));
 	if (Score == 3)
 	{
@@ -82,7 +82,7 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 void UEYS_GeneratorActivateWidget::FStopTimer()
 {
 	UKismetSystemLibrary::K2_ClearTimer(this, "StartGenerator");
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "turrsadasdrrrr");
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "turrsadasdrrrr");
 
 	const float CurrentValue = RadialValue;
 

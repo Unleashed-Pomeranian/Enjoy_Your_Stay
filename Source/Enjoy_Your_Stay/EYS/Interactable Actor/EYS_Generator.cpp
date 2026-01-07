@@ -45,7 +45,7 @@ void AEYS_Generator::BeginPlay()
 	 PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
 	if (PC)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
 		GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
 		if (GeneratorActivateWidgetInstance)
 		{
@@ -122,7 +122,7 @@ void AEYS_Generator::ReduceFuel()
 
 	
 
-	fuelAmount = FMath::Clamp(fuelAmount-10.0f, 0.0f, 100.0f);
+	fuelAmount = FMath::Clamp(fuelAmount-1.0f, 0.0f, 100.0f);
 	FuelText->SetText(FText::FromString(FString::SanitizeFloat(fuelAmount)));
 	GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 
