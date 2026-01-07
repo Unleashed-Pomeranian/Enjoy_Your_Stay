@@ -159,6 +159,8 @@ void AEYS_MyCharacterController::SetInteractionWidget(FString InterctionText)
 	
 }
 
+
+
 void AEYS_MyCharacterController::CloseInteractionWidget()
 {
 	if ((MyCharacterUIInstance->Interaction_Text->IsVisible()))
@@ -167,7 +169,13 @@ void AEYS_MyCharacterController::CloseInteractionWidget()
 	}
 
 }
-
+void AEYS_MyCharacterController::SetHourWidget(float TimeofDay)
+{
+	int32 hour = FMath::TruncToInt(TimeofDay);
+	int32 minute = (TimeofDay - hour) * 60;
+	FString TimeString = FString::Printf(TEXT("%02d:%02d"), hour, minute);
+	MyCharacterUIInstance->Hour_Text->SetText(FText::FromString(TimeString));
+}
 
 void AEYS_MyCharacterController::MobilizeCharacter(bool bLookInput, bool BIsInputModeUI, bool ShowCursor)
 {

@@ -33,5 +33,6 @@ public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* Money_Text;
 
-
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* Hour_Text;
 };
