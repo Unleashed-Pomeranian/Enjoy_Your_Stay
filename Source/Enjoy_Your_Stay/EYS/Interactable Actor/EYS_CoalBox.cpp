@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_CoalSack.h"
 #include "Kismet/GamePlayStatics.h"
 
 // Sets default values
@@ -51,9 +52,17 @@ void  AEYS_CoalBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 
 void  AEYS_CoalBox::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	
-	FillingCoal();
-
+ 
+	 if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_CoalSack::StaticClass()))
+	 {
+		 AEYS_CoalSack* FoodBox = Cast<AEYS_CoalSack>(myPlayer->HeldEquipment);
+		 if (CoalAmount < 100 && FoodBox->CoalValue>0)
+		 {
+			 FoodBox->ReduceFuelValue(20);
+			 FillingCoal(+20);
+			 
+		 }
+	 }
 }
 void  AEYS_CoalBox::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
@@ -76,9 +85,9 @@ void  AEYS_CoalBox::Interact(AEYS_MyCharacter* myPlayer)
 	return;
 }
 
-void AEYS_CoalBox::FillingCoal()
+void AEYS_CoalBox::FillingCoal(int32 AddValue)
 {
-	CoalAmount = FMath::Clamp(CoalAmount + 20, 0, 100);
+	CoalAmount = FMath::Clamp(CoalAmount + AddValue, 0, 100);
 	SetCoalMeshCoal();
 }
 void AEYS_CoalBox::DrainingCoal()

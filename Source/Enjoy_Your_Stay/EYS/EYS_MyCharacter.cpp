@@ -12,6 +12,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "Timermanager.h"
 #include "EYS/Interactable Actor/EYS_InteractableActor.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_HeavyEquipmentBase.h"
 #include "EYS/Interactable Actor/EYS_Notebook.h"
 #include "GameFramework/PlayerController.h"
 #include "EYS/EYS_MyCharacterController.h"
@@ -110,6 +111,7 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		EIC->BindAction(IA_Action2, ETriggerEvent::Started, this, &AEYS_MyCharacter::Action2);
 		EIC->BindAction(IA_Action2, ETriggerEvent::Completed, this, &AEYS_MyCharacter::Action2);
+		EIC->BindAction(IA_Drop, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DropObject);
 			
 			if (IA_EquipmentWheel)
 			{
@@ -244,6 +246,15 @@ void AEYS_MyCharacter::StopSprint(const FInputActionValue& Value)
 	  bIsSprinting = false;
 	  UKismetSystemLibrary::K2_SetTimer(this, TEXT("StaminaRecovery"), 0.1f, true, false, 0.0f, 0.0f);
 	
+}
+
+void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
+{
+	if (HeldEquipment)
+	{
+		HeldEquipment->DettachActor();
+		HeldEquipment = nullptr;
+	}
 }
 
 

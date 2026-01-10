@@ -14,7 +14,7 @@ class UInputAction;
 class AEYS_Notebook;
 class AEYS_MyCharacterController;
 class AEYS_InteractableActor;
-
+class AEYS_HeavyEquipmentBase;
 
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
@@ -67,6 +67,8 @@ protected:
 	UInputAction* IA_Sprint;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_eInteract;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Drop;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Action;
@@ -90,6 +92,7 @@ protected:
 	UFUNCTION() void StopJump(const FInputActionValue& Value);
 	UFUNCTION() void StartSprint(const FInputActionValue& Value);
 	UFUNCTION() void StopSprint(const FInputActionValue& Value);
+	UFUNCTION() void DropObject(const FInputActionValue& Value);
 	UFUNCTION() void StaminaRecovery();
 	
 
@@ -135,7 +138,8 @@ public:
 	TArray<UAnimMontage*> MyCharacterMontages;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	float FuelValue=100;
-
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<AEYS_HeavyEquipmentBase> HeldEquipment;
 	
 
 

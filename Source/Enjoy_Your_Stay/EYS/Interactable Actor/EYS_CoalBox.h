@@ -37,7 +37,7 @@ protected:
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
-	UFUNCTION() void FillingCoal();
+	UFUNCTION() void FillingCoal(int32 AddValue);
 	UFUNCTION() void DrainingCoal();
 	UFUNCTION() void SetCoalMeshCoal();
 

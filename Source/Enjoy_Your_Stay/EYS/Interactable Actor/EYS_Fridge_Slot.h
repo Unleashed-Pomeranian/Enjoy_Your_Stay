@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "HeavyEquipment/EYS_Types.h"
+#include "EYS/EYS_InteractInterface.h"
 #include "EYS_Fridge_Slot.generated.h"
 
 class UBoxComponent;
 class UInstancedStaticMeshComponent;
 UCLASS()
-class ENJOY_YOUR_STAY_API AEYS_Fridge_Slot : public AActor
+class ENJOY_YOUR_STAY_API AEYS_Fridge_Slot : public AActor, public IEYS_InteractInterface
 {
 	GENERATED_BODY()
 
@@ -27,11 +29,17 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	int32 InstanceIndex;
-	UPROPERTY() TArray<FTransform> InstanceTransform;
+	int32 InstanceIndex=-1;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TArray<FTransform> InstanceTransform;
 	UFUNCTION() void FAddSlot();
 	UFUNCTION() void FDeleteSlot();
-public:	
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
+	EFoodType SlotFoodType;
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

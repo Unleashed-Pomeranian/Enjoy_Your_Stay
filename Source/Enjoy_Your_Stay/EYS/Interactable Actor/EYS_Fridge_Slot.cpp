@@ -4,6 +4,9 @@
 #include "EYS/Interactable Actor/EYS_Fridge_Slot.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
 // Sets default values
 AEYS_Fridge_Slot::AEYS_Fridge_Slot()
 {
@@ -27,19 +30,21 @@ void AEYS_Fridge_Slot::BeginPlay()
 
 void AEYS_Fridge_Slot::FAddSlot()
 {
-	if (InstanceIndex >= 0)
+	
+	if (InstanceIndex < 5)
 	{
-		InstancedStaticMesh->RemoveInstance(InstanceIndex);
-		InstanceIndex--;
+		InstancedStaticMesh->AddInstance(InstanceTransform[InstanceIndex + 1], false);
+		InstanceIndex++;
 	}
 }
 
 void AEYS_Fridge_Slot::FDeleteSlot()
 {
-	if(InstanceIndex<5)
+	if (InstanceIndex >= 0)
 	{
-		InstancedStaticMesh->AddInstance(InstanceTransform[InstanceIndex + 1], false);
-		InstanceIndex++;
+
+		InstancedStaticMesh->RemoveInstance(InstanceIndex);
+		InstanceIndex--;
 	}
 }
 
@@ -50,3 +55,45 @@ void AEYS_Fridge_Slot::Tick(float DeltaTime)
 
 }
 
+void   AEYS_Fridge_Slot::Interact(AEYS_MyCharacter* myPlayer)
+{
+	return;
+	
+
+}
+
+
+
+
+void  AEYS_Fridge_Slot::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	if (myPlayer->HeldEquipment)
+	{
+		if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
+			PC->SetInteractionWidget("[E] Place");
+	}
+	else
+		PC->SetInteractionWidget("[E] Take");
+
+}
+
+void   AEYS_Fridge_Slot::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
+	{
+		AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
+		if (SlotFoodType == FoodBox->FoodType)
+		{
+			if (InstanceIndex < 5)
+			{
+				FoodBox->RemoveFood();
+			}
+			FAddSlot();
+		}
+	}
+	else
+	{
+		FDeleteSlot();
+	}
+}
