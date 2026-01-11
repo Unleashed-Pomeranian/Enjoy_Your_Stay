@@ -10,6 +10,7 @@
 
 class UBoxComponent;
 class UInstancedStaticMeshComponent;
+class  AEYS_FoodBag;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Fridge_Slot : public AActor, public IEYS_InteractInterface
 {
@@ -17,7 +18,7 @@ class ENJOY_YOUR_STAY_API AEYS_Fridge_Slot : public AActor, public IEYS_Interact
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* DefaultSceneRoot;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UInstancedStaticMeshComponent* InstancedStaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* BoxCollision;
@@ -36,9 +37,12 @@ protected:
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
 	EFoodType SlotFoodType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AEYS_FoodBag> FoodBagActor;
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -254,6 +254,7 @@ void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
 	{
 		HeldEquipment->DettachActor();
 		HeldEquipment = nullptr;
+		bIsHandsFull = false;
 	}
 }
 
@@ -275,11 +276,14 @@ void AEYS_MyCharacter::StaminaRecovery()
 
 void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 {
-	if (!(GetCharacterMovement()->IsFalling()))
+	if (!bIsHandsFull)
 	{
-		if (MyPC)
+		if (!(GetCharacterMovement()->IsFalling()))
 		{
-			MyPC->OpenEquipmentWidget();
+			if (MyPC)
+			{
+				MyPC->OpenEquipmentWidget();
+			}
 		}
 	}
 }
@@ -288,6 +292,7 @@ void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 {
 	if (MyPC)
 	{
+		
 		MyPC->CloseEquipmentWidget();
 	}
 	PoseNum = LastPoseNum;

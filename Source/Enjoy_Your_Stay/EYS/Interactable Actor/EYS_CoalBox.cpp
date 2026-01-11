@@ -67,7 +67,7 @@ void  AEYS_CoalBox::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 void  AEYS_CoalBox::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
 
-	if (Value == 6&& !(myPlayer->bIsCoalMode))
+	if (Value == 5&& !(myPlayer->bIsCoalMode))
 	{
 		if (CoalAmount >= 20)
 		{

@@ -113,16 +113,12 @@ protected:
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	int32 PoseNum = 0, LastPoseNum;
-	
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	bool bIsAction=false;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	int32 ActionNum = 0;
-
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsKeyMode = false;
-
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsHaveKey = false;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
@@ -131,13 +127,12 @@ public:
 	bool bIsDoorLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	bool bIsPhoneMode = false;
-
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+	bool bIsHandsFull = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	bool bIsCoalMode= false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
 	TArray<UAnimMontage*> MyCharacterMontages;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Animation")
-	float FuelValue=100;
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<AEYS_HeavyEquipmentBase> HeldEquipment;
 	

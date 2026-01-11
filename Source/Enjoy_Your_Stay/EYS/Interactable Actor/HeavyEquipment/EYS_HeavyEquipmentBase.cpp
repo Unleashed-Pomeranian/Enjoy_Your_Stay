@@ -3,7 +3,9 @@
 
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_HeavyEquipmentBase.h"
 #include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
 
+class AEYS_MyCharacterController;
 // Sets default values
 AEYS_HeavyEquipmentBase::AEYS_HeavyEquipmentBase()
 {
@@ -34,7 +36,14 @@ void   AEYS_HeavyEquipmentBase::Interact(AEYS_MyCharacter* myPlayer)
 
 void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 {
-
+	StaticMesh->SetSimulatePhysics(false);
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	AttachToComponent(myPlayer->FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "HeavyEquipment");
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	myPlayer->PoseNum = 6;
+	myPlayer->SetRoot();
+	myPlayer->HeldEquipment = this;
+	myPlayer->bIsHandsFull = true;
 }
 
 void AEYS_HeavyEquipmentBase::DettachActor()
@@ -52,8 +61,6 @@ void  AEYS_HeavyEquipmentBase::InteractUI_Implementation(AEYS_MyCharacter* myPla
 
 void   AEYS_HeavyEquipmentBase::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	StaticMesh->SetSimulatePhysics(false);
-	AttachToComponent(myPlayer->FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "RightHand");
-	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	myPlayer->HeldEquipment = this;
+	if(!(myPlayer->bIsHandsFull))
+	AttachActor(myPlayer);
 }

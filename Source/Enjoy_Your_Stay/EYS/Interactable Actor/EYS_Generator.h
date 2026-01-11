@@ -13,6 +13,7 @@
 
 class UEYS_GeneratorActivateWidget;
 class AEYS_MyCharacterController;
+class AEYS_FuelTank;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractInterface
 {
@@ -21,9 +22,9 @@ class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractIn
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components",meta = (AllowPrivateAccess = "true"))
 	USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* StaticMesh;
+	USceneComponent* Fuelingpoint;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UTextRenderComponent* FuelText;	
+	UStaticMeshComponent* StaticMesh;	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* WidgetMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -44,11 +45,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION() void ReduceFuel();
-	UFUNCTION() void DestroyFuelTank(AEYS_MyCharacter* myPlayer);
+	UFUNCTION() void AddFuel();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
 	AEYS_MyCharacterController* PC;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
@@ -56,5 +56,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_GeneratorActivateWidget* GeneratorActivateWidgetInstance = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<FLinearColor> LightColor;
-	
+	UPROPERTY()
+	AEYS_FuelTank* CurrentFuelTank = nullptr;
 };

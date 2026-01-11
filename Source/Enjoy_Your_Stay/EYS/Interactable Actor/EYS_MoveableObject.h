@@ -18,7 +18,7 @@ class ENJOY_YOUR_STAY_API AEYS_MoveableObject : public AActor, public IEYS_Inter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
 	UCurveFloat* MovementCurve;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Timeline Actor | Mesh", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* SceneRoot;

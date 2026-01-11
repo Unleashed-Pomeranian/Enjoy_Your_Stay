@@ -7,6 +7,7 @@
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
 // Sets default values
 AEYS_Fridge_Slot::AEYS_Fridge_Slot()
 {
@@ -45,6 +46,9 @@ void AEYS_Fridge_Slot::FDeleteSlot()
 
 		InstancedStaticMesh->RemoveInstance(InstanceIndex);
 		InstanceIndex--;
+
+		GetWorld()->SpawnActor<AActor>(FoodBagActor, GetActorTransform());
+		
 	}
 }
 
@@ -70,7 +74,7 @@ void  AEYS_Fridge_Slot::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (myPlayer->HeldEquipment)
 	{
-		if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
+		if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass())|| myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
 			PC->SetInteractionWidget("[E] Place");
 	}
 	else
@@ -80,17 +84,34 @@ void  AEYS_Fridge_Slot::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 
 void   AEYS_Fridge_Slot::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
+	if (myPlayer->HeldEquipment)
 	{
-		AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
-		if (SlotFoodType == FoodBox->FoodType)
+		if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
 		{
-			if (InstanceIndex < 5)
+			AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
+			if (SlotFoodType == FoodBox->FoodType)
 			{
-				FoodBox->RemoveFood();
+				if (InstanceIndex < 5)
+				{
+					FoodBox->RemoveFood();
+				}
+				FAddSlot();
 			}
-			FAddSlot();
 		}
+		
+		if (myPlayer->HeldEquipment&&myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
+		{
+			AEYS_FoodBag* FoodBag = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment);
+			if (SlotFoodType == FoodBag->FoodType)
+			{
+				if (InstanceIndex < 5)
+				{
+					FoodBag->RemoveFoodBag();
+				}
+				FAddSlot();
+			}
+		}
+		
 	}
 	else
 	{

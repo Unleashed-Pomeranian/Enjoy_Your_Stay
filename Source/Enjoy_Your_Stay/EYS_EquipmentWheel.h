@@ -50,8 +50,7 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* Btn_Slot8;
 
-    UPROPERTY(meta = (BindWidget))
-    UImage* FuelTank_Icon;
+    
     UPROPERTY(meta = (BindWidget))
     UImage* Hammer_Icon;
     UPROPERTY(meta = (BindWidget))
