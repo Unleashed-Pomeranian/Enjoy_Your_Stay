@@ -290,13 +290,17 @@ void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 {
-	if (MyPC)
+
+	if (!bIsHandsFull)
 	{
-		
-		MyPC->CloseEquipmentWidget();
+		if (MyPC)
+		{
+
+			MyPC->CloseEquipmentWidget();
+		}
+		PoseNum = LastPoseNum;
+		SetRoot();
 	}
-	PoseNum = LastPoseNum;
-	SetRoot();
 }
 
 
