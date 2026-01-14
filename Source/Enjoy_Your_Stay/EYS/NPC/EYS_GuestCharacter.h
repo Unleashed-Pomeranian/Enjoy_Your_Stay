@@ -1,13 +1,16 @@
 
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "EYS/EYS_InteractInterface.h"
+#include "EYS/NPC/EYS_QDialoguesSpeakerComponent.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_Types.h"
 #include "EYS_GuestCharacter.generated.h"
 
+
 class AEYS_GuestAIController;
+
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_InteractInterface
 {
@@ -19,6 +22,7 @@ class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_I
 	UPROPERTY()
 	AEYS_GuestAIController* CachedAIController;
 
+
 public:
 	// Sets default values for this character's properties
 	AEYS_GuestCharacter();
@@ -26,21 +30,36 @@ public:
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION()
 	void HandleMoveCompleted();
+	void TakeKey(AEYS_MyCharacter* myPlayer);
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void StartDialogue(AEYS_MyCharacter* myPlayer);
+	UFUNCTION()
+	void GuestStartDialogue(AEYS_MyCharacter* myPlayer);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bisDialogueEnd = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanInteract = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsHaveRoom = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsOrderFood = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DialogueNum = 0;
+	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(BlueprintReadOnly) FVector MainLock;
+	UPROPERTY(EditAnyWhere,BlueprintReadWrite) FVector MainLock;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite) int32 RoomNumber;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
+	UEYS_QDialoguesSpeakerComponent* DialogueComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Food")
+	EFoodType FoodType;
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -49,7 +68,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);
-	
-
+	UFUNCTION() void destroyme();
+	UFUNCTION() void OrderFood();
+	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
 	
 };

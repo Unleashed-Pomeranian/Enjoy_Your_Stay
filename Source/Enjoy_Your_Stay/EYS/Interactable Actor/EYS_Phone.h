@@ -9,7 +9,7 @@
 
 class AEYS_MyCharacterController;
 class UEYS_Phone_UI;
-
+class UEYS_Guest_UI;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Phone : public AActor,public IEYS_InteractInterface
 {
@@ -45,8 +45,13 @@ protected:
 	UEYS_Phone_UI* PhoneWidgetInstance = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UEYS_Phone_UI> PhoneWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UEYS_Guest_UI* GuestWidgetInstance = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UEYS_Guest_UI> GuestWidgetClass;
 
 	UPROPERTY() bool bCanInteract= true;
+	UPROPERTY() bool bIsGuestCalling =false;
 	FTransform PhoneFirstTransform;
 
 public:	
@@ -54,4 +59,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable) void OpenUI();
 	UFUNCTION(BlueprintCallable) void CloseUI();
+	UFUNCTION() void SetGuestUI(FString Foodtype, int32 RoomNum);
 };

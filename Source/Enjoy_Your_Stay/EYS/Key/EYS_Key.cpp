@@ -55,7 +55,7 @@ void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 		myPlayer->bIsHaveKey = true;
 		myPlayer->RoomLock = RoomLocation;
 		myPlayer->PoseNum = 2;
-	
+		myPlayer->RoomNumb = RoomNum;
 		Destroy();
 		
 	}

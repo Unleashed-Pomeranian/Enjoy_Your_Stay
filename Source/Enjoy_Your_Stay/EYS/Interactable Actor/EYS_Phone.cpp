@@ -4,7 +4,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/UI/EYS_Phone_UI.h"
-
+#include "EYS/UI/Order Widgets/EYS_Guest_UI.h"
 
 
 // Sets default values
@@ -88,24 +88,47 @@ void AEYS_Phone::SetupCloseAttachment(AEYS_MyCharacter* myPlayer)
 
 void AEYS_Phone::OpenUI()
 {
-	PhoneWidgetInstance = CreateWidget<UEYS_Phone_UI>(PC, PhoneWidgetClass);
-
-	if (PhoneWidgetInstance&& !(PhoneWidgetInstance->IsInViewport()))
+	if (bIsGuestCalling)
 	{
-		PhoneWidgetInstance->AddToViewport();
-		
+		if (!(GuestWidgetInstance->IsInViewport()))
+			GuestWidgetInstance->AddToViewport();
 	}
-	
+	else
+	{
+		PhoneWidgetInstance = CreateWidget<UEYS_Phone_UI>(PC, PhoneWidgetClass);
+
+		if (PhoneWidgetInstance && !(PhoneWidgetInstance->IsInViewport()))
+		{
+			PhoneWidgetInstance->AddToViewport();
+
+		}
+	}
 }
 
 void AEYS_Phone::CloseUI()
 {
-	if ((PhoneWidgetInstance->IsInViewport()))
+	if (bIsGuestCalling)
 	{
-		PhoneWidgetInstance->RemoveFromParent();
-		PlayPhoneCloseMontage();
-		
-		
+		if (GuestWidgetInstance->IsInViewport())
+			GuestWidgetInstance->RemoveFromParent();	
+	}
+	else
+	{ 
+		if ((PhoneWidgetInstance->IsInViewport()))
+			PhoneWidgetInstance->RemoveFromParent();
+		bIsGuestCalling = false;
+	}
+
+	PlayPhoneCloseMontage();
+}
+
+void AEYS_Phone::SetGuestUI(FString Foodtype,int32 RoomNum)
+{
+	GuestWidgetInstance = CreateWidget<UEYS_Guest_UI>(PC, GuestWidgetClass);
+	if (GuestWidgetInstance)
+	{
+		GuestWidgetInstance->SetGuestText(Foodtype, RoomNum);
+		bIsGuestCalling = true;
 	}
 }
 

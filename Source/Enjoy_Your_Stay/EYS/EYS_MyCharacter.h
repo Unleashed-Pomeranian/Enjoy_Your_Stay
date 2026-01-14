@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Animation/AnimMontage.h"
+#include "EYS/EYS_QDialoguesListenerComponent.h"
 #include "EYS_MyCharacter.generated.h"
  
 
@@ -40,7 +41,8 @@ UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TSubclassOf<AEYS_Notebook> NotebookActor;
 	UPROPERTY()
 	AEYS_MyCharacterController* MyPC;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
+	UEYS_QDialoguesListenerComponent* MyDialogueComponent;
 public:
 	AEYS_MyCharacter();
     virtual void Tick(float DeltaTime) override;
@@ -85,6 +87,7 @@ protected:
 	float walkSpeed = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float sprintSpeed = 600.0f;
+	
 
 	UFUNCTION() void Move(const FInputActionValue& Value);
 	UFUNCTION() void Look(const FInputActionValue& Value);
@@ -123,6 +126,8 @@ public:
 	bool bIsHaveKey = false;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	FVector RoomLock;
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+	int32 RoomNumb;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsDoorLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")

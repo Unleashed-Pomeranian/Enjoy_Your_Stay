@@ -37,6 +37,8 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 	ChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor"));
 	ChildActor->SetupAttachment(FirstPersonMesh, TEXT("RightHand"));
 
+	MyDialogueComponent = CreateDefaultSubobject<UEYS_QDialoguesListenerComponent>(TEXT("My Dialogue Component"));
+
 	UCharacterMovementComponent* moveComp = GetCharacterMovement();
 	moveComp->bOrientRotationToMovement = false;
 	moveComp->RotationRate = FRotator(0.f, 540.f, 0.f);
