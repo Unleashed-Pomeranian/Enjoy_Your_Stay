@@ -22,7 +22,7 @@ AEYS_MoveableObject::AEYS_MoveableObject()
 	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Box"));
 	TriggerBox->SetupAttachment(RootComponent);
 	bIsTrigrred = false;
-	bIsDoorLocked = false;
+
 }
 
 
@@ -57,24 +57,12 @@ void AEYS_MoveableObject::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 
 void AEYS_MoveableObject::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	Interact(myPlayer);
+		DoorInteract();
 }
 
 void AEYS_MoveableObject::Interact(AEYS_MyCharacter* myPlayer)
 {
-	if (!bIsDoorLocked)
-	{
-		DoorInteract();
-	
-	}
-	
-	else
-	{
-		myPlayer->PlayMontage(0);
-		AssignedNPCs->MoveTo(TriggerBox->GetComponentLocation(), 50.0f);
-		AssignedNPCs->bisDialogueEnd = false;
-	}
-	
+	return;
 }
 
 void AEYS_MoveableObject::TimelineProgress(float value)
@@ -84,10 +72,6 @@ void AEYS_MoveableObject::TimelineProgress(float value)
 		FRotator NewRot = FMath::Lerp(StartRot, EndRot, value);
 	
 		StaticMesh->SetRelativeRotation(NewRot);
-
-		//SetActorRotation(NewRot);
-		
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Play");
 		
 }
 
@@ -97,6 +81,8 @@ void AEYS_MoveableObject::TimelineFinished()
 
 void AEYS_MoveableObject::DoorInteract()
 {
+
+	
 	if (!MainTimeline || !MovementCurve) return;
 
 	if (!bIsTrigrred)
@@ -104,17 +90,13 @@ void AEYS_MoveableObject::DoorInteract()
 		MainTimeline->Play();
 		StartRot = EndRot = StaticMesh->GetRelativeRotation();
 		StartRot.Yaw = RotStartValue;
-		EndRot.Yaw = RotEndValue;
-		
+		EndRot.Yaw = RotEndValue;	
 		bIsTrigrred = true;
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "true");
-
 	}
 	else
 	{
 		MainTimeline->Reverse();
 		bIsTrigrred = false;
-	  //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "fasle");
 	}
 }
 

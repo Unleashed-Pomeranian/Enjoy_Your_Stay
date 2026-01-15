@@ -32,6 +32,7 @@ void AEYS_GuestCharacter::BeginPlay()
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 	
 	MoveTo(MainLock, 20);
+	//CachedAIController->CorruptedNPC();
 }
 
 // Called every frame
