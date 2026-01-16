@@ -9,11 +9,20 @@
 /**
  * 
  */
+class AEYS_GuestCharacter;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_GuestAIController : public AAIController
 {
 	GENERATED_BODY()
 	
+
+protected:
+
+	virtual void OnPossess(APawn* InPawn) override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Animation")
+	UAnimMontage* GuestAnimMontage;
+
 public:
 
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
@@ -32,4 +41,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UClass* BrokenPipeRef;
 	bool Iscorrapted = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	AEYS_GuestCharacter* GuestCharacter;
+	
 };

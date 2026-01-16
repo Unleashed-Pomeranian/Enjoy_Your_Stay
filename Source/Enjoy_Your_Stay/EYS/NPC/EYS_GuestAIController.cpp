@@ -5,7 +5,16 @@
 #include "NavigationSystem.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "EYS/NPC/EYS_GuestCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
+
+void AEYS_GuestAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	GuestCharacter = Cast<AEYS_GuestCharacter>(InPawn);
+}
 void AEYS_GuestAIController::MoveToPoint(const FVector& Destiniton, float AccceptanceRadius)
 {
 	FAIMoveRequest MoveReq;
@@ -31,7 +40,7 @@ void AEYS_GuestAIController::CorruptedNPC()
 	SinglePipeRef = FoundPipes[RandomIndex];
 	MoveToPoint(SinglePipeRef->GetActorLocation(), 50);
 	Iscorrapted= true;
-	
+	GuestCharacter->GetCharacterMovement()->MaxWalkSpeed = 400;
 }
 
 void AEYS_GuestAIController::BrokePipe()
@@ -49,9 +58,17 @@ void AEYS_GuestAIController::OnMoveCompleted(FAIRequestID RequestID, const FPath
 
     if (Result.IsSuccess())
     {
-      //  UE_LOG(LogTemp, Warning, TEXT("AI Move Completed Successfully!"));
+		
+     
         OnAIMoveComplete.Broadcast();
+		
+	
 		if (Iscorrapted)
+		{
+			GuestCharacter->ThirdPersonMesh->GetAnimInstance()->Montage_Play(GuestAnimMontage);
 			UKismetSystemLibrary::K2_SetTimer(this, "BrokePipe", 3.0f, false);
+			
+		}
+
     }
 }

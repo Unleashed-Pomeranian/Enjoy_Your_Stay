@@ -8,6 +8,7 @@
 #include "EYS/EYS_InteractInterface.h"
 #include "EYS_Boiler.generated.h"
 
+
 class UBoxComponent;
 class UEYS_Boiler_UI;
 UCLASS()
@@ -28,6 +29,8 @@ public:
 	UWidgetComponent* WidgetMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anim")
 	TArray<TObjectPtr<UAnimationAsset>> AnimAssets;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
+	FTimerHandle MyTimerHandle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,7 +38,7 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	int32 Animvalue=0;
-	float FuelValue=0.0f;
+	float BoilerCoalValue=0.0f;
 	bool bAnimFlip=true;
 	UPROPERTY()
 	UEYS_Boiler_UI* BoilerWidgetInstance;
@@ -44,6 +47,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION(BlueprintCallable) void SetFuelAmount(float FuelAddValue);
+	UFUNCTION(BlueprintCallable) void SetCoalAmount(float FuelAddValue);
+	UFUNCTION(BlueprintCallable) void ReduceCoalValue();
 
 };

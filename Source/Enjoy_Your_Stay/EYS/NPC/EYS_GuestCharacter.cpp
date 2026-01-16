@@ -30,8 +30,8 @@ void AEYS_GuestCharacter::BeginPlay()
 	SpawnDefaultController();
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
-	
-	MoveTo(MainLock, 20);
+
+	//MoveTo(MainLock, 20);
 	//CachedAIController->CorruptedNPC();
 }
 
@@ -125,6 +125,12 @@ void AEYS_GuestCharacter::destroyme()
 	{
 		MoveTo(MainLock, 50);
 	}
+}
+
+void AEYS_GuestCharacter::CorruptTheGuest()
+{
+	CachedAIController->CorruptedNPC();
+	
 }
 
 void AEYS_GuestCharacter::OrderFood()

@@ -16,8 +16,7 @@ class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_I
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	USkeletalMeshComponent* ThirdPersonMesh;
+	
 
 	UPROPERTY()
 	AEYS_GuestAIController* CachedAIController;
@@ -31,6 +30,8 @@ public:
 	UFUNCTION()
 	void HandleMoveCompleted();
 	void TakeKey(AEYS_MyCharacter* myPlayer);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+	USkeletalMeshComponent* ThirdPersonMesh;
 
 public:
 	UFUNCTION()
@@ -47,7 +48,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DialogueNum = 0;
 	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MentalSlateValue = 100.0f;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -69,6 +71,7 @@ public:
 
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);
 	UFUNCTION() void destroyme();
+	UFUNCTION() void CorruptTheGuest();
 	UFUNCTION() void OrderFood();
 	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
 	
