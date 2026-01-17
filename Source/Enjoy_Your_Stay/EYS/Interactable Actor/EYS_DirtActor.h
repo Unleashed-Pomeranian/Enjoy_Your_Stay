@@ -38,6 +38,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<TObjectPtr<UMaterial>> DirtMaterial;
 	UFUNCTION()void test();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* TargetPointRef;
 public:	
 	// Called every frame
 	

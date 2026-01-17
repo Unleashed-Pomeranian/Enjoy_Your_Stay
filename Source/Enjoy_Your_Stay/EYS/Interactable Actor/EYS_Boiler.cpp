@@ -37,7 +37,7 @@ void AEYS_Boiler::BeginPlay()
 		BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());
 		WidgetMesh->SetWidget(BoilerWidgetInstance);
 		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
-		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
+		//GetWorld()->GetTimerManager().SetTimer(MyTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
 }
 
 // Called every frame

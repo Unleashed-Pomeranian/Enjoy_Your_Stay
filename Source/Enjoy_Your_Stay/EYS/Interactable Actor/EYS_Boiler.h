@@ -38,7 +38,7 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	int32 Animvalue=0;
-	float BoilerCoalValue=0.0f;
+	float BoilerCoalValue=100.0f;
 	bool bAnimFlip=true;
 	UPROPERTY()
 	UEYS_Boiler_UI* BoilerWidgetInstance;

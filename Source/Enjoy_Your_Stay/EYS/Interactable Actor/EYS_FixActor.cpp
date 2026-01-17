@@ -16,9 +16,7 @@ AEYS_FixActor::AEYS_FixActor()
 		StaticMesh= CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 		StaticMesh->SetupAttachment(DefaultSceneRoot);
 
-		BoilerActor = Cast<AEYS_Boiler>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Boiler::StaticClass()));
-		if (BoilerActor)
-			GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AEYS_FixActor::SetBoilerFuel, 2.0f, false);
+		
 		
 }
 
@@ -27,6 +25,10 @@ void AEYS_FixActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+		BoilerActor = Cast<AEYS_Boiler>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Boiler::StaticClass()));
+		if (BoilerActor)
+		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AEYS_FixActor::SetBoilerFuel, 2.0f, true);
+
 }
 
 // Called every frame
@@ -82,6 +84,7 @@ void AEYS_FixActor::SetPipeMesh()
 
 void AEYS_FixActor::SetBoilerFuel()
 {
+	if (!(BoilerActor==nullptr))
 	BoilerActor->SetCoalAmount(-1.0f);
 }
 

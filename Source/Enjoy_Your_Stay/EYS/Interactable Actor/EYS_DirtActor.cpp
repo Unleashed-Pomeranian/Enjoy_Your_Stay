@@ -103,6 +103,7 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 				Notebook->CleaningMission(GetActorTransform());
 
 			}
+			GetWorld()->SpawnActor<AActor>(TargetPointRef, GetActorTransform());
 			Destroy();
 
 		}
