@@ -37,7 +37,7 @@ protected:
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<TObjectPtr<UMaterial>> DirtMaterial;
-	UFUNCTION()void test();
+	UFUNCTION()void SetGuestMentalHealth();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* TargetPointRef;
 public:	
 	// Called every frame

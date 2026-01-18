@@ -37,7 +37,7 @@ void AEYS_Boiler::BeginPlay()
 		BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());
 		WidgetMesh->SetWidget(BoilerWidgetInstance);
 		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
-		//GetWorld()->GetTimerManager().SetTimer(MyTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
+		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
 }
 
 // Called every frame
@@ -48,7 +48,7 @@ void AEYS_Boiler::Tick(float DeltaTime)
 }
 void AEYS_Boiler::ReduceCoalValue()
 {
-	BoilerCoalValue = FMath::Clamp(BoilerCoalValue -5.0, 0.0f, 100.0f);
+	BoilerCoalValue = FMath::Clamp(BoilerCoalValue -1.6f, 0.0f, 100.0f);
 	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
 }
 void   AEYS_Boiler::Interact(AEYS_MyCharacter* myPlayer)

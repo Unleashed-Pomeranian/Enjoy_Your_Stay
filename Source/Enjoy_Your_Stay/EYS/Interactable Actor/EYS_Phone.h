@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EYS/EYS_InteractInterface.h"
+#include "Components/AudioComponent.h"
 #include "EYS_Phone.generated.h"
 
 class AEYS_MyCharacterController;
@@ -51,7 +52,11 @@ protected:
 	TSubclassOf<UEYS_Guest_UI> GuestWidgetClass;
 
 	UPROPERTY() bool bCanInteract= true;
-	UPROPERTY() bool bIsGuestCalling =false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UAudioComponent* PhoneAudio;
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundBase* RingingSound;
+	
 	FTransform PhoneFirstTransform;
 
 public:	
@@ -60,4 +65,5 @@ public:
 	UFUNCTION(BlueprintCallable) void OpenUI();
 	UFUNCTION(BlueprintCallable) void CloseUI();
 	UFUNCTION() void SetGuestUI(FString Foodtype, int32 RoomNum);
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly) bool bIsGuestCalling =false;
 };

@@ -40,7 +40,7 @@ void AEYS_DirtActor::BeginPlay()
 			opacityValue = FMath::Clamp(opacityValue, 0.0f, 3.0f);
 		}
 	}
-	UKismetSystemLibrary::K2_SetTimer(this, "test", 0.5f, true);
+	UKismetSystemLibrary::K2_SetTimer(this, "SetGuestMentalHealth", 2.0f, true);
 
 	if (DirtDecal)
 	{
@@ -73,12 +73,12 @@ void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 
 
 
-void AEYS_DirtActor::test()
+void AEYS_DirtActor::SetGuestMentalHealth()
 {
 	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 	if (!Director) return;
 
-		Director->SetMentalSlate(4.0f);
+		Director->SetMentalSlate(0.5f);
 }
 
 

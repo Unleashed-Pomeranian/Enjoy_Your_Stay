@@ -20,16 +20,23 @@ void AEYS_GuestSpawner::BeginPlay()
 	Super::BeginPlay();
 	EmptyRooms = 4;
 	Rooms = 4;
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", 10.0f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", 5.0f, false);
 }
 
 void AEYS_GuestSpawner::SpawnGuest()
 {
-	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
-	if (!Director) return;
+	
+	if (EmptyRooms > 0)
+	{
+		UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
+		if (!Director) return;
+		if (GuestClass)
+			Director->RequestSpawnNPC(GuestClass, GetActorTransform());
+		EmptyRooms -= 1;
+		 int32 RandomIndex = FMath::RandRange(55,120);
+		UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", RandomIndex, true);
+	}
 
-	if(GuestClass)
-	Director->RequestSpawnNPC(GuestClass, GetActorTransform());
 }
 
 // Called every frame

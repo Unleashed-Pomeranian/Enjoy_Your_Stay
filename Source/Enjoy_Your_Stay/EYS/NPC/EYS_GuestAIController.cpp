@@ -28,19 +28,26 @@ void AEYS_GuestAIController::MoveToPoint(const FVector& Destiniton, float Acccep
 
 void AEYS_GuestAIController::CorruptedNPC()
 {
-	TArray<AActor*> FoundPipes;
-
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(),PipeRef,FoundPipes);
-
-	if (FoundPipes.Num() == 0)
+	if ((GuestCharacter->bIsCorrupted))
 	{
-		return;
+		TArray<AActor*> FoundPipes;
+
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), PipeRef, FoundPipes);
+
+		if (FoundPipes.Num() == 0)
+		{
+			return;
+		}
+		const int32 RandomIndex = FMath::RandRange(0, FoundPipes.Num() - 1);
+		SinglePipeRef = FoundPipes[RandomIndex];
+		MoveToPoint(SinglePipeRef->GetActorLocation(), 50);
+		Iscorrapted = true;
+		GuestCharacter->GetCharacterMovement()->MaxWalkSpeed = 400;
 	}
-	const int32 RandomIndex = FMath::RandRange(0, FoundPipes.Num() - 1);
-	SinglePipeRef = FoundPipes[RandomIndex];
-	MoveToPoint(SinglePipeRef->GetActorLocation(), 50);
-	Iscorrapted= true;
-	GuestCharacter->GetCharacterMovement()->MaxWalkSpeed = 400;
+	else
+	{
+		Iscorrapted = false;
+	}
 }
 
 void AEYS_GuestAIController::BrokePipe()

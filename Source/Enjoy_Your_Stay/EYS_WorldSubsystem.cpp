@@ -3,6 +3,7 @@
 
 #include "EYS_WorldSubsystem.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform)
 {
@@ -32,7 +33,10 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	}
 
 	ActiveNPCs.Add(Spawned);
-
+	if (Spawned)
+	{
+		UKismetSystemLibrary::K2_SetTimer(Spawned, "OrderFood", 120.0f, false);
+	}
 
 
 	return Spawned;
@@ -49,7 +53,7 @@ void UEYS_WorldSubsystem::SetMentalSlate( const float ReduceValue)
 		}
 		else
 		{
-			ActiveNPCs[i]->MentalSlateValue -= ReduceValue;
+			ActiveNPCs[i]->MentalSlateValue =FMath::Clamp(ActiveNPCs[i]->MentalSlateValue -= ReduceValue,0,100);
 		}
 
 	}
@@ -66,7 +70,7 @@ void UEYS_WorldSubsystem::SetMentalSlate( const float ReduceValue)
 			if (ActiveNPCs[i]->MentalSlateValue <= 0.0f)
 			{
 				ActiveNPCs[i]->CorruptTheGuest();
-				ActiveNPCs.RemoveAtSwap(i);
+				
 			}
 		}
 

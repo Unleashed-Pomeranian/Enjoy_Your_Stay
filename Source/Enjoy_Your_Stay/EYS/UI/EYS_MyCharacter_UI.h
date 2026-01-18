@@ -22,6 +22,7 @@ class ENJOY_YOUR_STAY_API UEYS_MyCharacter_UI : public UUserWidget
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage* Stamina_Image;
+	
 public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UOverlay* Overlay;
@@ -35,4 +36,6 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* Hour_Text;
+	UPROPERTY(meta = (BindWidget))
+	UImage* Dot_Image;
 };

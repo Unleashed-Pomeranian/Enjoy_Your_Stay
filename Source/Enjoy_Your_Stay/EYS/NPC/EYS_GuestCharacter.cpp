@@ -31,8 +31,9 @@ void AEYS_GuestCharacter::BeginPlay()
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 
-	//MoveTo(MainLock, 20);
-	//CachedAIController->CorruptedNPC();
+	MoveTo(MainLock, 50.0f);
+
+	
 }
 
 // Called every frame
@@ -65,32 +66,35 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 {
 	
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanIsqdsdnteract");
-	if (bCanInteract)
+	if (!bIsCorrupted)
 	{
-		if (bIsOrderFood)
+		if (bCanInteract)
 		{
-			TakeFood(myPlayer);
-		}
-		else
-		{
-			if (!bisDialogueEnd)
+			if (bIsOrderFood)
 			{
-				GuestStartDialogue(myPlayer);
+				TakeFood(myPlayer);
 			}
 			else
 			{
-				if (!bIsHaveRoom)
+				if (!bisDialogueEnd)
 				{
-					if (myPlayer->bIsHaveKey)
-						TakeKey(myPlayer);
-					else
-						GuestStartDialogue(myPlayer);
+					GuestStartDialogue(myPlayer);
 				}
+				else
+				{
+					if (!bIsHaveRoom)
+					{
+						if (myPlayer->bIsHaveKey)
+							TakeKey(myPlayer);
+						else
+							GuestStartDialogue(myPlayer);
+					}
 
+				}
 			}
+
+
 		}
-
-
 	}
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanInteract");
 }
@@ -119,7 +123,7 @@ void AEYS_GuestCharacter::destroyme()
 	if (DialogueNum == 1)
 	{
 		MoveTo(MainLock, 50);
-		OrderFood();
+		//OrderFood();
 	}
 	if(DialogueNum == 2|| DialogueNum == 3)
 	{
@@ -130,6 +134,8 @@ void AEYS_GuestCharacter::destroyme()
 void AEYS_GuestCharacter::CorruptTheGuest()
 {
 	CachedAIController->CorruptedNPC();
+	bIsCorrupted = true;
+	
 	
 }
 
@@ -138,9 +144,16 @@ void AEYS_GuestCharacter::OrderFood()
 	FoodType= static_cast<EFoodType>(FMath::RandRange(0, static_cast<int32>(EFoodType::Count) - 1));
 	FString FoodString = StaticEnum<EFoodType>()->GetDisplayNameTextByValue(static_cast<int64>(FoodType)).ToString();
 	AEYS_Phone* Phone = Cast<AEYS_Phone>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Phone::StaticClass()));
-	Phone->SetGuestUI(FoodString, RoomNumber);
-	bisDialogueEnd = true;
-	bIsOrderFood = true;
+	if (Phone&&!(Phone->bIsGuestCalling))
+	{
+		Phone->SetGuestUI(FoodString, RoomNumber);
+		bisDialogueEnd = true;
+		bIsOrderFood = true;
+	}
+	else
+	{
+		UKismetSystemLibrary::K2_SetTimer(this, "OrderFood", 30.0f, false);
+	}
 
 }
 
@@ -153,13 +166,17 @@ void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 		{
 			FoodBag->AttachToComponent(ThirdPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Bag");
 			myPlayer->HeldEquipment = nullptr;
+			myPlayer->bIsHandsFull = false;
 			DialogueNum = 2;
 			bIsOrderFood = false;
+			MentalSlateValue += 20.0f;
+
+			
 		}
 		else
 		{
 			DialogueNum = 3;
-			
+			MentalSlateValue -= 15.0f;
 		}
 		bIsOrderFood = false;
 		GuestStartDialogue(myPlayer);

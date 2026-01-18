@@ -17,8 +17,8 @@ void AEYS_MissionSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnFixActor", 3.0f, true);
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnDirtActor", 5.0f, true);
+	UKismetSystemLibrary::K2_SetTimer(this, "SpawnFixActor", 3.0f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "SpawnDirtActor", 5.0f, false);
 }
 
 void AEYS_MissionSpawner::SpawnFixActor()
@@ -37,7 +37,8 @@ void AEYS_MissionSpawner::SpawnFixActor()
 	if (FixActor)
 		GetWorld()->SpawnActor<AActor>(FixActor, SinglePipeRef->GetActorTransform());
 	SinglePipeRef->Destroy();
-	
+	int32 RandomIndexFix = FMath::RandRange(15, 120);
+	UKismetSystemLibrary::K2_SetTimer(this, "SpawnFixActor", RandomIndexFix, false);
 
 
 }
@@ -56,6 +57,8 @@ void AEYS_MissionSpawner::SpawnDirtActor()
 	{
 		GetWorld()->SpawnActor<AActor>(DirtActor, TargetPoints[RandomIndex]->GetActorTransform());
 		TargetPoints[RandomIndex]->Destroy();
+		int32 RandomIndexDirt = FMath::RandRange(15, 120);
+		UKismetSystemLibrary::K2_SetTimer(this, "SpawnDirtActor", RandomIndexDirt, false);
 	}
 	
 }

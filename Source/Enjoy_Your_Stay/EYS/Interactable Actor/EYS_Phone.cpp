@@ -20,6 +20,9 @@ AEYS_Phone::AEYS_Phone()
 
 	StaticMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Int Phone Mesh"));
 	StaticMesh2->SetupAttachment(RootComponent);
+	PhoneAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("PhoneAudio"));
+	PhoneAudio->SetupAttachment(RootComponent);
+	PhoneAudio->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +39,7 @@ void AEYS_Phone::BeginPlay()
 // Called every frame
 void AEYS_Phone::Tick(float DeltaTime)
 {
+
 	Super::Tick(DeltaTime);
 
 }
@@ -91,7 +95,10 @@ void AEYS_Phone::OpenUI()
 	if (bIsGuestCalling)
 	{
 		if (!(GuestWidgetInstance->IsInViewport()))
+		{
 			GuestWidgetInstance->AddToViewport();
+			PhoneAudio->Stop();
+		}
 	}
 	else
 	{
@@ -111,12 +118,13 @@ void AEYS_Phone::CloseUI()
 	{
 		if (GuestWidgetInstance->IsInViewport())
 			GuestWidgetInstance->RemoveFromParent();	
+		bIsGuestCalling = false;
 	}
 	else
 	{ 
 		if ((PhoneWidgetInstance->IsInViewport()))
 			PhoneWidgetInstance->RemoveFromParent();
-		bIsGuestCalling = false;
+		
 	}
 
 	PlayPhoneCloseMontage();
@@ -127,6 +135,11 @@ void AEYS_Phone::SetGuestUI(FString Foodtype,int32 RoomNum)
 	GuestWidgetInstance = CreateWidget<UEYS_Guest_UI>(PC, GuestWidgetClass);
 	if (GuestWidgetInstance)
 	{
+		if (RingingSound)
+		{
+			PhoneAudio->SetSound(RingingSound);
+			PhoneAudio->Play();
+		}
 		GuestWidgetInstance->SetGuestText(Foodtype, RoomNum);
 		bIsGuestCalling = true;
 	}

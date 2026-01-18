@@ -154,6 +154,7 @@ void AEYS_MyCharacterController::SetInteractionWidget(FString InterctionText)
 	if (!(MyCharacterUIInstance->Interaction_Text->IsVisible()))
 	{
 		MyCharacterUIInstance->Interaction_Text->SetVisibility(ESlateVisibility::Visible);
+		MyCharacterUIInstance->Dot_Image->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	
@@ -166,6 +167,7 @@ void AEYS_MyCharacterController::CloseInteractionWidget()
 	if ((MyCharacterUIInstance->Interaction_Text->IsVisible()))
 	{
 		MyCharacterUIInstance->Interaction_Text->SetVisibility(ESlateVisibility::Hidden);
+		MyCharacterUIInstance->Dot_Image->SetVisibility(ESlateVisibility::Visible);
 	}
 
 }

@@ -46,6 +46,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsOrderFood = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsCorrupted = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DialogueNum = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
