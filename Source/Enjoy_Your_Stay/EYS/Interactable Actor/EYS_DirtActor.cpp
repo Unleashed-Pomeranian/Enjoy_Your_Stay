@@ -16,7 +16,8 @@ AEYS_DirtActor::AEYS_DirtActor()
 	PrimaryActorTick.bCanEverTick = true;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	RootComponent = DefaultSceneRoot;
-	
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	StaticMesh->SetupAttachment(DefaultSceneRoot);
 	DirtDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("Dirt Decal"));
 	DirtDecal->SetupAttachment(DefaultSceneRoot);
 	BoxCollision = CreateDefaultSubobject <UBoxComponent> (TEXT("Box Collision"));

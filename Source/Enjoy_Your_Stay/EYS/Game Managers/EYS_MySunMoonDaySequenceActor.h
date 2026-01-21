@@ -21,11 +21,11 @@ class ENJOY_YOUR_STAY_API AEYS_MySunMoonDaySequenceActor : public ASunMoonDaySeq
  
 protected:
 	virtual void BeginPlay() override;
-	UFUNCTION() void FSetTimer();
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
 	AEYS_MyCharacterController* PC;
 	
 public:
 	virtual void Tick(float DeltaTime) override;
-	
+	UFUNCTION() void FSetTimer();
 };

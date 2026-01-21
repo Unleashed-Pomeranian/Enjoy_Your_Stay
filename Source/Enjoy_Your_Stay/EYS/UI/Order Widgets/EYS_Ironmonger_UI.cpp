@@ -11,10 +11,9 @@
 
 void UEYS_Ironmonger_UI::NativeConstruct()
 {
-	Button_Hammer-> OnClicked.AddDynamic(this, &UEYS_Ironmonger_UI::OnSlot0);
-	Button_Shovel->OnClicked.AddDynamic(this, &UEYS_Ironmonger_UI::OnSlot1);
-	Button_FuelTank->OnClicked.AddDynamic(this, &UEYS_Ironmonger_UI::OnSlot2);
-
+	
+	Button_FuelTank->OnClicked.AddDynamic(this, &UEYS_Ironmonger_UI::OnSlot0);
+	Button_CoalSack->OnClicked.AddDynamic(this, &UEYS_Ironmonger_UI::OnSlot1);
 
 	SetEquipmentText();
 
@@ -49,10 +48,9 @@ void UEYS_Ironmonger_UI::OnBtnSlotOrder(int32 SlotIndex, int32 Price)
 
 void UEYS_Ironmonger_UI::SetEquipmentText()
 {
-	FString HammerText = "Hammer (" + FString(TEXT("\u20BD")) + FString::FromInt(HammerPrice) + ")";
-	Text_Hammer->SetText((FText::FromString(HammerText)));
-	FString ShovelText = "Shovel (" + FString(TEXT("\u20BD")) +  FString::FromInt(ShovelPrice) + ")";
-	Text_Shovel->SetText((FText::FromString(ShovelText)));
+
 	FString FuelTankText = "FuelTank (" + FString(TEXT("\u20BD")) + FString::FromInt(FuelTankPrice) + ")";
 	Text_FuelTank->SetText((FText::FromString(FuelTankText)));
+	FString ShovelText = "Coal Sack (" + FString(TEXT("\u20BD")) + FString::FromInt(CoalSackPrice) + ")";
+	Text_CoalSack->SetText((FText::FromString(ShovelText)));
 }

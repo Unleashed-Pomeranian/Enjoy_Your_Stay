@@ -13,53 +13,44 @@
 /**
  * 
  */
-class AEYS_InteractableActor_WP;
+class AEYS_HeavyEquipmentBase;
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_Ironmonger_UI : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY(meta = (BindWidget))
-	UButton* Button_Hammer;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_Hammer;
-	UPROPERTY(meta = (BindWidget))
-	UImage* Image_Hammer;
+	
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* Button_Shovel;
+	UButton* Button_CoalSack;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_Shovel;
-	UPROPERTY(meta = (BindWidget))
-	UImage* Image_Shovel;
+	UTextBlock* Text_CoalSack;
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* Button_FuelTank;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_FuelTank;
-	UPROPERTY(meta = (BindWidget))
-	UImage* Image_FuelTank;
 
 private:
 	UFUNCTION()
 	void OnBtnSlotOrder(int32 SlotIndex,int32 Price);
 
-	int32 HammerPrice=250;
-	int32 ShovelPrice=300;
-	int32 FuelTankPrice=150;
+	int32 FuelTankPrice = 250;
+	int32 CoalSackPrice=150;
+	
 
 	UFUNCTION()
-	void OnSlot0() { OnBtnSlotOrder(0,HammerPrice); }
+	void OnSlot0() { OnBtnSlotOrder(0,FuelTankPrice); }
 	UFUNCTION()
-	void OnSlot1() { OnBtnSlotOrder(1, ShovelPrice); }
-	UFUNCTION()
-	void OnSlot2() { OnBtnSlotOrder(2, FuelTankPrice); }
+	void OnSlot1() { OnBtnSlotOrder(1, CoalSackPrice); }
+	
 	
 	
 protected:
 	virtual void NativeConstruct() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<AEYS_InteractableActor_WP>> SpawnActor;
+	TArray<TSubclassOf<AEYS_HeavyEquipmentBase>> SpawnActor;
 	UFUNCTION() void SetEquipmentText();
 	//UFUNCTION() void FSpawningActor();
 };

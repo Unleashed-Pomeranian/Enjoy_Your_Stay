@@ -16,6 +16,7 @@
 #include "EYS/Interactable Actor/EYS_Notebook.h"
 #include "GameFramework/PlayerController.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "EYS/Game Managers/EYS_MissionPostProcessVolume.h"
 
 
 // Sets default values
@@ -36,6 +37,8 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 
 	ChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor"));
 	ChildActor->SetupAttachment(FirstPersonMesh, TEXT("RightHand"));
+	ChildActorNotebook = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor Notebook"));
+	ChildActorNotebook->SetupAttachment(FirstPersonMesh, TEXT("RightHand"));
 
 	MyDialogueComponent = CreateDefaultSubobject<UEYS_QDialoguesListenerComponent>(TEXT("My Dialogue Component"));
 
@@ -121,8 +124,17 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 				EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseEquipmentWidget);
 			}
 		
+			if (IA_Notebook)
+			{
+				EIC->BindAction(IA_Notebook, ETriggerEvent::Started, this, &AEYS_MyCharacter::OpenNotebook);
+				EIC->BindAction(IA_Notebook, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseNotebook);
+			}
+			if (IA_Mission)
+			{
+				EIC->BindAction(IA_Mission, ETriggerEvent::Started, this, &AEYS_MyCharacter::EnableMission);
+				EIC->BindAction(IA_Mission, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DisableMission);
+			}
 
-			
 		
 	}
 
@@ -275,6 +287,40 @@ void AEYS_MyCharacter::StaminaRecovery()
 	
 }
 
+void AEYS_MyCharacter::OpenNotebook(const FInputActionValue& Value)
+{
+	PoseNum = 1;
+	ChildActorNotebook->SetVisibility(true);
+	SetRoot();
+}
+void AEYS_MyCharacter::CloseNotebook(const FInputActionValue& Value)
+{
+	ChildActorNotebook->SetVisibility(false);
+	PoseNum = LastPoseNum;
+	SetRoot();
+}
+void AEYS_MyCharacter::EnableMission(const FInputActionValue& Value)
+{
+	MissionPPV = Cast<AEYS_MissionPostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionPostProcessVolume::StaticClass()));
+	
+	if (MissionPPV)
+	{
+		MissionPPV->bEnabled = true;
+		MissionPPV->SetMissionPPEnabled(true);
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.25f); // %25 hız
+	}
+}
+
+void AEYS_MyCharacter::DisableMission(const FInputActionValue& Value)
+{
+	if (MissionPPV)
+	{
+		MissionPPV->bEnabled = false;
+		MissionPPV->SetMissionPPEnabled(false);
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f); // %25 hız
+	}
+}
+
 
 void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 {
@@ -314,7 +360,7 @@ void AEYS_MyCharacter::InteractUI()
 {
 	FHitResult* Hit = new FHitResult();
 	FVector Start = FirstPersonCamera->GetComponentLocation();
-	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
+	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
 		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 1.0f);
 	if (Hit->GetActor() != nullptr)
@@ -344,9 +390,9 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 
 	FHitResult* Hit = new FHitResult();
 	FVector Start = FirstPersonCamera->GetComponentLocation();
-	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
+	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
 	if (Hit->GetActor() != nullptr)
 	{
 		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
@@ -402,14 +448,16 @@ void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
 	
 }
 
+
+
 void AEYS_MyCharacter::Action_ForwardTrace()
 {
 	bIsAction = true;
 	FHitResult* Hit = new FHitResult();
 	FVector Start = FirstPersonCamera->GetComponentLocation();
-	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 500.f;
+	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
 	if (Hit->GetActor() != nullptr)
 	{
 		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
@@ -467,11 +515,21 @@ void AEYS_MyCharacter::PlayMontage(int32 MontageIndex)
 {
 	if (UAnimInstance* AnimInst = FirstPersonMesh->GetAnimInstance())
 	{
+
+		if (PoseNum == 6)
+		{
+
+			AnimInst->Montage_Play(MyCharacterMontages[MontageIndex]);
+		}
+		else
+		{
+			PoseNum = 0;
+			AnimInst->Montage_Play(MyCharacterMontages[MontageIndex]);
+		
+			if (MontageIndex == 0)
+				SetRoot();
+		}
 	
-		AnimInst->Montage_Play(MyCharacterMontages[MontageIndex]);
-		PoseNum = 0;
-		if(MontageIndex==0)
-		SetRoot();
 		
 	}
 
@@ -487,7 +545,7 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 	{
 		if (MeshValue==1)
 		{
-			ChildActor->SetChildActorClass(TSubclassOf<AActor>(NotebookActor));
+			ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
 		}
 
 		else

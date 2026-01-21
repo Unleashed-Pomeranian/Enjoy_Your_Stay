@@ -16,6 +16,7 @@ class AEYS_Notebook;
 class AEYS_MyCharacterController;
 class AEYS_InteractableActor;
 class AEYS_HeavyEquipmentBase;
+class AEYS_MissionPostProcessVolume;
 
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
@@ -34,15 +35,17 @@ UPROPERTY(EditDefaultsOnly, Category = "Input")
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UChildActorComponent* ChildActor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* ChildActorNotebook;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
 	TArray<TSubclassOf<AEYS_InteractableActor>> InteractableActors;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
-	TSubclassOf<AEYS_Notebook> NotebookActor;
 	UPROPERTY()
 	AEYS_MyCharacterController* MyPC;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	UEYS_QDialoguesListenerComponent* MyDialogueComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dialogue")
+	AEYS_MissionPostProcessVolume* MissionPPV = nullptr;
 public:
 	AEYS_MyCharacter();
     virtual void Tick(float DeltaTime) override;
@@ -79,6 +82,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_EquipmentWheel;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Notebook;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Mission;
 
 
 
@@ -97,6 +104,8 @@ protected:
 	UFUNCTION() void StopSprint(const FInputActionValue& Value);
 	UFUNCTION() void DropObject(const FInputActionValue& Value);
 	UFUNCTION() void StaminaRecovery();
+	UFUNCTION() void OpenNotebook(const FInputActionValue& Value);
+	UFUNCTION() void CloseNotebook(const FInputActionValue& Value);
 	
 
 	UFUNCTION() void OpenEquipmentWidget(const FInputActionValue& Value);
@@ -108,7 +117,8 @@ protected:
 	UFUNCTION() void Action2(const FInputActionValue& Value);
 	UFUNCTION() void ActionStart(const FInputActionValue& Value);
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
-	
+	UFUNCTION() void EnableMission(const FInputActionValue& Value);
+	UFUNCTION() void DisableMission(const FInputActionValue& Value);
 	
 
 	

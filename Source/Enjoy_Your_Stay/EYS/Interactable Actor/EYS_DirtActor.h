@@ -41,7 +41,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* TargetPointRef;
 public:	
 	// Called every frame
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* StaticMesh;
 	
 
 	float opacityValue = 3.0f;

@@ -102,5 +102,5 @@ void AEYS_CoalBox::SetCoalMeshCoal()
 	
 	int32 MeshValue = CoalAmount / 20;
 	StaticMesh_Coal->SetStaticMesh(CoalMeshes[MeshValue]);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(MeshValue));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(MeshValue));
 }

@@ -25,6 +25,7 @@ class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_I
 public:
 	// Sets default values for this character's properties
 	AEYS_GuestCharacter();
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION()

@@ -43,7 +43,7 @@ void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibi
      
 	case 3:
 	{
-		Btn_Slot3->SetIsEnabled(bIsEnable);
+		Btn_Slot2->SetIsEnabled(bIsEnable);
 		Hammer_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
@@ -51,20 +51,20 @@ void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibi
 	
 	case 4:
 	{
-		Btn_Slot4->SetIsEnabled(bIsEnable);
+		Btn_Slot3->SetIsEnabled(bIsEnable);
 		Mop_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
 	case 5:
 	{
-		Btn_Slot5->SetIsEnabled(bIsEnable);
+		Btn_Slot4->SetIsEnabled(bIsEnable);
 		Flashlight_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
 
 	case 6:
 	{
-		Btn_Slot6->SetIsEnabled(bIsEnable);
+		Btn_Slot5->SetIsEnabled(bIsEnable);
 		Shovel_Icon->SetVisibility(VisibleIcon);
 		break;
 	}

@@ -64,8 +64,8 @@ void AEYS_Phone::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 	if (bCanInteract)
 	{
 		PC->PlayerCameraManager->StartCameraFade(2.0f, 0.0f, 1.5f, FLinearColor::Black, false, true);
-	
-
+		myPlayer->PoseNum = 0;
+		myPlayer->SetRoot();
 		FRotator Rotation = { -48,180,0 };
 		PC->SetCharacterPositon(GetActorLocation(), 10, 8, Rotation);
 		PC->MobilizeCharacter(true, true, true);

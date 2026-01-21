@@ -74,8 +74,33 @@ void  AEYS_Fridge_Slot::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (myPlayer->HeldEquipment)
 	{
-		if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass())|| myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
-			PC->SetInteractionWidget("[E] Place");
+		
+			if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
+			{
+				AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
+
+				if (FoodBox->FoodType == SlotFoodType)
+				{
+					PC->SetInteractionWidget("[E] Place");
+				}
+				else
+					PC->SetInteractionWidget("Wrong Food Type.");
+			}
+		    else if(myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
+			{ 
+				AEYS_FoodBag* FoodBag = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment);
+				
+				if (FoodBag->FoodType == SlotFoodType)
+				{
+					PC->SetInteractionWidget("[E] Place");
+				}
+				else
+				    PC->SetInteractionWidget("Wrong Food Type.");
+			}
+			else
+				PC->SetInteractionWidget("Your hands are full.");
+			
+		
 	}
 	else
 		PC->SetInteractionWidget("[E] Take");

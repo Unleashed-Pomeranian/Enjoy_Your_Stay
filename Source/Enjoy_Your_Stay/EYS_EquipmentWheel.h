@@ -70,19 +70,19 @@ private:
     UFUNCTION()
     void OnSlot1() { OnBtnSlotHovered(0); }
     UFUNCTION()
-    void OnSlot2() { OnBtnSlotHovered(1); }
+    void OnSlot2() { OnBtnSlotHovered(2); }
     UFUNCTION()
-    void OnSlot3() { OnBtnSlotHovered(2); }
+    void OnSlot3() { OnBtnSlotHovered(3); }
     UFUNCTION()
-    void OnSlot4() { OnBtnSlotHovered(3); }
+    void OnSlot4() { OnBtnSlotHovered(4); }
     UFUNCTION()
-    void OnSlot5() { OnBtnSlotHovered(4); }
+    void OnSlot5() { OnBtnSlotHovered(5); }
     UFUNCTION()
-    void OnSlot6() { OnBtnSlotHovered(5); }
+    void OnSlot6() { OnBtnSlotHovered(6); }
     UFUNCTION()
-    void OnSlot7() { OnBtnSlotHovered(6); }
+    void OnSlot7() { OnBtnSlotHovered(7); }
     UFUNCTION()
-    void OnSlot8() { OnBtnSlotHovered(7); }
+    void OnSlot8() { OnBtnSlotHovered(8); }
 
 public:
     UFUNCTION() void EnableButtons(int32 Index, bool bIsEnable, ESlateVisibility VisibleIcon);

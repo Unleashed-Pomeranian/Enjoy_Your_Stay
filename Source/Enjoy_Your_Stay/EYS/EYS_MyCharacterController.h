@@ -67,7 +67,7 @@ public:
 	UFUNCTION() void SetStaminaWidget(float StaminaValue);
 	UFUNCTION() void CloseStaminaWidget();
 	UFUNCTION() void SetMoneyWidget(int32 AddValue);
-	UFUNCTION() void SetInteractionWidget(FString InterctionText);
+	UFUNCTION(BlueprintCallable) void SetInteractionWidget(FString InterctionText);
 	UFUNCTION() void SetHourWidget(float TimeofDay);
 	UFUNCTION() void CloseInteractionWidget();
 	UFUNCTION(BlueprintCallable) void MobilizeCharacter(bool bLookInput,bool BIsInputModeUI, bool ShowCursor);

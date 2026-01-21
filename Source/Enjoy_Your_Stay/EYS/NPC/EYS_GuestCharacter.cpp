@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
 #include "EYS/Interactable Actor/EYS_Phone.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
 
 
 // Sets default values
@@ -47,6 +49,14 @@ void AEYS_GuestCharacter::Tick(float DeltaTime)
 void AEYS_GuestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+}
+void AEYS_GuestCharacter::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	if (bCanInteract)
+		PC->SetInteractionWidget("[E] Talk");
+
 
 }
 
