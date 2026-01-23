@@ -9,7 +9,7 @@
 void AEYS_CoalSack::ReduceFuelValue(int32 ReduceValue)
 {
 	CoalValue -= ReduceValue;
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(CoalValue));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(CoalValue));
 	if (CoalValue <= 0)
 	{
 		AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));

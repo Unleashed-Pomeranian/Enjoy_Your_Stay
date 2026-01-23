@@ -54,7 +54,7 @@ void AEYS_GuestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 void AEYS_GuestCharacter::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	if (bCanInteract)
+	if (bCanInteract&& !bIsCorrupted)
 		PC->SetInteractionWidget("[E] Talk");
 
 
@@ -68,8 +68,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 {
 	UE_LOG(LogTemp, Warning, TEXT("NPC Move Completed → Interaction Enabled"));
 	bCanInteract = true;
-	
-	
+
 }
 
 void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
@@ -138,6 +137,12 @@ void AEYS_GuestCharacter::destroyme()
 	if(DialogueNum == 2|| DialogueNum == 3)
 	{
 		MoveTo(MainLock, 50);
+		UKismetSystemLibrary::K2_SetTimer(this, "DestroyFoodBag", 2.0f, false);
+	}
+	if (DialogueNum ==4)
+	{
+		MoveTo(MainLock, 50);
+		DialogueNum = 1;
 	}
 }
 
@@ -145,6 +150,7 @@ void AEYS_GuestCharacter::CorruptTheGuest()
 {
 	CachedAIController->CorruptedNPC();
 	bIsCorrupted = true;
+	DialogueNum = 4;
 	
 	
 }
@@ -171,17 +177,17 @@ void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 {
 	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
 	{
-		AEYS_FoodBag* FoodBag = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment);
-		if(FoodBag->FoodType==FoodType)
+		FoodBagRef = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment);
+		if(FoodBagRef->FoodType==FoodType)
 		{
-			FoodBag->AttachToComponent(ThirdPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Bag");
+			FoodBagRef->AttachToComponent(ThirdPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Bag");
 			myPlayer->HeldEquipment = nullptr;
 			myPlayer->bIsHandsFull = false;
 			DialogueNum = 2;
 			bIsOrderFood = false;
 			MentalSlateValue += 20.0f;
 
-			
+			UKismetSystemLibrary::K2_SetTimer(this, "OrderFood", 30.0f, false);
 		}
 		else
 		{
@@ -192,10 +198,6 @@ void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 		GuestStartDialogue(myPlayer);
 	}
 }
-
-
-
-
 
 
 void AEYS_GuestCharacter::GuestStartDialogue(AEYS_MyCharacter* myPlayer)
@@ -210,4 +212,9 @@ void AEYS_GuestCharacter::GuestStartDialogue(AEYS_MyCharacter* myPlayer)
 	DialogueComponent->StartDialogue(myPlayer, DialogueNum);
 	myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::destroyme);
 
+}
+void AEYS_GuestCharacter::DestroyFoodBag()
+{
+	if(FoodBagRef)
+		FoodBagRef->Destroy();
 }

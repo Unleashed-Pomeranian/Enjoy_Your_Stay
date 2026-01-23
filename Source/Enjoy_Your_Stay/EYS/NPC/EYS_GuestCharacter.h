@@ -10,6 +10,7 @@
 
 
 class AEYS_GuestAIController;
+class AEYS_FoodBag;
 
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_InteractInterface
@@ -50,7 +51,8 @@ public:
 	bool bIsCorrupted = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DialogueNum = 0;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AEYS_FoodBag* FoodBagRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MentalSlateValue = 100.0f;
 protected:
@@ -77,5 +79,6 @@ public:
 	UFUNCTION() void CorruptTheGuest();
 	UFUNCTION() void OrderFood();
 	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
+	UFUNCTION() void DestroyFoodBag();
 	
 };
