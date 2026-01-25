@@ -16,7 +16,7 @@ class ENJOY_YOUR_STAY_API AEYS_MySunMoonDaySequenceActor : public ASunMoonDaySeq
 
 
 
-	
+	FTimerHandle TimerHandle;
 
  
 protected:
@@ -28,4 +28,5 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION() void FSetTimer();
+	UPROPERTY() int32 DayNum=1;
 };

@@ -17,7 +17,7 @@ class AEYS_MyCharacterController;
 class AEYS_InteractableActor;
 class AEYS_HeavyEquipmentBase;
 class AEYS_MissionPostProcessVolume;
-
+class AEYS_Key;
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_MyCharacter : public ACharacter
 {
@@ -40,6 +40,8 @@ UPROPERTY(EditDefaultsOnly, Category = "Input")
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
 	TArray<TSubclassOf<AEYS_InteractableActor>> InteractableActors;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS|Interact")
+	TSubclassOf<AEYS_Key> KeyActor;
 	UPROPERTY()
 	AEYS_MyCharacterController* MyPC;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
@@ -154,7 +156,7 @@ public:
 
 
 public:
-	UFUNCTION() virtual void SetRoot();
+	UFUNCTION(BlueprintCallable) virtual void SetRoot();
 	UFUNCTION(BlueprintCallable) virtual void SetRootBP();
 	UFUNCTION() virtual void PlayMontage(int32 MontageIndex);
 

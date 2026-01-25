@@ -82,12 +82,17 @@ void AEYS_DirtActor::SetGuestMentalHealth()
 		Director->SetMentalSlate(0.5f);
 }
 
+void AEYS_DirtActor::PlayCleaningAudio_Implementation()
+{
+}
+
 
 void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer) 
 {
 	
 	opacityValue -= cleaningValue;
 	DynMath->SetScalarParameterValue("Opacity", opacityValue);
+	PlayCleaningAudio();
 	if (opacityValue <= 2.1f)
 	{
 		cleaningValue = 0.021f;

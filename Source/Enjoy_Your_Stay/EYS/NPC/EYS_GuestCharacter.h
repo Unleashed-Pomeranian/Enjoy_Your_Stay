@@ -50,16 +50,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsCorrupted = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsCheckOut = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DialogueNum = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AEYS_FoodBag* FoodBagRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MentalSlateValue = 100.0f;
+	UPROPERTY()
+	int32 CheckOutDay;
+	float CheckOutTime;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnyWhere,BlueprintReadWrite) FVector MainLock;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite) FVector DestroyLock;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite) int32 RoomNumber;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	UEYS_QDialoguesSpeakerComponent* DialogueComponent;
@@ -80,5 +88,6 @@ public:
 	UFUNCTION() void OrderFood();
 	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void DestroyFoodBag();
+	UFUNCTION() void CheckOut(AEYS_MyCharacter* myPlayer);
 	
 };

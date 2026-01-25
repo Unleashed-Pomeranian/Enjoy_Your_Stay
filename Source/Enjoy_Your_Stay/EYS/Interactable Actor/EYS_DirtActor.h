@@ -39,6 +39,7 @@ protected:
 	TArray<TObjectPtr<UMaterial>> DirtMaterial;
 	UFUNCTION()void SetGuestMentalHealth();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* TargetPointRef;
+	UFUNCTION(BlueprintNativeEvent) void PlayCleaningAudio();
 public:	
 	// Called every frame
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

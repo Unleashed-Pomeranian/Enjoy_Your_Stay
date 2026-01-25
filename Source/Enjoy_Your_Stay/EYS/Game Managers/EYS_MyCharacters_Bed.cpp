@@ -63,12 +63,13 @@ void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlaye
 
 		if (DayWidgetInstance)
 		{
-			DayNum++;
-			DayWidgetInstance->SetDayText(DayNum);
+			DayCycleActor->DayNum++;
+			DayWidgetInstance->SetDayText(DayCycleActor->DayNum);
 			DayWidgetInstance->SetFocus();
 			DayWidgetInstance->AddToViewport();
 			DayCycleActor->SetTimeOfDay(10.0f);
 			DayCycleActor->FSetTimer();
+			DayCycleActor->Play();
 			PC->bShowMouseCursor = true;
 			PC->SetInputMode(FInputModeUIOnly());
 			DayWidgetInstance->myPC = PC;

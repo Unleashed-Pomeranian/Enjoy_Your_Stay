@@ -18,9 +18,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "EYS|NPC")
 	AEYS_GuestCharacter* RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform);
 	void SetMentalSlate( const float ReduceValue);
+	void CheckOutPlayer(int32 DayValue,float TimeValue);
+
 
 private:
 	// ?stersen aktif NPC listesi
 	UPROPERTY()
 	TArray<TObjectPtr<AEYS_GuestCharacter>> ActiveNPCs;
+
+public:
+
+	UPROPERTY() bool bIsAnyGuestCorrupted = false;
+	UPROPERTY() FVector LobyLocation;
 };

@@ -61,7 +61,8 @@ void AEYS_FixActor::Interact(AEYS_MyCharacter* myPlayer)
 
 void AEYS_FixActor::SetPipeMesh()
 {
-	FixValue = FMath::Clamp(FixValue+1,0.0f,100.0f);
+	FixValue = FMath::Clamp(FixValue+0.7,0.0f,100.0f);
+	PlayFixAudio();
 
 	if (FixValue >= 100.f)
 	{
@@ -86,5 +87,10 @@ void AEYS_FixActor::SetBoilerFuel()
 {
 	if (!(BoilerActor==nullptr))
 	BoilerActor->SetCoalAmount(-1.0f);
+}
+
+void AEYS_FixActor::PlayFixAudio_Implementation()
+{
+
 }
 

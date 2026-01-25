@@ -4,6 +4,7 @@
 #include "EYS_WorldSubsystem.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
 
 AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform)
 {
@@ -36,13 +37,19 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	if (Spawned)
 	{
 		UKismetSystemLibrary::K2_SetTimer(Spawned, "OrderFood", 120.0f, false);
+		
 	}
 
+	if (AEYS_MySunMoonDaySequenceActor* DayActor = Cast<AEYS_MySunMoonDaySequenceActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MySunMoonDaySequenceActor::StaticClass())))
+	{
+		Spawned->CheckOutDay = DayActor->DayNum+1;
+		Spawned->CheckOutTime = DayActor->GetTimeOfDay();
+	}
 
 	return Spawned;
 }
 
-void UEYS_WorldSubsystem::SetMentalSlate( const float ReduceValue)
+void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
 {
 	for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
 	{
@@ -53,26 +60,55 @@ void UEYS_WorldSubsystem::SetMentalSlate( const float ReduceValue)
 		}
 		else
 		{
-			ActiveNPCs[i]->MentalSlateValue =FMath::Clamp(ActiveNPCs[i]->MentalSlateValue -= ReduceValue,0,100);
+			ActiveNPCs[i]->MentalSlateValue = FMath::Clamp(ActiveNPCs[i]->MentalSlateValue -= ReduceValue, 0, 100);
 		}
 
 	}
-
-	for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
+	if (!bIsAnyGuestCorrupted)
 	{
-		if (!ActiveNPCs[i])
+		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
 		{
-			ActiveNPCs.RemoveAtSwap(i);
-			continue;
-		}
-		else
-		{
-			if (ActiveNPCs[i]->MentalSlateValue <= 0.0f)
+			if (!ActiveNPCs[i])
 			{
-				ActiveNPCs[i]->CorruptTheGuest();
-				
+				ActiveNPCs.RemoveAtSwap(i);
+				continue;
 			}
-		}
+			else
+			{
 
+
+				if (ActiveNPCs[i]->MentalSlateValue <= 0.0f)
+				{
+
+					{
+						ActiveNPCs[i]->CorruptTheGuest();
+
+
+					}
+
+				}
+
+
+			}
+
+		}
+    }
+	
+}
+
+void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
+{
+	{
+
+		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
+		{
+			if ((ActiveNPCs[i]->CheckOutDay == DayValue) && (ActiveNPCs[i]->CheckOutTime <= TimeValue)&&!(ActiveNPCs[i]->bIsCheckOut))
+			{
+				ActiveNPCs[i]->MoveTo(LobyLocation, 50);
+				ActiveNPCs[i]->bIsCheckOut = true;
+				ActiveNPCs.RemoveAtSwap(i);
+			}
+
+		}
 	}
 }

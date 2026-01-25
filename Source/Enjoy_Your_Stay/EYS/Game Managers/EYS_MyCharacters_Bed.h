@@ -29,7 +29,7 @@ protected:
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	UPROPERTY() int32 DayNum=1;
+
      UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Day Actor", meta = (AllowPrivateAcces = "True"))
 	 AEYS_MySunMoonDaySequenceActor* DayCycleActor;
 

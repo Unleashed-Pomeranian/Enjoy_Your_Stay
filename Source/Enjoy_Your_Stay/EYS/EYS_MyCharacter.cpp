@@ -17,7 +17,7 @@
 #include "GameFramework/PlayerController.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Game Managers/EYS_MissionPostProcessVolume.h"
-
+#include "EYS/Key/EYS_Key.h"
 
 // Sets default values
 AEYS_MyCharacter::AEYS_MyCharacter()
@@ -324,7 +324,7 @@ void AEYS_MyCharacter::DisableMission(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 {
-	if (!bIsHandsFull)
+	if (!bIsHandsFull&&!bIsHaveKey)
 	{
 		if (!(GetCharacterMovement()->IsFalling()))
 		{
@@ -339,7 +339,7 @@ void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)
 void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 {
 
-	if (!bIsHandsFull)
+	if (!bIsHandsFull && !bIsHaveKey)
 	{
 		if (MyPC)
 		{
@@ -543,9 +543,9 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 
 	if(ChildActor)
 	{
-		if (MeshValue==1)
+		if (MeshValue==6)
 		{
-			ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
+			ChildActor->SetChildActorClass(TSubclassOf<AActor>(KeyActor));
 		}
 
 		else

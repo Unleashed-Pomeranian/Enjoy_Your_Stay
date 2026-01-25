@@ -43,5 +43,5 @@ public:
 	bool Iscorrapted = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	AEYS_GuestCharacter* GuestCharacter;
-	
+
 };

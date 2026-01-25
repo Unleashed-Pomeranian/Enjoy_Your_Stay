@@ -6,6 +6,7 @@
 #include "EYS_WorldSubsystem.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
 
+
 // Sets default values
 AEYS_GuestSpawner::AEYS_GuestSpawner()
 {
@@ -19,8 +20,12 @@ void AEYS_GuestSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	EmptyRooms = 4;
-	Rooms = 4;
+
 	UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", 5.0f, false);
+
+	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
+	if (!Director) return; 
+	Director->LobyLocation = LobyLoc;
 }
 
 void AEYS_GuestSpawner::SpawnGuest()
@@ -34,15 +39,26 @@ void AEYS_GuestSpawner::SpawnGuest()
 			Director->RequestSpawnNPC(GuestClass, GetActorTransform());
 		EmptyRooms -= 1;
 		 int32 RandomIndex = FMath::RandRange(55,120);
-		UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", RandomIndex, true);
+		UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", RandomIndex, false);
 	}
 
 }
+
 
 // Called every frame
 void AEYS_GuestSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AEYS_GuestSpawner::SetEmptyRoom()
+{
+	EmptyRooms++;
+	if (EmptyRooms > 0)
+	{
+		int32 RandomIndex = FMath::RandRange(55, 120);
+		UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", RandomIndex, false);
+	}
 }
 

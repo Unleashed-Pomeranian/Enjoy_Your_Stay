@@ -37,6 +37,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) AEYS_Boiler* BoilerActor;
 	
 	UFUNCTION() void SetBoilerFuel();
+	UFUNCTION(BlueprintNativeEvent) void PlayFixAudio();
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
