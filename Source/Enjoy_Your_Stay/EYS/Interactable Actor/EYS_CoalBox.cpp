@@ -95,6 +95,7 @@ void AEYS_CoalBox::DrainingCoal()
 	CoalAmount = FMath::Clamp(CoalAmount - 20, 0, 100);
 	SetCoalMeshCoal();
 	bisTakeCoal = false;
+	
 }
 
 void AEYS_CoalBox::SetCoalMeshCoal()
@@ -103,4 +104,9 @@ void AEYS_CoalBox::SetCoalMeshCoal()
 	int32 MeshValue = CoalAmount / 20;
 	StaticMesh_Coal->SetStaticMesh(CoalMeshes[MeshValue]);
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(MeshValue));
+	PlayCoalAudio();
+}
+
+void AEYS_CoalBox::PlayCoalAudio_Implementation()
+{
 }

@@ -40,12 +40,14 @@ protected:
 	UFUNCTION() void FillingCoal(int32 AddValue);
 	UFUNCTION() void DrainingCoal();
 	UFUNCTION() void SetCoalMeshCoal();
+	UFUNCTION(BlueprintNativeEvent) void PlayCoalAudio();
 
 	UPROPERTY() int32 CoalAmount = 0.0f;
 	UPROPERTY() bool bisTakeCoal=false;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
 
 
 };
