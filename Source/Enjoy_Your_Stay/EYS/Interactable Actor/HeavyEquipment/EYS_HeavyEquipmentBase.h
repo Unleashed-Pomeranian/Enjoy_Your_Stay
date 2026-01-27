@@ -27,7 +27,7 @@ protected:
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	
+	UFUNCTION(BlueprintNativeEvent) void PlayHeavyAudio();
 	
 
 public:	
@@ -35,4 +35,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable) void DettachActor();
 	UFUNCTION() void AttachActor(AEYS_MyCharacter* myPlayer);
+
 };

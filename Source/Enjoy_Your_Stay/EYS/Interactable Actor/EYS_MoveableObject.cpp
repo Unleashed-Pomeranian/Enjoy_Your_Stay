@@ -7,6 +7,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "Timermanager.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
+#include "Kismet/GamePlayStatics.h"
 
 
 // Sets default values
@@ -92,12 +93,21 @@ void AEYS_MoveableObject::DoorInteract()
 		StartRot.Yaw = RotStartValue;
 		EndRot.Yaw = RotEndValue;	
 		bIsTrigrred = true;
+		UKismetSystemLibrary::K2_SetTimer(this, "DoorInteract", 3.0f, false);
+		PlayMoveableAudio();
+
 	}
 	else
 	{
 		MainTimeline->Reverse();
 		bIsTrigrred = false;
+		PlayMoveableAudio();
+		UKismetSystemLibrary::K2_ClearTimer(this, "DoorInteract");
 	}
+}
+
+void AEYS_MoveableObject::PlayMoveableAudio_Implementation()
+{
 }
 
 

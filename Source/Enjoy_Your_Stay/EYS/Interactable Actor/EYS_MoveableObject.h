@@ -49,10 +49,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timeline Actor | Mesh")
 	UTimelineComponent* MainTimeline;
-	
+	UFUNCTION(BlueprintNativeEvent)  void PlayMoveableAudio();
 	
    
-
+		
 public:	
 	
 	

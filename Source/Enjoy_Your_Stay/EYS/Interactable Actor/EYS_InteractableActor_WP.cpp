@@ -37,9 +37,14 @@ void  AEYS_InteractableActor_WP::InteractUI_Implementation(AEYS_MyCharacter* myP
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	PC->SetInteractionWidget("[E] Take");
 }
+void AEYS_InteractableActor_WP::PlayEquipAudio_Implementation()
+{
+
+}
 void  AEYS_InteractableActor_WP::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	Interact(myPlayer);
+	
 }
 
 void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
@@ -47,6 +52,5 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	PC->EquipmentWheelInstance->EnableButtons(Index, true, ESlateVisibility::Visible);
-	Destroy();
-
+	PlayEquipAudio();
 }

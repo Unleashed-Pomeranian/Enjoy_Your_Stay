@@ -34,7 +34,7 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentI", meta = (AllowPrivateAccess = "true"))
 	int32 Index;
-
+	UFUNCTION(BlueprintNativeEvent) void PlayEquipAudio();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

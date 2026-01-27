@@ -91,6 +91,7 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 				myPlayer->PlayMontage(2);
 				GeneratorActivateWidgetInstance->TimerFTimer();
+				PlayActivateSound();
 			}
 		}
 	}
@@ -118,6 +119,7 @@ void AEYS_Generator::ReduceFuel()
 		UKismetSystemLibrary::K2_ClearTimer(this, "ReduceFuel");
 		bIsWorking = false;
 		PointLight->SetLightColor(LightColor[0]);
+		PlayNaturalSound(bIsWorking);
 	}
 
 }
@@ -139,6 +141,14 @@ void AEYS_Generator::AddFuel()
 		UKismetSystemLibrary::K2_ClearTimer(this, "AddFuel");
 	}
 	
+}
+
+void AEYS_Generator::PlayActivateSound_Implementation()
+{
+}
+
+void AEYS_Generator::PlayNaturalSound_Implementation(bool bIsWork)
+{
 }
 
 

@@ -58,4 +58,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<FLinearColor> LightColor;
 	UPROPERTY()
 	AEYS_FuelTank* CurrentFuelTank = nullptr;
+	UFUNCTION(BlueprintNativeEvent) void PlayActivateSound();
+public:
+	UFUNCTION(BlueprintNativeEvent) void PlayNaturalSound(bool bIsWork);
 };

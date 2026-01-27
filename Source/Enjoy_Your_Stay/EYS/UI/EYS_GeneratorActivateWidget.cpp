@@ -64,6 +64,7 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 		Generator->bIsWorking = true;
 		Generator->StartStopTimer();
 		Generator->testlight();
+		Generator->PlayNaturalSound(true);
 		
 		Score_Text->SetText(FText::FromString(FString::FromInt(0)));
 

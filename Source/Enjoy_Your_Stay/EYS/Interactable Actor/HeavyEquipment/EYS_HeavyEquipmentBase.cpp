@@ -34,6 +34,10 @@ void   AEYS_HeavyEquipmentBase::Interact(AEYS_MyCharacter* myPlayer)
 	return;
 }
 
+void AEYS_HeavyEquipmentBase::PlayHeavyAudio_Implementation()
+{
+}
+
 void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 {
 	StaticMesh->SetSimulatePhysics(false);
@@ -44,6 +48,7 @@ void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 	myPlayer->SetRoot();
 	myPlayer->HeldEquipment = this;
 	myPlayer->bIsHandsFull = true;
+	PlayHeavyAudio();
 }
 
 void AEYS_HeavyEquipmentBase::DettachActor()
@@ -51,6 +56,7 @@ void AEYS_HeavyEquipmentBase::DettachActor()
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	StaticMesh->SetSimulatePhysics(true);
+	PlayHeavyAudio();
 }
 
 
