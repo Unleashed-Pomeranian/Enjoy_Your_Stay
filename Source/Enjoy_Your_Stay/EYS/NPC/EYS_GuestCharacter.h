@@ -73,7 +73,7 @@ protected:
 	UEYS_QDialoguesSpeakerComponent* DialogueComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Food")
 	EFoodType FoodType;
-	
+	UFUNCTION(BlueprintNativeEvent) void PlayNPCAudio();
 
 public:	
 	// Called every frame

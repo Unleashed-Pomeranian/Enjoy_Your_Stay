@@ -32,7 +32,8 @@ protected:
 	
 public:
 	UFUNCTION() void SetDayText(int32 DayValue);
-	UFUNCTION() void StarNewDay();
+    UFUNCTION() void StarNewDay();
+	UFUNCTION(BlueprintNativeEvent) void PlayAnim();
 	UPROPERTY(EditAnywhere) AEYS_MyCharacterController* myPC;
 	
 };

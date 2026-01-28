@@ -93,7 +93,7 @@ void AEYS_MoveableObject::DoorInteract()
 		StartRot.Yaw = RotStartValue;
 		EndRot.Yaw = RotEndValue;	
 		bIsTrigrred = true;
-		UKismetSystemLibrary::K2_SetTimer(this, "DoorInteract", 3.0f, false);
+		//UKismetSystemLibrary::K2_SetTimer(this, "DoorInteract", 3.0f, false);
 		PlayMoveableAudio();
 
 	}
@@ -102,7 +102,7 @@ void AEYS_MoveableObject::DoorInteract()
 		MainTimeline->Reverse();
 		bIsTrigrred = false;
 		PlayMoveableAudio();
-		UKismetSystemLibrary::K2_ClearTimer(this, "DoorInteract");
+		//UKismetSystemLibrary::K2_ClearTimer(this, "DoorInteract");
 	}
 }
 

@@ -35,9 +35,14 @@ void AEYS_GuestCharacter::BeginPlay()
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 
-	MoveTo(MainLock, 50.0f);
+	MoveTo(MainLock, 20.0f);
 
 	
+}
+
+void AEYS_GuestCharacter::PlayNPCAudio_Implementation()
+{
+
 }
 
 // Called every frame
@@ -85,17 +90,20 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 	{
 		if (!bIsCorrupted)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "biscorrupt");
 			if (bCanInteract)
 			{
 				if (bIsOrderFood)
 				{
 					TakeFood(myPlayer);
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "food");
 				}
 				else
 				{
 					if (!bisDialogueEnd)
 					{
 						GuestStartDialogue(myPlayer);
+						GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "dialogue");
 					}
 					else
 					{
@@ -124,7 +132,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 void AEYS_GuestCharacter::MoveTo(FVector Target, float AccceptanceRadius)
 {
 	CachedAIController->MoveToPoint(Target,AccceptanceRadius);
-	
+	bCanInteract = false;
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "NOVEE");
 }
 
@@ -152,6 +160,7 @@ void AEYS_GuestCharacter::destroyme()
 	{
 		MoveTo(MainLock, 50);
 		bIsOrderFood = false;
+		DialogueNum;
 		if(DialogueNum == 2) UKismetSystemLibrary::K2_SetTimer(this, "DestroyFoodBag", 2.0f, false);
 	}
 	{
@@ -165,22 +174,24 @@ void AEYS_GuestCharacter::destroyme()
 	if (DialogueNum == 5)
 	{
 		MoveTo(DestroyLock, 50.0f);
-	
+		
 	}
 }
 
 void AEYS_GuestCharacter::CorruptTheGuest()
 {
-	if (!bIsCheckOut&&bIsOrderFood)
+	if (!bIsCheckOut&&!bIsOrderFood)
 	{
 		if (IsValid(CachedAIController))
 		{
+			PlayNPCAudio();
 			bIsCorrupted = true;
 			CachedAIController->CorruptedNPC();
 			DialogueNum = 4;
 			UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 			if (!Director) return;
 			Director->bIsAnyGuestCorrupted = true;
+			
 
 		}
 	}

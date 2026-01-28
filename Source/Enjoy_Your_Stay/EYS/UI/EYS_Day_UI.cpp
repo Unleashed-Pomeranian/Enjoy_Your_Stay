@@ -23,9 +23,15 @@ void UEYS_Day_UI::StarNewDay()
 {
     if (myPC)
     {
+        PlayAnim();
         UGameplayStatics::SetGamePaused(GetWorld(), false);
         myPC->bShowMouseCursor = false;
         myPC->SetInputMode(FInputModeGameOnly());
-        RemoveFromParent();
+       
     }
+}
+
+void UEYS_Day_UI::PlayAnim_Implementation()
+{
+
 }

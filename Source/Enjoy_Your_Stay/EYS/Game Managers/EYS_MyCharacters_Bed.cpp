@@ -7,7 +7,7 @@
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/UI/EYS_Day_UI.h"
-
+#include "EYS/EYS_OrderSpawner.h"
 // Sets default values
 AEYS_MyCharacters_Bed::AEYS_MyCharacters_Bed()
 {
@@ -61,6 +61,10 @@ void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlaye
 		if (DayWidgetClass)
 			DayWidgetInstance = CreateWidget<UEYS_Day_UI>(PC, DayWidgetClass);
 
+		if (AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass())))
+		{
+			OrderSpawner->SpawnOrder();
+		}
 		if (DayWidgetInstance)
 		{
 			DayCycleActor->DayNum++;
@@ -76,6 +80,8 @@ void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlaye
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
 
 		}
+
+
 	}
 }
 

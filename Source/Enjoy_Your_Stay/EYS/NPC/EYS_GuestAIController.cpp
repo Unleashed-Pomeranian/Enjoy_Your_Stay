@@ -40,7 +40,7 @@ void AEYS_GuestAIController::CorruptedNPC()
 		}
 		const int32 RandomIndex = FMath::RandRange(0, FoundPipes.Num() - 1);
 		SinglePipeRef = FoundPipes[RandomIndex];
-		MoveToPoint(SinglePipeRef->GetActorLocation(), 50);
+		MoveToPoint(SinglePipeRef->GetActorLocation(), 10.0f);
 		Iscorrapted = true;
 		GuestCharacter->GetCharacterMovement()->MaxWalkSpeed = 400;
 	}

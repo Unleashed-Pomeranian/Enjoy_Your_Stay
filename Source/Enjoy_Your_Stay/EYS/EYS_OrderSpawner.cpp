@@ -18,7 +18,7 @@ AEYS_OrderSpawner::AEYS_OrderSpawner()
 void AEYS_OrderSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnOrder", 25.0f, true);
+	
 }
 
 // Called every frame

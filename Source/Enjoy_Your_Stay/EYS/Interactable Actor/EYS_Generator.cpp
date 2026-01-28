@@ -89,7 +89,7 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 					PC->MobilizeCharacter(true, false, false);
 				}
 
-				myPlayer->PlayMontage(2);
+				//myPlayer->PlayMontage(2);
 				GeneratorActivateWidgetInstance->TimerFTimer();
 				PlayActivateSound();
 			}
