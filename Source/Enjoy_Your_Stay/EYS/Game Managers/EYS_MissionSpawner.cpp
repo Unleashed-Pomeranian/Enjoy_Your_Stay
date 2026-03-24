@@ -4,6 +4,8 @@
 #include "EYS/Game Managers/EYS_MissionSpawner.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/TargetPoint.h"
+#include "EYS/Interactable Actor/EYS_FixActor.h"
+#include "EYS/Interactable Actor/EYS_DirtActor.h"
 
 AEYS_MissionSpawner::AEYS_MissionSpawner()
 {

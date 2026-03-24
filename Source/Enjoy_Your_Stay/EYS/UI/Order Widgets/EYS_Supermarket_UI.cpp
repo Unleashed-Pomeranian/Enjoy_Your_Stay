@@ -5,7 +5,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/EYS_OrderSpawner.h"
-
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
 
 void UEYS_Supermarket_UI::NativeConstruct()
 {
