@@ -3,6 +3,7 @@
 
 #include "EYS/UI/Computer Widgets/EYS_UpgradeSystem_UI.h"
 #include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
+#include "EYS/Game Managers/EYS_EconomySubsystem.h"
 
 void UEYS_UpgradeSystem_UI::NativeConstruct()
 {
@@ -60,6 +61,7 @@ void UEYS_UpgradeSystem_UI::NativeConstruct()
 
 	if(Button_Close) Button_Close->OnClicked.AddDynamic(this, &UEYS_UpgradeSystem_UI::CloseUpgradeWidget);
 	CheckUpgrades();
+	UpdateCurrentMoney();
 }
 
 void UEYS_UpgradeSystem_UI::ShowUpgradeText(int32 SlotIndex)
@@ -68,7 +70,7 @@ void UEYS_UpgradeSystem_UI::ShowUpgradeText(int32 SlotIndex)
 	{
 		Text_Upgrade->SetText(UpgradeText[SlotIndex]);
 		Text_Header->SetText(HeaderText[SlotIndex]);
-		FString Price = FString(TEXT("$ ")) + UpgradePriceText[SlotIndex];
+		FString Price = FString(TEXT("$ ")) + FString::FromInt(UpgradePrice[SlotIndex]);
 		Text_UpgradePrice->SetText(FText::FromString(Price));
 	    Overlay_UpgradeText->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -84,163 +86,207 @@ void UEYS_UpgradeSystem_UI::HideUpgradeText()
 
 void UEYS_UpgradeSystem_UI::SetGeneratorUpgrade(int32 UpgradeIndex)
 {
-	UEYS_UpgradeSubsystem* UpgradeSubsystem =
-		GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
-	if (UpgradeSubsystem)
-	{
+	UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+
+	UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>();
+
+	if (!US || !ES) return;
+	
 		switch (UpgradeIndex)
 		{
 		case 0:
 		{
-			Button_GenUp1->SetIsEnabled(false);
-			Button_GenUp2->SetIsEnabled(true);
-			UpgradeSubsystem->ApplyGeneratorUpgrade(UpgradeIndex);
-			Button_GenUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[0]);
+			if (ES->SpendMoney(UpgradePrice[0]))
+			{
+				Button_GenUp1->SetIsEnabled(false);
+				Button_GenUp2->SetIsEnabled(true);
+				US->ApplyGeneratorUpgrade(UpgradeIndex);
+				Button_GenUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[0]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		case 1:
 		{
-			Button_GenUp2->SetIsEnabled(false);
-			Button_GenUp3->SetIsEnabled(true);
-			UpgradeSubsystem->ApplyGeneratorUpgrade(UpgradeIndex);
-			Button_GenUp2->WidgetStyle.Normal.SetResourceObject(DisableTextures[1]);
+			if (ES->SpendMoney(UpgradePrice[1]))
+			{
+				Button_GenUp2->SetIsEnabled(false);
+				Button_GenUp3->SetIsEnabled(true);
+				US->ApplyGeneratorUpgrade(UpgradeIndex);
+				Button_GenUp2->WidgetStyle.Normal.SetResourceObject(DisableTextures[1]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		case 2:
 		{
-			Button_GenUp3->SetIsEnabled(false);
-			UpgradeSubsystem->ApplyGeneratorUpgrade(UpgradeIndex);
-			Button_GenUp3->WidgetStyle.Normal.SetResourceObject(DisableTextures[2]);
+			if (ES->SpendMoney(UpgradePrice[2]))
+			{
+				Button_GenUp3->SetIsEnabled(false);
+				US->ApplyGeneratorUpgrade(UpgradeIndex);
+				Button_GenUp3->WidgetStyle.Normal.SetResourceObject(DisableTextures[2]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		default:
 			break;
 		}
-	}
+		
+	
 }
 
 void UEYS_UpgradeSystem_UI::SetBoilerUpgrade(int32 UpgradeIndex)
 {
 
-	UEYS_UpgradeSubsystem* UpgradeSubsystem =
-		GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
-	if (UpgradeSubsystem)
-	{
-		UpgradeSubsystem->ApplyBoilerUpgrade(UpgradeIndex);
+	UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>();
+	if (!US || !ES) return;
+	
+		US->ApplyBoilerUpgrade(UpgradeIndex);
 		switch (UpgradeIndex)
 		{
 		case 0:
 		{
-			Button_BoilerUp1->SetIsEnabled(false);
-			Button_BoilerUp2->SetIsEnabled(true);
-			Button_BoilerUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[3]);
+			if (ES->SpendMoney(UpgradePrice[3]))
+			{
+				Button_BoilerUp1->SetIsEnabled(false);
+				Button_BoilerUp2->SetIsEnabled(true);
+				Button_BoilerUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[3]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		case 1:
 		{
-			Button_BoilerUp2->SetIsEnabled(false);
-			Button_BoilerUp3->SetIsEnabled(true);
-			Button_BoilerUp2->WidgetStyle.Normal.SetResourceObject(DisableTextures[4]);
+			if (ES->SpendMoney(UpgradePrice[4]))
+			{
+				Button_BoilerUp2->SetIsEnabled(false);
+				Button_BoilerUp3->SetIsEnabled(true);
+				Button_BoilerUp2->WidgetStyle.Normal.SetResourceObject(DisableTextures[4]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		case 2:
 		{
-			Button_BoilerUp3->SetIsEnabled(false);
-			Button_BoilerUp3->WidgetStyle.Normal.SetResourceObject(DisableTextures[5]);
+			if (ES->SpendMoney(UpgradePrice[5]))
+			{
+				Button_BoilerUp3->SetIsEnabled(false);
+				Button_BoilerUp3->WidgetStyle.Normal.SetResourceObject(DisableTextures[5]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		default:
 			break;
 		}
-	}
+	
 }
 
 void UEYS_UpgradeSystem_UI::SetGuestUpgrade(int32 UpgradeIndex)
 {
-	UEYS_UpgradeSubsystem* UpgradeSubsystem =
-		GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>();
 
-	if (UpgradeSubsystem)
-	{
-		UpgradeSubsystem->ApplyGuestUpgrade(UpgradeIndex);
+	if (!US || !ES) return;
+	
+
+		US->ApplyGuestUpgrade(UpgradeIndex);
 		switch (UpgradeIndex)
 		{
 		case 0:
 		{
-
-			Button_GuestUp1->SetIsEnabled(false);
-			Button_GuestUp2->SetIsEnabled(true);
-			Button_GuestUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[6]);
-
+			if (ES->SpendMoney(UpgradePrice[6]))
+			{
+				Button_GuestUp1->SetIsEnabled(false);
+				Button_GuestUp2->SetIsEnabled(true);
+				Button_GuestUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[6]);
+				UpdateCurrentMoney();
+			}
 
 			break;
 		}
 		case 1:
 		{
-			Button_GuestUp2->SetIsEnabled(false);
-			Button_GuestUp3->SetIsEnabled(true);
-			Button_GuestUp2->WidgetStyle.Normal.SetResourceObject(DisableTextures[7]);
-			
+			if (ES->SpendMoney(UpgradePrice[7]))
+			{
+				Button_GuestUp2->SetIsEnabled(false);
+				Button_GuestUp3->SetIsEnabled(true);
+				Button_GuestUp2->WidgetStyle.Normal.SetResourceObject(DisableTextures[7]);
+				UpdateCurrentMoney();
+			}
 			break;
 		}
 		case 2:
 		{
-			Button_GuestUp3->SetIsEnabled(false);
-			Button_GuestUp3->WidgetStyle.Normal.SetResourceObject(DisableTextures[8]);
-			break;
+			if (ES->SpendMoney(UpgradePrice[8]))
+			{
+				Button_GuestUp3->SetIsEnabled(false);
+				Button_GuestUp3->WidgetStyle.Normal.SetResourceObject(DisableTextures[8]);
+				UpdateCurrentMoney();
+				break;
+			}
 		}
 		default:
 			break;
 		}
-	}
+	
+	
 }
 
 void UEYS_UpgradeSystem_UI::SetSingleUpgrade(int32 UpgradeIndex)
 {
-	UEYS_UpgradeSubsystem* UpgradeSubsystem =
-		GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>();
 
-	if (UpgradeSubsystem)
-	{
-		UpgradeSubsystem->ApplySingleUpgrade(UpgradeIndex);
+	if (!US || !ES) return;
+	
+		US->ApplySingleUpgrade(UpgradeIndex);
 		
 			switch (UpgradeIndex)
 			{
 			case 0:
 			{
-				Button_MyCharacterUp->SetIsEnabled(false);
-				Button_MyCharacterUp->WidgetStyle.Normal.SetResourceObject(DisableTextures[9]);
-
+				if (ES->SpendMoney(UpgradePrice[9]))
+				{
+					Button_MyCharacterUp->SetIsEnabled(false);
+					Button_MyCharacterUp->WidgetStyle.Normal.SetResourceObject(DisableTextures[9]);
+					UpdateCurrentMoney();
+				}
 				break;
 			}
 			case 1:
 			{
-				Button_EquipmentUp->SetIsEnabled(false);
-				Button_EquipmentUp->WidgetStyle.Normal.SetResourceObject(DisableTextures[10]);
-
+				if (ES->SpendMoney(UpgradePrice[10]))
+				{
+					Button_EquipmentUp->SetIsEnabled(false);
+					Button_EquipmentUp->WidgetStyle.Normal.SetResourceObject(DisableTextures[10]);
+					UpdateCurrentMoney();
+				}
 				break;
 			}
 			case 2:
 			{
-				Button_DoormatUp->SetIsEnabled(false);
-				Button_DoormatUp->WidgetStyle.Normal.SetResourceObject(DisableTextures[11]);
+				if (ES->SpendMoney(UpgradePrice[11]))
+				{
+					Button_DoormatUp->SetIsEnabled(false);
+					Button_DoormatUp->WidgetStyle.Normal.SetResourceObject(DisableTextures[11]);
+					UpdateCurrentMoney();
+				}
 				break;
 			}
 			default:
 				break;
 			}
-
-			
-	}
-
-
 		
 }
 
 void UEYS_UpgradeSystem_UI::CheckUpgrades()
 {
-	UEYS_UpgradeSubsystem* US =
-		GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>();
+	if (!US) return;
+
 	switch (US->GeneratorUpgradeLevel)
 	{
 	case 1:
@@ -359,4 +405,16 @@ void UEYS_UpgradeSystem_UI::CheckUpgrades()
 void UEYS_UpgradeSystem_UI::CloseUpgradeWidget()
 {
 	RemoveFromParent();
+}
+
+void UEYS_UpgradeSystem_UI::UpdateCurrentMoney()
+{
+
+	UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>();
+	if (ES&&Text_CurrentMoney)
+	{
+		FString CM = FString(TEXT("$ ")) + FString::FromInt(ES->CurrentMoney());
+		Text_CurrentMoney->SetText(FText::FromString(CM));
+	}
+
 }

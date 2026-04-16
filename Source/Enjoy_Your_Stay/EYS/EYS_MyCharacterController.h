@@ -27,21 +27,6 @@ public:
 	
 protected:
 
-	/** Input Mapping Contexts */
-	UPROPERTY(EditAnywhere, Category = "Input|Input Mappings")
-	TArray<UInputMappingContext*> DefaultMappingContexts;
-
-	/** Input Mapping Contexts */
-	UPROPERTY(EditAnywhere, Category = "Input|Input Mappings")
-	TArray<UInputMappingContext*> MobileExcludedMappingContexts;
-
-
-	/** Mobile controls widget to spawn */
-	UPROPERTY(EditAnywhere, Category = "Input|Touch Controls")
-	TSubclassOf<UUserWidget> MobileControlsWidgetClass;
-
-	/** Pointer to the mobile controls widget */
-	TObjectPtr<UUserWidget> MobileControlsWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_EquipmentWheel> EquipmentWheelClass;
@@ -50,7 +35,8 @@ protected:
 	TSubclassOf<UEYS_MyCharacter_UI> MYCharacterUIClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player", meta = (AllowAbstract = "true"))
 	AEYS_MyCharacter* OwnerCharacter;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputMappingContext* DefaultMapping;
 	
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;

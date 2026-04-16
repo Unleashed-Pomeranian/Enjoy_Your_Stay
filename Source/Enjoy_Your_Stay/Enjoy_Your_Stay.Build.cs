@@ -20,7 +20,8 @@ public class Enjoy_Your_Stay : ModuleRules
 			"UMG",
             "AdvancedWidgets",
             "Slate",
-            "SlateCore"
+            "SlateCore",
+            "GameplayTags"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

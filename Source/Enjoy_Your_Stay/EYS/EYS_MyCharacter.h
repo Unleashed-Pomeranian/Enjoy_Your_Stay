@@ -30,8 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
 
-UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputMappingContext* DefaultMapping;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UChildActorComponent* ChildActor;
@@ -62,7 +61,7 @@ protected:
 	bool bCanSprinting = true;
 	float Stamina=100.0f;
 	float StaminaRecoveryValue = 0.2f;
-	
+	class UEYS_UserSettingsSubsystem* UserSettingsSubsystem;
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Move;
@@ -89,6 +88,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Mission;
 
+	
 
 
 protected:

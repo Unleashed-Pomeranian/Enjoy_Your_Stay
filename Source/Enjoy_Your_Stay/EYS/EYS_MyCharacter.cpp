@@ -4,7 +4,6 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 #include "EYS/EYS_InteractInterface.h"
 #include "EYS/Camera Shake/EYS_MyLegacyCameraShake_Walk.h"
@@ -18,7 +17,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Game Managers/EYS_MissionPostProcessVolume.h"
 #include "EYS/Key/EYS_Key.h"
-
+#include "EYS/Game Managers/EYS_UserSettingsSubsystem.h"
 // Sets default values
 AEYS_MyCharacter::AEYS_MyCharacter()
 {
@@ -51,32 +50,16 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationPitch = false;
 
-
+	
 }
 
 // Called when the game starts or when spawned
 void AEYS_MyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		if (ULocalPlayer* LP = PC->GetLocalPlayer())
-		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsys =
-				ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LP))
-			{
-				if (DefaultMapping)
-				{
-					Subsys->AddMappingContext(DefaultMapping, 0);
-					
-				}
-			}
-		}
-	}
-
 	MyPC = Cast<AEYS_MyCharacterController>(GetController());
 	UKismetSystemLibrary::K2_SetTimer(this, TEXT("InteractUI"), 0.2f, true, false, 0.0f, 0.0f);
+	UserSettingsSubsystem = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
 }
 
 // Called every frame
@@ -202,13 +185,24 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
 			MyPC->SetStaminaWidget(Stamina/100);
 
+			
+			if (UserSettingsSubsystem)
+			{
+				float Scale = UserSettingsSubsystem->CameraShakeIntensity;
+				UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Run::StaticClass(),Scale);
 
-			UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Run::StaticClass());
+			}
 		}
 
 		else
 		{
-			UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Walk::StaticClass());
+			if (UserSettingsSubsystem)
+			{
+				float Scale = UserSettingsSubsystem->CameraShakeIntensity;
+				UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UEYS_MyLegacyCameraShake_Walk::StaticClass(), Scale);
+
+			}
+
 		}
 		if (Stamina <= 0)
 		{
@@ -222,9 +216,11 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::Look(const FInputActionValue& Value)
 {
-	
 	const FVector2D lookAxis = Value.Get<FVector2D>();
 	float sense = 0.5f;
+	if (UserSettingsSubsystem) {sense = UserSettingsSubsystem->MouseSensitivity;}
+		
+	
 	AddControllerYawInput(lookAxis.X * sense);
 	AddControllerPitchInput(lookAxis.Y * sense);
 

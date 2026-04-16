@@ -49,9 +49,6 @@ class ENJOY_YOUR_STAY_API UEYS_UpgradeSystem_UI : public UUserWidget
 	UPROPERTY(meta = (BindWidget))
 	UButton* Button_DoormatUp;
 
-
-
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* Button_Close; 
 
@@ -64,6 +61,11 @@ class ENJOY_YOUR_STAY_API UEYS_UpgradeSystem_UI : public UUserWidget
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_UpgradePrice;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Text_CurrentMoney;
+
 
 	UPROPERTY(meta = (BindWidget))
 	UOverlay* Overlay_UpgradeText;
@@ -102,7 +104,7 @@ protected:
 	void OnDoormat() { ShowUpgradeText(11); }
 
 	UFUNCTION() void CloseUpgradeWidget();
-
+	UFUNCTION() void UpdateCurrentMoney();
 	
 	//*********************GeneratorUp****************************
    void SetGeneratorUpgrade(int32 UpgradeIndex);
@@ -156,8 +158,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	TArray<FText> HeaderText;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
-	TArray<FString> UpgradePriceText;
+	TArray<int32> UpgradePrice;
 
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	TArray<UTexture2D*> DisableTextures;
 

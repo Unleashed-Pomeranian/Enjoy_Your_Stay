@@ -2,13 +2,13 @@
 
 
 #include "EYS/EYS_MyCharacterController.h"
-#include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
+#include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "UserSettings/EnhancedInputUserSettings.h"
 #include "Enjoy_Your_StayCameraManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Enjoy_Your_Stay.h"
-#include "Widgets/Input/SVirtualJoystick.h"
 #include "EYS_EquipmentWheel.h"
 #include "EYS/EYS_MyCharacter.h"
 
@@ -22,26 +22,25 @@ AEYS_MyCharacterController::AEYS_MyCharacterController()
 void AEYS_MyCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (SVirtualJoystick::ShouldDisplayTouchInterface() && IsLocalPlayerController())
+	
+	if (ULocalPlayer* LP = GetLocalPlayer())
 	{
-		// spawn the mobile controls widget
-		MobileControlsWidget = CreateWidget<UUserWidget>(this, MobileControlsWidgetClass);
-
-		if (MobileControlsWidget)
+		if (UEnhancedInputLocalPlayerSubsystem* Subsys =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LP))
 		{
-			// add the controls to the player screen
-			MobileControlsWidget->AddToPlayerScreen(0);
+			if (DefaultMapping)
+			{
+				Subsys->AddMappingContext(DefaultMapping, 0);
 
+			}
+			if (UEnhancedInputUserSettings* Settings = Subsys->GetUserSettings())
+			{
+				Settings->RegisterInputMappingContext(DefaultMapping);
+			}
 		}
-		else {
-
-			UE_LOG(LogEnjoy_Your_Stay, Error, TEXT("Could not spawn mobile controls widget."));
-
-		}
-		
-
 	}
+
+	
 	EquipmentWheelInstance = CreateWidget<UEYS_EquipmentWheel>(this, EquipmentWheelClass);
 	MyCharacterUIInstance = CreateWidget<UEYS_MyCharacter_UI>(this, MYCharacterUIClass);
 
@@ -53,35 +52,13 @@ void AEYS_MyCharacterController::BeginPlay()
 	OwnerCharacter = Cast<AEYS_MyCharacter>(GetPawn());
 	Money = 1000;
 	SetMoneyWidget(0);
+
+
 }
 
 void AEYS_MyCharacterController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
-	// only add IMCs for local player controllers
-	if (IsLocalPlayerController())
-	{
-		// Add Input Mapping Context
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-		{
-			for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
-			{
-				Subsystem->AddMappingContext(CurrentContext, 0);
-			}
-
-			// only add these IMCs if we're not using mobile touch input
-			if (!SVirtualJoystick::ShouldDisplayTouchInterface())
-			{
-				for (UInputMappingContext* CurrentContext : MobileExcludedMappingContexts)
-				{
-					Subsystem->AddMappingContext(CurrentContext, 0);
-				}
-			}
-		}
-	}
-
-	
 	
 	
 }
