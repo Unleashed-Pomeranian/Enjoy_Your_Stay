@@ -1,0 +1,87 @@
+
+#pragma once
+#include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "Engine/DataTable.h"
+#include "EYS_TutorialSubsystem.generated.h"
+
+
+UENUM(BlueprintType)
+enum class ETutorialStep: uint8
+{
+	None UMETA(DisplayName = "No Mission"),
+	GoToEntrance  UMETA(DisplayName = "Walk to Main Door"),
+	TakeFlashlight  UMETA(DisplayName = "Take Flashlight"),
+	GoToBoosRoom  UMETA(DisplayName = "Go to Boos Room"),
+	TalkWithBoss  UMETA(DisplayName = "Talk With Boss"),
+	GoToGenerator UMETA(DisplayName = "Go to Generator"),
+	ActivateGenerator UMETA(DisplayName = "Activate Generator"),
+	FindMop UMETA(DisplayName = "Find Mop"),
+	TakeMop UMETA(DisplayName = "Take Mop"),
+	CleanDirt UMETA(DisplayName = "Clean Dirt"),
+	GoToBasement UMETA(DisplayName = "Go To Basement"),
+	TakeShovel UMETA(DisplayName = "Take Shovel"),
+	GoToBoilerRoom UMETA(DisplayName = "Go to Boiler Room"),
+	FillCoalBox UMETA(DisplayName = "Fill Coal Box"),
+	FillBoiler UMETA(DisplayName = "Fill Boiler"),
+	GoToPhone UMETA(DisplayName = "Go to Phone"),
+	OrderSupplies UMETA(DisplayName = "Order Supplies"),
+};
+USTRUCT(BlueprintType)
+struct FTutorialMissionData:public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	FText MissionObjective;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	FText SubtitleText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	float SubtitleDuration = 4.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	class USoundBase* BossAudio;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	FVector HitBoxLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	TSubclassOf<AActor> EquipmentRef = nullptr;
+
+};
+
+class UEYS_MyCharacter_UI;
+class AEYS_BossSpeaker;
+class AEYS_TutorialHitBox;
+
+UCLASS()
+class ENJOY_YOUR_STAY_API UEYS_TutorialSubsystem : public UGameInstanceSubsystem
+{
+	GENERATED_BODY()
+	
+
+public:
+	UPROPERTY(BlueprintReadWrite, Category = "Tutorial")
+	ETutorialStep CurrentStep = ETutorialStep::None;
+	UPROPERTY(BlueprintReadWrite, Category = "Tutorial")
+	bool bIsTutorialFinished = false;
+
+	UFUNCTION(BlueprintCallable, Category = "Tutorial")
+	void UpdateTutorialState(ETutorialStep RequiredStep, ETutorialStep NextStep);
+	UFUNCTION(BlueprintCallable, Category = "Tutorial")
+	void SetTutorialStep(ETutorialStep NewStep);
+
+
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tutorial Data")
+	UDataTable* MissionDataTable;
+
+	/*---------------------Tutorial Classes------------------------*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UEYS_MyCharacter_UI* MyCharacterUIIns = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	AEYS_BossSpeaker* TargetSpeaker;
+	UPROPERTY(EditAnywhere, Category = "Hitbox")
+	AEYS_TutorialHitBox* TargetHitBox;
+};

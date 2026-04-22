@@ -4,7 +4,7 @@
 #include "EYS/Interactable Actor/EYS_Notebook.h"
 #include "EYS/Interactable Actor/EYS_NotebookWidget.h"
 #include "Blueprint/UserWidget.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
 AEYS_Notebook::AEYS_Notebook()
@@ -46,7 +46,7 @@ void AEYS_Notebook::Tick(float DeltaTime)
 
 }
 
-void AEYS_Notebook::CleaningMission(FTransform test)
+void AEYS_Notebook::CleaningMission()
 {
 
 	if (NotebookWidgetInstance)
@@ -57,7 +57,15 @@ void AEYS_Notebook::CleaningMission(FTransform test)
 
 	if (CleaningTotal == CleaningFinished)
 	{
-		Closelight(test);
+		CleaningTotal = 0;
+		CleaningFinished = 0;
+		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+		if (TS)
+		{
+			TS->UpdateTutorialState(ETutorialStep::CleanDirt, ETutorialStep::GoToBasement);
+	
+		}
+		NotebookWidgetInstance->CleanMissionBox(1);
 	}
 }
 
@@ -76,9 +84,6 @@ void AEYS_Notebook::FixingMission()
 	NotebookWidgetInstance->SetFixingBox(FixingFinished, FixingTotal);
 }
 
-void AEYS_Notebook::Closelight_Implementation(FTransform test)
-{
-}
 
 
 

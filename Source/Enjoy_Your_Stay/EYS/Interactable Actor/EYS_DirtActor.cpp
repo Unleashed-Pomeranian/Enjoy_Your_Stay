@@ -39,6 +39,7 @@ void AEYS_DirtActor::BeginPlay()
 		{
 			DirtDecal->SetMaterial(0,DynMath);
 			opacityValue = FMath::Clamp(opacityValue, 0.0f, 3.0f);
+			StaticMesh->SetVisibility(false);
 		}
 	}
 	UKismetSystemLibrary::K2_SetTimer(this, "SetGuestMentalHealth", 2.0f, true);
@@ -51,7 +52,7 @@ void AEYS_DirtActor::BeginPlay()
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 			Notebook->CleaningTotal += 1;
-			Notebook->CleaningMission(GetActorTransform());
+			Notebook->CleaningMission();
 			
 		}
 	}
@@ -106,7 +107,7 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 			{
 				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
 				Notebook->CleaningFinished+=1;
-				Notebook->CleaningMission(GetActorTransform());
+				Notebook->CleaningMission();
 
 			}
 			GetWorld()->SpawnActor<AActor>(TargetPointRef, GetActorTransform());

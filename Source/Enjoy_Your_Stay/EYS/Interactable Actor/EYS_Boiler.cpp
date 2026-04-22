@@ -5,7 +5,7 @@
 #include "EYS/UI/EYS_Boiler_UI.h"
 #include "Components/BoxComponent.h"
 #include "Blueprint/UserWidget.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 
 
@@ -87,4 +87,13 @@ void AEYS_Boiler::SetCoalAmount(float FuelAddValue)
 {
 	BoilerCoalValue =  FMath::Clamp(BoilerCoalValue + FuelAddValue, 0.0f, 100.0f);
 	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
+	if (BoilerCoalValue >= 90)
+	{
+		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+		if (TS)
+		{
+			TS->UpdateTutorialState(ETutorialStep::FillBoiler, ETutorialStep::GoToPhone);
+		}
+	}
+
 }

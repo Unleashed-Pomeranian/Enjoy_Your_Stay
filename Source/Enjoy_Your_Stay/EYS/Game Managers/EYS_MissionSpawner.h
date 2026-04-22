@@ -30,9 +30,11 @@ protected:
 	AActor* SinglePipeRef;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<ATargetPoint> DirtTargetPoint;
-
+public:
 	UFUNCTION() void SpawnFixActor();
 	UFUNCTION() void SpawnDirtActor();
+	UFUNCTION() void SpawnFixActorTimer();
+	UFUNCTION() void SpawnDirtActorTimer();
 
 
 public:	

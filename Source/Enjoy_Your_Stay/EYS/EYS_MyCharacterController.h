@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "InputActionValue.h"
 #include "EYS_MyCharacterController.generated.h"
 
 
@@ -15,6 +16,8 @@ class UEYS_MyCharacter_UI;
 class UEYS_EquipmentWheel;
 
  
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChanged,float,NewValue,bool,bIsRecovery);
+
 UCLASS(abstract)
 class ENJOY_YOUR_STAY_API AEYS_MyCharacterController : public APlayerController
 {
@@ -33,8 +36,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_MyCharacter_UI> MYCharacterUIClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> PauseWidgetClass;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player", meta = (AllowAbstract = "true"))
 	AEYS_MyCharacter* OwnerCharacter;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* DefaultMapping;
 	
@@ -43,15 +51,13 @@ protected:
 
 	/** Input mapping context setup */
 	virtual void SetupInputComponent() override;
-
 	
 
 
 public:
 	UFUNCTION() void OpenEquipmentWidget();
 	UFUNCTION() void CloseEquipmentWidget();
-	UFUNCTION() void SetStaminaWidget(float StaminaValue);
-	UFUNCTION() void CloseStaminaWidget();
+	
 	UFUNCTION() void SetMoneyWidget(int32 AddValue);
 	UFUNCTION(BlueprintCallable) void SetInteractionWidget(FString InterctionText);
 	UFUNCTION() void SetHourWidget(float TimeofDay);
@@ -60,11 +66,17 @@ public:
 	UFUNCTION() void SetCharacterPositon(FVector ActorLocation,float LocationX,float LocationY,FRotator Rotation);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 Money;
 
+	UFUNCTION() void PauseGame();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_EquipmentWheel* EquipmentWheelInstance = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_MyCharacter_UI* MyCharacterUIInstance = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	class UUserWidget* PauseWidgetInstance = nullptr;
+
+	FOnStaminaChanged OnStaminaChanged;
 	
 };

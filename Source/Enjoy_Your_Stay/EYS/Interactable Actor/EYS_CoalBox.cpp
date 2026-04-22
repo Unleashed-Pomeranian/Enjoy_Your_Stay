@@ -7,6 +7,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_CoalSack.h"
 #include "Kismet/GamePlayStatics.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
 AEYS_CoalBox::AEYS_CoalBox()
@@ -55,10 +56,10 @@ void  AEYS_CoalBox::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
  
 	 if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_CoalSack::StaticClass()))
 	 {
-		 AEYS_CoalSack* FoodBox = Cast<AEYS_CoalSack>(myPlayer->HeldEquipment);
-		 if (CoalAmount < 100 && FoodBox->CoalValue>0)
+		 AEYS_CoalSack* CoalSack = Cast<AEYS_CoalSack>(myPlayer->HeldEquipment);
+		 if (CoalAmount < 100 && CoalSack->CoalValue>0)
 		 {
-			 FoodBox->ReduceFuelValue(20);
+			 CoalSack->ReduceFuelValue(20);
 			 FillingCoal(+20);
 			 
 		 }
@@ -89,6 +90,14 @@ void AEYS_CoalBox::FillingCoal(int32 AddValue)
 {
 	CoalAmount = FMath::Clamp(CoalAmount + AddValue, 0, 100);
 	SetCoalMeshCoal();
+	if (CoalAmount >= 99)
+	{
+		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+		if (TS)
+		{
+			TS->UpdateTutorialState(ETutorialStep::FillCoalBox, ETutorialStep::FillBoiler);
+		}
+	}
 }
 void AEYS_CoalBox::DrainingCoal()
 {

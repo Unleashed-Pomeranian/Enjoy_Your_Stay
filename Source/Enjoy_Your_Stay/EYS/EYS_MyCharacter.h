@@ -87,7 +87,8 @@ protected:
 	UInputAction* IA_Notebook;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Mission;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Pause;
 	
 
 
@@ -121,7 +122,7 @@ protected:
 	UFUNCTION() void ActionEnd(const FInputActionValue& Value);
 	UFUNCTION() void EnableMission(const FInputActionValue& Value);
 	UFUNCTION() void DisableMission(const FInputActionValue& Value);
-	
+	UFUNCTION() void RequestPauseGame(const FInputActionValue& Value);
 
 	
 

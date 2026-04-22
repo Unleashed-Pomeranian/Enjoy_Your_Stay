@@ -47,10 +47,12 @@ public:
 	UPROPERTY()
 	int32 CurentRow;
 
+
 public:
 	UFUNCTION() void SetCleaningBox(int32 finished,int32 total);
 	UFUNCTION() void SetFixingBox(int32 finished, int32 total);
 	UFUNCTION() void SetFuelingBox(int32 finished, int32 total);
+	UFUNCTION() void CleanMissionBox(int32 value);
 
 	
 };

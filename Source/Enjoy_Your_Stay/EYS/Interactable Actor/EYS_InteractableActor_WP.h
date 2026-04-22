@@ -8,6 +8,7 @@
 #include "EYS_EquipmentWheel.h"
 #include "EYS_InteractableActor_WP.generated.h"
 
+
 class UBoxComponent;
 
 UCLASS()
@@ -35,6 +36,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EquipmentI", meta = (AllowPrivateAccess = "true"))
 	int32 Index;
 	UFUNCTION(BlueprintNativeEvent) void PlayEquipAudio();
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

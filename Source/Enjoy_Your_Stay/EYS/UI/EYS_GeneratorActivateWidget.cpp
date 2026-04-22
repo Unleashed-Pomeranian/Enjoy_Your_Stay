@@ -4,7 +4,7 @@
 #include "EYS/UI/EYS_GeneratorActivateWidget.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/Interactable Actor/EYS_Generator.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 void UEYS_GeneratorActivateWidget::NativeConstruct()
 
 {
@@ -70,6 +70,13 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 
 		UKismetSystemLibrary::K2_ClearTimer(this, "StartGenerator");
 		bIsWorking = false;
+
+		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+
+		if (TS)
+		{
+			TS->UpdateTutorialState(ETutorialStep::ActivateGenerator, ETutorialStep::FindMop);
+		}
 	}
 	else
 	{

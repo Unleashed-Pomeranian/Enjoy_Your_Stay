@@ -37,6 +37,7 @@ void UEYS_NotebookWidget::SetCleaningBox(int32 finished, int32 total)
     FString TextToShow = "Cleaning: " + FString::FromInt(finished) + "/" + FString::FromInt(total);
     CleaningText->SetText(FText::FromString(TextToShow));
     CurentRow++;
+  
 }
 
 void UEYS_NotebookWidget::SetFixingBox(int32 finished, int32 total)
@@ -76,4 +77,19 @@ void UEYS_NotebookWidget::SetFuelingBox(int32 finished, int32 total)
     FString TextToShow = "Fuel: " + FString::FromInt(finished) + "/" + FString::FromInt(total);
     FuelingText->SetText(FText::FromString(TextToShow));
     CurentRow++;
+}
+
+void UEYS_NotebookWidget::CleanMissionBox(int32 value)
+{
+    switch (value)
+    {
+    case 1:
+    {
+        CleaningBox->SetVisibility(ESlateVisibility::Hidden);
+        break;
+    }
+
+    default:
+        break;
+    }
 }

@@ -118,6 +118,7 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 				EIC->BindAction(IA_Mission, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DisableMission);
 			}
 
+			if (IA_Pause)  EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &AEYS_MyCharacter::RequestPauseGame);
 		
 	}
 
@@ -183,7 +184,7 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 
 			Stamina = FMath::Clamp(Stamina - 0.2f, 0.0f, 100.0f);
 			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
-			MyPC->SetStaminaWidget(Stamina/100);
+			MyPC->OnStaminaChanged.Broadcast(Stamina, bCanSprinting);
 
 			
 			if (UserSettingsSubsystem)
@@ -208,7 +209,8 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 		{
 			if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
 				MoveComp->MaxWalkSpeed = walkSpeed;
-			bCanSprinting = false;
+			    bCanSprinting = false;
+				
 		}
 
 	}
@@ -273,14 +275,13 @@ void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
 void AEYS_MyCharacter::StaminaRecovery()
 {
 	Stamina = FMath::Clamp(Stamina + 1.0f, 0.0f, 100.0f);
-	MyPC->SetStaminaWidget(Stamina / 100);
+	
 	if (Stamina == 100)
 	{
-		MyPC->CloseStaminaWidget();
 		bCanSprinting = true;
-		UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
+		UKismetSystemLibrary::K2_ClearTimer(this, TEXT("StaminaRecovery"));
 	}
-	
+	MyPC->OnStaminaChanged.Broadcast(Stamina,bCanSprinting);
 }
 
 void AEYS_MyCharacter::OpenNotebook(const FInputActionValue& Value)
@@ -316,6 +317,13 @@ void AEYS_MyCharacter::DisableMission(const FInputActionValue& Value)
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f); // %25 hız
 	}
 }
+
+void AEYS_MyCharacter::RequestPauseGame(const FInputActionValue& Value)
+{
+	if (MyPC) MyPC->PauseGame();
+}
+
+
 
 
 void AEYS_MyCharacter::OpenEquipmentWidget(const FInputActionValue& Value)

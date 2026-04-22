@@ -41,7 +41,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION() void CleaningMission(FTransform test);
+	UFUNCTION() void CleaningMission();
 	UFUNCTION() void FuelingMission();
 	UFUNCTION(BlueprintCallable) void FixingMission();
 
@@ -55,5 +55,5 @@ public:
 
 	
 	//delete
-	UFUNCTION(BlueprintNativeEvent) void Closelight(FTransform test);
+
 };
