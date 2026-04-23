@@ -5,6 +5,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS_WorldSubsystem.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 {
@@ -13,10 +14,13 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 
 	SetTimeOfDay(10.0f);
 	SetTimePerCycle(1.0f);
-	Play();
-	
+
 	UKismetSystemLibrary::K2_SetTimer(this, "FSetTimer", 2.0f, true);
 	SetTimePerCycle(0.016f);
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->DayManager = this;
+	}
 }
 
 void AEYS_MySunMoonDaySequenceActor::FSetTimer()
@@ -31,6 +35,11 @@ if (PC) PC->SetHourWidget(GetTimeOfDay());
 	if (!Director) return;
 
 	Director->CheckOutPlayer(DayNum,GetTimeOfDay());
+}
+
+void AEYS_MySunMoonDaySequenceActor::SetDayHour(float TimeValue)
+{
+	SetTimeOfDay(TimeValue);
 }
 
 void AEYS_MySunMoonDaySequenceActor::Tick(float DeltaTime)

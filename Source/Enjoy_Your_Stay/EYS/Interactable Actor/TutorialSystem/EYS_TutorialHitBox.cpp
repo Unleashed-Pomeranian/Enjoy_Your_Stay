@@ -18,7 +18,7 @@ AEYS_TutorialHitBox::AEYS_TutorialHitBox()
 	BoxCollision->SetupAttachment(DefaultSceneRoot);
 	PostProcessVolume = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessVolume"));
 	PostProcessVolume->SetupAttachment(BoxCollision);
-	PostProcessVolume->bUnbound = false;
+
 	
 }
 
@@ -50,7 +50,6 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 			case ETutorialStep::GoToEntrance:
 			{
 				TS->SetTutorialStep(ETutorialStep::TakeFlashlight);
-				PostProcessVolume->bUnbound = true;
 				break;
 				
 			}
@@ -79,6 +78,24 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 			case ETutorialStep::GoToBoilerRoom:
 			{
 				TS->SetTutorialStep(ETutorialStep::FillCoalBox);
+				break;
+			}
+
+			case ETutorialStep::GoToPhone:
+			{
+				TS->SetTutorialStep(ETutorialStep::TakePhone);
+				break;
+			}
+			case ETutorialStep::GoToBed:
+			{
+				TS->SetTutorialStep(ETutorialStep::EndDay);
+				break;
+			}
+			case ETutorialStep::GoToFridge:
+			{
+				TS->SetTutorialStep(ETutorialStep::PlaceFoodBox);
+				break;
+ 
 			}
 			default:
 				break;

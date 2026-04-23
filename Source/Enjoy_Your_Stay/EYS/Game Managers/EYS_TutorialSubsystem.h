@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "Engine/DataTable.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_Types.h"
 #include "EYS_TutorialSubsystem.generated.h"
 
 
@@ -25,7 +26,19 @@ enum class ETutorialStep: uint8
 	FillCoalBox UMETA(DisplayName = "Fill Coal Box"),
 	FillBoiler UMETA(DisplayName = "Fill Boiler"),
 	GoToPhone UMETA(DisplayName = "Go to Phone"),
+	TakePhone UMETA(DisplayName = "Take Phone"),
 	OrderSupplies UMETA(DisplayName = "Order Supplies"),
+	GoToBed  UMETA(DisplayName = "Go To Bed"),
+	EndDay UMETA(DisplayName = "End Day"),
+	TakeFoodBox UMETA(DisplayName = "Take Food Box"),
+	GoToFridge UMETA(DisplayName = "Go to Fridge"),
+	PlaceFoodBox UMETA(DisplayName = "Place Food Box"),
+	WaitTheGuest UMETA(DisplayName = "Wait the Guest"),
+	TalkWithGuest UMETA(DisplayName = "Talk With Guest"),
+	TakeKey UMETA(DisplayName = "Take Key"),
+	GiveKeyToGuest UMETA(DisplayName = "Give Key to Guest"),
+	WaitGuestOrder UMETA(DisplayName = "Wait Guest Order"),
+
 };
 USTRUCT(BlueprintType)
 struct FTutorialMissionData:public FTableRowBase
@@ -48,13 +61,15 @@ struct FTutorialMissionData:public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
 	TSubclassOf<AActor> EquipmentRef = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mission Data")
+	float DayTime = 10.0f;
 
 };
 
 class UEYS_MyCharacter_UI;
 class AEYS_BossSpeaker;
 class AEYS_TutorialHitBox;
-
+class AEYS_MySunMoonDaySequenceActor;
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_TutorialSubsystem : public UGameInstanceSubsystem
 {
@@ -84,4 +99,26 @@ public:
 	AEYS_BossSpeaker* TargetSpeaker;
 	UPROPERTY(EditAnywhere, Category = "Hitbox")
 	AEYS_TutorialHitBox* TargetHitBox;
+	UPROPERTY(EditAnywhere, Category = "DaySequenceActor")
+	AEYS_MySunMoonDaySequenceActor* DayManager;
+
+	/*---------------------Order Tutorial------------------------*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tutorial Settings")
+	TArray<TSubclassOf<AActor>> RequiredOrderItems;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tutorial Settings")
+	TArray<TSubclassOf<AActor>> CurrentlyOrderedItems;
+
+	UFUNCTION(BlueprintCallable, Category = "Tutorial")
+	void RegisterNewOrder(TSubclassOf<AActor> OrderedItemClass);
+
+	/*---------------------FoodBox Tutorial------------------------*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tutorial Settings")
+	TArray<EFoodType> FilledFridgeSlots;
+
+	UFUNCTION(BlueprintCallable, Category = "Tutorial")
+	void RegisterFilledSlot(EFoodType FilledType);
+
 };

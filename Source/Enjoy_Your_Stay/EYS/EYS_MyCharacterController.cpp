@@ -53,7 +53,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			if (TS) 
 			{ 
 				TS->MyCharacterUIIns = MyCharacterUIInstance; 
-				TS->SetTutorialStep(ETutorialStep::GoToEntrance);
+				TS->SetTutorialStep(ETutorialStep::TakeFoodBox);
 			}
 
 			MyCharacterUIInstance->AddToViewport();
@@ -62,7 +62,7 @@ void AEYS_MyCharacterController::BeginPlay()
 
 
 	OwnerCharacter = Cast<AEYS_MyCharacter>(GetPawn());
-	Money = 1000;
+	Money = 2000;
 	SetMoneyWidget(0);
 
 
@@ -185,7 +185,7 @@ void AEYS_MyCharacterController::SetCharacterPositon(FVector ActorLocation, floa
 
 void AEYS_MyCharacterController::PauseGame()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "IsIn");
+
 	if (!PauseWidgetClass)
 	{
 		return;

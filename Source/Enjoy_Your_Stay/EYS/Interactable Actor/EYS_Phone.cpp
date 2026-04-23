@@ -5,7 +5,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/UI/EYS_Phone_UI.h"
 #include "EYS/UI/Order Widgets/EYS_Guest_UI.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
 AEYS_Phone::AEYS_Phone()
@@ -71,6 +71,11 @@ void AEYS_Phone::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 		PC->MobilizeCharacter(true, true, true);
 		PlayPhoneMontage(myPlayer);
 		bCanInteract = false;
+	}
+	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+	if (TS)
+	{
+		TS->UpdateTutorialState(ETutorialStep::TakePhone, ETutorialStep::OrderSupplies);
 	}
 }
 

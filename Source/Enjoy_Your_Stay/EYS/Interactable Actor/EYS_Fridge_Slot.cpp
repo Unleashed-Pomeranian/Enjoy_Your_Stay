@@ -8,6 +8,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 // Sets default values
 AEYS_Fridge_Slot::AEYS_Fridge_Slot()
 {
@@ -36,6 +37,13 @@ void AEYS_Fridge_Slot::FAddSlot()
 	{
 		InstancedStaticMesh->AddInstance(InstanceTransform[InstanceIndex + 1], false);
 		InstanceIndex++;
+		if (InstanceIndex >= 4)
+		{
+			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+			{
+				TS->RegisterFilledSlot(SlotFoodType);
+			}
+		}
 	}
 }
 

@@ -7,8 +7,8 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS_Supermarket_UI.h"
 #include "EYS/Interactable Actor/EYS_InteractableActor_WP.h"
-
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_HeavyEquipmentBase.h"
 void UEYS_Ironmonger_UI::NativeConstruct()
 {
 	
@@ -40,6 +40,11 @@ void UEYS_Ironmonger_UI::OnBtnSlotOrder(int32 SlotIndex, int32 Price)
 			return;
 	}
 
+	
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->RegisterNewOrder(SpawnActor[SlotIndex]);
+	}
 	
 	
 }

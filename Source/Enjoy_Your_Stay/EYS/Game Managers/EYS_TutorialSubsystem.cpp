@@ -5,6 +5,7 @@
 #include "EYS/UI/EYS_MyCharacter_UI.h"
 #include "EYS/Interactable Actor/TutorialSystem/EYS_BossSpeaker.h"
 #include "EYS/Interactable Actor/TutorialSystem/EYS_TutorialHitBox.h"
+#include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
 
 
 void UEYS_TutorialSubsystem::UpdateTutorialState(ETutorialStep RequiredStep, ETutorialStep NextStep)
@@ -57,10 +58,46 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 
 			}
 		}
-		
+		if (DayManager)
+		{
+			DayManager->SetDayHour(FoundRow->DayTime);
+		}
+
 	}
 	else
 	{
 	
+	}
+}
+
+void UEYS_TutorialSubsystem::RegisterNewOrder(TSubclassOf<AActor> OrderedItemClass)
+{
+	
+	if (CurrentStep != ETutorialStep::OrderSupplies) return;
+
+	
+	if (RequiredOrderItems.Contains(OrderedItemClass))
+	{
+		
+		CurrentlyOrderedItems.AddUnique(OrderedItemClass);
+
+		if (CurrentlyOrderedItems.Num() >= RequiredOrderItems.Num())
+		{
+
+			
+			UpdateTutorialState(ETutorialStep::OrderSupplies, ETutorialStep::GoToBed);
+			CurrentlyOrderedItems.Empty();
+		}
+	}
+}
+
+void UEYS_TutorialSubsystem::RegisterFilledSlot(EFoodType FilledType)
+{
+	if(CurrentStep != ETutorialStep::PlaceFoodBox) return;
+
+	FilledFridgeSlots.AddUnique(FilledType);
+	if (FilledFridgeSlots.Num() >= 4)
+	{
+		UpdateTutorialState(ETutorialStep::PlaceFoodBox, ETutorialStep::WaitTheGuest);
 	}
 }

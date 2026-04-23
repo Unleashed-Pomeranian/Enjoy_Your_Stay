@@ -6,6 +6,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/EYS_OrderSpawner.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void UEYS_Supermarket_UI::NativeConstruct()
 {
@@ -52,7 +53,10 @@ void UEYS_Supermarket_UI::OnBtnSlotOrder(int32 SlotIndex, int32 Price)
 			return;
 	}
 
-
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->RegisterNewOrder(FSpawnActor[SlotIndex]);
+	}
 
 }
 

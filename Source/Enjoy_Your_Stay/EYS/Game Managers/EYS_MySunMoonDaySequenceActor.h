@@ -28,5 +28,6 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION() void FSetTimer();
+	UFUNCTION() void SetDayHour(float TimeValue);
 	UPROPERTY() int32 DayNum=1;
 };

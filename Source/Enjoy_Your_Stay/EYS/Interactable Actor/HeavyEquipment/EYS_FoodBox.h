@@ -19,6 +19,7 @@ class ENJOY_YOUR_STAY_API AEYS_FoodBox : public AEYS_HeavyEquipmentBase
 protected:
 	UPROPERTY() int32 FoodAmount=6;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 public:
 	UFUNCTION() void RemoveFood();
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
