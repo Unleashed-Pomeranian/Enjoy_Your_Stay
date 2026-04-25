@@ -37,7 +37,7 @@ void AEYS_Fridge_Slot::FAddSlot()
 	{
 		InstancedStaticMesh->AddInstance(InstanceTransform[InstanceIndex + 1], false);
 		InstanceIndex++;
-		if (InstanceIndex >= 4)
+		if (InstanceIndex >= 5)
 		{
 			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 			{

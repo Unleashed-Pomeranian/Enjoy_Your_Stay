@@ -8,7 +8,7 @@
 class AEYS_FixActor;
 class AEYS_DirtActor;
 class ATargetPoint;
-
+class UEYS_TutorialSubsystem;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MissionSpawner : public AActor
 {
@@ -30,12 +30,19 @@ protected:
 	AActor* SinglePipeRef;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<ATargetPoint> DirtTargetPoint;
+
+	UPROPERTY()
+	 UEYS_TutorialSubsystem* TutorialSubsystemRef;
+	/*------------TimerHandle----------*/
+	FTimerHandle DirtTimerHandle;
+	FTimerHandle FixTimerHandle;
 public:
 	UFUNCTION() void SpawnFixActor();
 	UFUNCTION() void SpawnDirtActor();
 	UFUNCTION() void SpawnFixActorTimer();
 	UFUNCTION() void SpawnDirtActorTimer();
-
+	UFUNCTION() void StartFixActorSpawening();
+	UFUNCTION() void SetStepOfTutorial();
 
 public:	
 	

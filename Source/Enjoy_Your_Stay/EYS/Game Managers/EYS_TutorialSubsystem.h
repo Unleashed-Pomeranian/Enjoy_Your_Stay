@@ -38,6 +38,15 @@ enum class ETutorialStep: uint8
 	TakeKey UMETA(DisplayName = "Take Key"),
 	GiveKeyToGuest UMETA(DisplayName = "Give Key to Guest"),
 	WaitGuestOrder UMETA(DisplayName = "Wait Guest Order"),
+	TakeGuestOrder UMETA(DisplayName = "Take Guest Order"),
+	TakeFoodBag UMETA(DisplayName = "Take Food Bag"),
+	GoToGuestRoom UMETA(DisplayName = "Go To Guest Room"),
+	GiveWrongFood UMETA(DisplayName = "Give Wrong Food"),
+	GiveRightFood UMETA(DisplayName = "Give Wrong Food"),
+	WaitForPipe UMETA(DisplayName = "Wait For Pipe"),
+	GoToHammer UMETA(DisplayName = "Go To Hammer"),
+	TakeHammer UMETA(DisplayName = "Take Hammer"),
+	FixBrokenPipe UMETA(DisplayName = "FixBrokenPipe"),
 
 };
 USTRUCT(BlueprintType)
@@ -70,6 +79,9 @@ class UEYS_MyCharacter_UI;
 class AEYS_BossSpeaker;
 class AEYS_TutorialHitBox;
 class AEYS_MySunMoonDaySequenceActor;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFirstPhaseEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSecondPhaseEnd);
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_TutorialSubsystem : public UGameInstanceSubsystem
 {
@@ -121,4 +133,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Tutorial")
 	void RegisterFilledSlot(EFoodType FilledType);
 
+
+	/*---------------------Delegate------------------------*/
+
+	UPROPERTY(BlueprintAssignable, Category = "Tutorial")
+	FOnFirstPhaseEnd OnFirstPhaseEnd;
+	UPROPERTY(BlueprintAssignable, Category = "Tutorial")
+	FOnSecondPhaseEnd OnSecondPhaseEnd;
 };

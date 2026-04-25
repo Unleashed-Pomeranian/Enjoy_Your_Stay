@@ -5,7 +5,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
 AEYS_GuestSpawner::AEYS_GuestSpawner()
@@ -21,11 +21,15 @@ void AEYS_GuestSpawner::BeginPlay()
 	Super::BeginPlay();
 	EmptyRooms = 4;
 
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", 5.0f, false);
+	
 
 	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 	if (!Director) return; 
 	Director->LobyLocation = LobyLoc;
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->OnFirstPhaseEnd.AddDynamic(this, &AEYS_GuestSpawner::StartGuestSpawning);
+	}
 }
 
 void AEYS_GuestSpawner::SpawnGuest()
@@ -37,28 +41,38 @@ void AEYS_GuestSpawner::SpawnGuest()
 		if (!Director) return;
 		if (GuestClass)
 			Director->RequestSpawnNPC(GuestClass, GetActorTransform());
-		EmptyRooms -= 1;
-		 int32 RandomIndex = FMath::RandRange(55,120);
-		UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", RandomIndex, false);
+		EmptyRooms --;
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(GuestTimerHandle);
 	}
 
 }
 
-
-// Called every frame
-void AEYS_GuestSpawner::Tick(float DeltaTime)
+void AEYS_GuestSpawner::SpawnGuestTimer()
 {
-	Super::Tick(DeltaTime);
+	SpawnGuest();
+	float RandomDelay = FMath::RandRange(55, 120);
+	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 
 }
+
+void AEYS_GuestSpawner::StartGuestSpawning()
+{
+	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, 100.0f, false);
+}
+
+
+
 
 void AEYS_GuestSpawner::SetEmptyRoom()
 {
 	EmptyRooms++;
 	if (EmptyRooms > 0)
 	{
-		int32 RandomIndex = FMath::RandRange(55, 120);
-		UKismetSystemLibrary::K2_SetTimer(this, "SpawnGuest", RandomIndex, false);
+		float RandomDelay = FMath::RandRange(55, 120);
+		GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 	}
 }
 

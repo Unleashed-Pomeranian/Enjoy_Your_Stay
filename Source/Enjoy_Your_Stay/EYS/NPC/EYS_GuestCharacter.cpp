@@ -13,6 +13,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/Game Managers/EYS_GuestSpawner.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 
 // Sets default values
@@ -73,8 +74,15 @@ void AEYS_GuestCharacter::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 }
 void AEYS_GuestCharacter::HandleMoveCompleted()
 {
-	UE_LOG(LogTemp, Warning, TEXT("NPC Move Completed → Interaction Enabled"));
+	
 	bCanInteract = true;
+	if (DialogueNum == 0)
+	{
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::WaitTheGuest, ETutorialStep::TalkWithGuest);
+		}
+	}
 	if (DialogueNum == 5)
 	{
 		Destroy();
@@ -110,7 +118,13 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 						if (!bIsHaveRoom)
 						{
 							if (myPlayer->bIsHaveKey)
+							{
 								TakeKey(myPlayer);
+								if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+								{
+									TS->UpdateTutorialState(ETutorialStep::GiveKeyToGuest, ETutorialStep::WaitGuestOrder);
+								}
+							}
 							else
 								GuestStartDialogue(myPlayer);
 						}
@@ -151,31 +165,59 @@ void AEYS_GuestCharacter::TakeKey(AEYS_MyCharacter* myPlayer)
 void AEYS_GuestCharacter::destroyme()
 {	
 	bisDialogueEnd = true;
-	if (DialogueNum == 1)
+	
+	switch (DialogueNum)
+	{
+	case 0:
+	{
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::TalkWithGuest, ETutorialStep::TakeKey);
+		}
+		break;
+	}
+	case 1:
 	{
 		MoveTo(MainLock, 50);
-		//OrderFood();
+		break;
 	}
-	if(DialogueNum == 2|| DialogueNum == 3)
-	{
-		MoveTo(MainLock, 50);
-		bIsOrderFood = false;
-		DialogueNum;
-		if(DialogueNum == 2) UKismetSystemLibrary::K2_SetTimer(this, "DestroyFoodBag", 2.0f, false);
-	}
+	case 2:
+	case 3:
 	{
 
+		MoveTo(MainLock, 50);
+		bIsOrderFood = false;
+			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+			{
+				if (DialogueNum == 2)
+				{
+					GetWorld()->GetTimerManager().SetTimer(DestroyFoodTimer, this, &AEYS_GuestCharacter::DestroyFoodBag, 2.0f, false);
+					TS->UpdateTutorialState(ETutorialStep::GoToGuestRoom, ETutorialStep::GiveRightFood);
+				}
+				else
+				{
+					TS->UpdateTutorialState(ETutorialStep::GoToGuestRoom, ETutorialStep::GiveWrongFood);
+				}
+			}
+		break;
 	}
-	if (DialogueNum ==4)
+	case 4:
 	{
 		MoveTo(MainLock, 50);
 		DialogueNum = 1;
+		break;
 	}
-	if (DialogueNum == 5)
+	case 5:
 	{
 		MoveTo(DestroyLock, 50.0f);
-		
+		break;
 	}
+	default:
+		break;
+	}
+
+	
+	
 }
 
 void AEYS_GuestCharacter::CorruptTheGuest()
@@ -211,6 +253,10 @@ void AEYS_GuestCharacter::OrderFood()
 			Phone->SetGuestUI(FoodString, RoomNumber);
 			bisDialogueEnd = true;
 			bIsOrderFood = true;
+			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+			{
+				TS->UpdateTutorialState(ETutorialStep::WaitGuestOrder, ETutorialStep::TakeGuestOrder);
+			}
 		}
 		else
 		{

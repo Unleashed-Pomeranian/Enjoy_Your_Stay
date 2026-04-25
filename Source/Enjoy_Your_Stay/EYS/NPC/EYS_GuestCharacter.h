@@ -75,6 +75,7 @@ protected:
 	EFoodType FoodType;
 	UFUNCTION(BlueprintNativeEvent) void PlayNPCAudio();
 
+	FTimerHandle DestroyFoodTimer;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

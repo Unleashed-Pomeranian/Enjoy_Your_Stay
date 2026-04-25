@@ -4,7 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "EYS/Key/EYS_KeyHolder.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 
 // Sets default values
@@ -51,6 +51,10 @@ void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
 			KeyHolder->SetPose();   
 			KeyHolder->LastRoomNum = RoomNum;
 		
+		}
+		if(UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::TakeKey, ETutorialStep::GiveKeyToGuest);
 		}
 		myPlayer->bIsHaveKey = true;
 		myPlayer->RoomLock = RoomLocation;

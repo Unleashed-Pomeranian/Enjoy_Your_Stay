@@ -23,15 +23,16 @@ protected:
 	UPROPERTY() int32 EmptyRooms;
 	UPROPERTY()  int32 Rooms;
 	UFUNCTION() void SpawnGuest();
+	UFUNCTION() void SpawnGuestTimer();
+	UFUNCTION() void StartGuestSpawning();
 	UPROPERTY(EditAnywhere,BlueprintReadWrite) FVector SpawnLock;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector LobyLoc;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TSubclassOf<AEYS_GuestCharacter> GuestClass;
 
+	FTimerHandle GuestTimerHandle;
+
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
 	UFUNCTION() void SetEmptyRoom();
 
 };

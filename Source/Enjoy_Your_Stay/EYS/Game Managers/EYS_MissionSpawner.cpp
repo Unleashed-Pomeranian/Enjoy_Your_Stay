@@ -6,11 +6,13 @@
 #include "Engine/TargetPoint.h"
 #include "EYS/Interactable Actor/EYS_FixActor.h"
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 AEYS_MissionSpawner::AEYS_MissionSpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 
 }
 
@@ -18,7 +20,12 @@ AEYS_MissionSpawner::AEYS_MissionSpawner()
 void AEYS_MissionSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
+	TutorialSubsystemRef = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+	if (TutorialSubsystemRef)
+	{
+		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnDirtActorTimer);
+		TutorialSubsystemRef->OnSecondPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::StartFixActorSpawening);
+	}
 
 }
 
@@ -38,9 +45,6 @@ void AEYS_MissionSpawner::SpawnFixActor()
 	if (FixActor)
 		GetWorld()->SpawnActor<AActor>(FixActor, SinglePipeRef->GetActorTransform());
 	SinglePipeRef->Destroy();
-	
-
-
 }
 
 void AEYS_MissionSpawner::SpawnDirtActor()
@@ -64,13 +68,35 @@ void AEYS_MissionSpawner::SpawnDirtActor()
 
 void AEYS_MissionSpawner::SpawnFixActorTimer()
 {
-	int32 RandomIndexFix = FMath::RandRange(15, 120);
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnFixActor", RandomIndexFix, false);
+	SpawnFixActor();
+	SetStepOfTutorial();
+	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	GetWorld()->GetTimerManager().SetTimer(FixTimerHandle, this, &AEYS_MissionSpawner::SpawnFixActorTimer,RandomDelay, false);
+	
 }
 
 void AEYS_MissionSpawner::SpawnDirtActorTimer()
 {
-	int32 RandomIndexDirt = FMath::RandRange(15, 120);
-	UKismetSystemLibrary::K2_SetTimer(this, "SpawnDirtActor", RandomIndexDirt, false);
+	
+	SpawnDirtActor();
+	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_MissionSpawner::SpawnDirtActorTimer, RandomDelay, false);
+	
 }
+
+void AEYS_MissionSpawner::StartFixActorSpawening()
+{
+	GetWorld()->GetTimerManager().SetTimer(FixTimerHandle, this, &AEYS_MissionSpawner::SpawnFixActorTimer, 60.0f, false);
+	
+}
+
+void AEYS_MissionSpawner::SetStepOfTutorial()
+{
+	if (TutorialSubsystemRef)
+	{
+		TutorialSubsystemRef->UpdateTutorialState(ETutorialStep::WaitForPipe, ETutorialStep::TakeHammer);
+	}
+}
+
+
 

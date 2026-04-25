@@ -15,6 +15,7 @@ void UEYS_TutorialSubsystem::UpdateTutorialState(ETutorialStep RequiredStep, ETu
 	if (CurrentStep != RequiredStep) return;
 	SetTutorialStep(NextStep);
 }
+
 void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 {
 	if (!MissionDataTable)
@@ -63,10 +64,25 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 			DayManager->SetDayHour(FoundRow->DayTime);
 		}
 
+		if (CurrentStep == ETutorialStep::WaitTheGuest)
+		{
+			OnFirstPhaseEnd.Broadcast();
+		}
+		if (CurrentStep == ETutorialStep::WaitTheGuest)
+		{
+			OnFirstPhaseEnd.Broadcast();
+		}
+
+		if(CurrentStep == ETutorialStep::GiveRightFood|| CurrentStep == ETutorialStep::GiveWrongFood)
+		{
+			CurrentStep = ETutorialStep::WaitForPipe;
+			OnSecondPhaseEnd.Broadcast();
+		}
+
 	}
 	else
 	{
-	
+		return;
 	}
 }
 
