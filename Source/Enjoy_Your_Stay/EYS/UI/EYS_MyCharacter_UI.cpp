@@ -55,10 +55,9 @@ void UEYS_MyCharacter_UI::SetStaminaBar(float StaminaValue,bool bIsRecovery)
     }
 }
 
-void UEYS_MyCharacter_UI::SetMissionText(const FText& MissionText)
+void UEYS_MyCharacter_UI::SetMissionText_Implementation(const FText& MissionText)
 {
-    if(!MissionText.IsEmptyOrWhitespace())
-    Text_Mission->SetText(MissionText);
+   
 }
 
 void UEYS_MyCharacter_UI::SetSubtitle_Implementation(const FText& Subtitle, float Duration)

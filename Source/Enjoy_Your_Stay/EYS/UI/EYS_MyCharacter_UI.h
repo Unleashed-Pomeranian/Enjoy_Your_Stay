@@ -39,7 +39,7 @@ public:
 	UTextBlock* Text_Subtitle;
 	UPROPERTY(meta = (BindWidget))
 	UImage* Dot_Image;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BindWidget))
 	URichTextBlock* Text_Mission;
 
 protected:
@@ -48,7 +48,7 @@ protected:
 	TArray<FLinearColor> BarColors;
 public:
 	UFUNCTION(BlueprintNativeEvent) void SetSubtitle(const FText& Subtitle,float Duration);
-	UFUNCTION() void SetMissionText(const FText& MissionText);
+	UFUNCTION(BlueprintNativeEvent) void SetMissionText(const FText& MissionText);
 
 	
 };

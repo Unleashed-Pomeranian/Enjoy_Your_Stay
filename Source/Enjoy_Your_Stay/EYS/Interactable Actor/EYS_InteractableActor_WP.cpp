@@ -61,6 +61,10 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 	{
 		switch (Index)
 		{
+		case 3:
+			{
+				TS->UpdateTutorialState(ETutorialStep::TakeHammer, ETutorialStep::FixBrokenPipe);
+			}
 		case 4:
 		{
 			TS->UpdateTutorialState(ETutorialStep::TakeMop, ETutorialStep::CleanDirt);

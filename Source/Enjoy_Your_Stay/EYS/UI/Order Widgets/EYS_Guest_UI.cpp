@@ -48,7 +48,7 @@ void UEYS_Guest_UI::RejectOrder()
 
 void UEYS_Guest_UI::SetGuestText(FString foodType, int32 roomNum)
 {
-	FString Settedtext = "Could I have one " + foodType + " sent to room " + FString::FromInt(roomNum) + ", please?";
+	FString Settedtext = "Could I have one <key>" + foodType + "</> sent to room <key>" + FString::FromInt(roomNum) + "</>, please?";
 	Text_Customer->SetText(FText::FromString(Settedtext));
 
 }

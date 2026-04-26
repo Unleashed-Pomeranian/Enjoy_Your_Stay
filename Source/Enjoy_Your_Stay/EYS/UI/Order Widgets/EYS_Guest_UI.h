@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Components/RichTextBlock.h"
 #include "EYS_Guest_UI.generated.h"
 
 UCLASS()
@@ -24,7 +25,7 @@ class ENJOY_YOUR_STAY_API UEYS_Guest_UI : public UUserWidget
 	UTextBlock* Text_RejectOrder;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_Customer;
+	URichTextBlock* Text_Customer;
 	
 
 

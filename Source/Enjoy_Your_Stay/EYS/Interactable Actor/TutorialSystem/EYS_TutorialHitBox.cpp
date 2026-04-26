@@ -97,6 +97,12 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 				break;
  
 			}
+			case ETutorialStep::GoToHammer:
+			{
+				TS->SetTutorialStep(ETutorialStep::TakeHammer);
+				break;
+
+			}
 			default:
 				break;
 			}

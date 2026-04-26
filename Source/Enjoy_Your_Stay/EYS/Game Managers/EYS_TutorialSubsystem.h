@@ -42,11 +42,12 @@ enum class ETutorialStep: uint8
 	TakeFoodBag UMETA(DisplayName = "Take Food Bag"),
 	GoToGuestRoom UMETA(DisplayName = "Go To Guest Room"),
 	GiveWrongFood UMETA(DisplayName = "Give Wrong Food"),
-	GiveRightFood UMETA(DisplayName = "Give Wrong Food"),
+	GiveRightFood UMETA(DisplayName = "Give Right Food"),
 	WaitForPipe UMETA(DisplayName = "Wait For Pipe"),
 	GoToHammer UMETA(DisplayName = "Go To Hammer"),
 	TakeHammer UMETA(DisplayName = "Take Hammer"),
-	FixBrokenPipe UMETA(DisplayName = "FixBrokenPipe"),
+	FixBrokenPipe UMETA(DisplayName = "Fix Broken Pipe"),
+	WaitForUpdate UMETA(DisplayName = "Wait For Update"),
 
 };
 USTRUCT(BlueprintType)

@@ -94,7 +94,7 @@ void AEYS_MissionSpawner::SetStepOfTutorial()
 {
 	if (TutorialSubsystemRef)
 	{
-		TutorialSubsystemRef->UpdateTutorialState(ETutorialStep::WaitForPipe, ETutorialStep::TakeHammer);
+		TutorialSubsystemRef->UpdateTutorialState(ETutorialStep::WaitForPipe, ETutorialStep::GoToHammer);
 	}
 }
 

@@ -13,7 +13,7 @@ void  AEYS_FoodBag::BeginPlay()
 
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
-		TS->UpdateTutorialState(ETutorialStep::TakeFoodBag, ETutorialStep::GoToBoosRoom);
+		TS->UpdateTutorialState(ETutorialStep::TakeFoodBag, ETutorialStep::GoToGuestRoom);
 	}
 }
 

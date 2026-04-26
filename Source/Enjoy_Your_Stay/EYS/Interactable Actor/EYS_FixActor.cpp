@@ -6,6 +6,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/Interactable Actor/EYS_Boiler.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 // Sets default values
 AEYS_FixActor::AEYS_FixActor()
 {
@@ -67,7 +68,12 @@ void AEYS_FixActor::SetPipeMesh()
 	if (FixValue >= 100.f)
 	{
 		GetWorld()->SpawnActor<AActor>(SinglePipeRef, GetActorTransform());
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::FixBrokenPipe, ETutorialStep::WaitForUpdate);
+		}
 		Destroy();
+
 	}
 	else if (FixValue > 75.f)
 	{

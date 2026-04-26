@@ -53,7 +53,7 @@ void AEYS_GuestSpawner::SpawnGuest()
 void AEYS_GuestSpawner::SpawnGuestTimer()
 {
 	SpawnGuest();
-	float RandomDelay = FMath::RandRange(55, 120);
+	float RandomDelay = FMath::RandRange(120, 180);
 	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 
 }
@@ -71,7 +71,7 @@ void AEYS_GuestSpawner::SetEmptyRoom()
 	EmptyRooms++;
 	if (EmptyRooms > 0)
 	{
-		float RandomDelay = FMath::RandRange(55, 120);
+		float RandomDelay = FMath::RandRange(120, 180);
 		GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 	}
 }
