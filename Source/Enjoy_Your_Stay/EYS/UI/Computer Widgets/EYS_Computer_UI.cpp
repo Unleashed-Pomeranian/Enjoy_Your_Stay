@@ -6,6 +6,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/UI/Computer Widgets/EYS_UpgradeSystem_UI.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 
 void UEYS_Computer_UI::NativeConstruct()
@@ -42,8 +43,17 @@ void UEYS_Computer_UI::CloseComputerWidget()
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (PC)
 	{
+		SetDefaultCursor();
 		PC->MobilizeCharacter(false, false, false);
 		RemoveFromParent();
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::CloseComputer, ETutorialStep::EndTutorial);
+		}
 	}
 
+}
+
+void UEYS_Computer_UI::SetDefaultCursor_Implementation()
+{
 }

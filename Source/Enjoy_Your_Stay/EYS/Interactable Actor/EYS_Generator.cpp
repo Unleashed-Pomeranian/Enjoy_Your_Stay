@@ -43,6 +43,7 @@ void AEYS_Generator::BeginPlay()
 		{
 			WidgetMesh->SetWidget(GeneratorActivateWidgetInstance);
 			GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+			GeneratorActivateWidgetInstance->GeneratorRef = this;
 		}
 	}
 	

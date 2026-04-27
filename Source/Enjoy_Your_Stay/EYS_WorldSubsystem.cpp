@@ -98,7 +98,8 @@ void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
 
 void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
 {
-	{
+	
+
 
 		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
 		{
@@ -110,5 +111,5 @@ void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
 			}
 
 		}
-	}
+	
 }

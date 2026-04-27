@@ -34,11 +34,13 @@ void AEYS_GuestCharacter::BeginPlay()
 	Super::BeginPlay();
 	SpawnDefaultController();
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
+
+	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 
 	MoveTo(MainLock, 20.0f);
-
-	
+	DestroyLock = GetActorLocation();
+;	
 }
 
 void AEYS_GuestCharacter::PlayNPCAudio_Implementation()
@@ -83,9 +85,17 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 			TS->UpdateTutorialState(ETutorialStep::WaitTheGuest, ETutorialStep::TalkWithGuest);
 		}
 	}
+
 	if (DialogueNum == 5)
 	{
 		Destroy();
+	}
+	if (bIsCheckOut)
+	{
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::WaitForCheckout, ETutorialStep::CheckoutGuest);
+		}
 	}
 
 }
@@ -325,5 +335,10 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 	if (PC) PC->SetMoneyWidget(500);
 	AEYS_GuestSpawner* Spawner = Cast<AEYS_GuestSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_GuestSpawner::StaticClass()));
 	if (Spawner) Spawner->SetEmptyRoom();
+
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->UpdateTutorialState(ETutorialStep::CheckoutGuest, ETutorialStep::PutKey);
+	}
 }
 

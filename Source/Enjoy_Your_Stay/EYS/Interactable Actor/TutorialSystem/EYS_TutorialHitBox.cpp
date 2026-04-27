@@ -103,6 +103,11 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 				break;
 
 			}
+
+			case ETutorialStep::GoToComputer:
+			{
+				TS->SetTutorialStep(ETutorialStep::OpenComputer);
+			}
 			default:
 				break;
 			}

@@ -86,7 +86,7 @@ void AEYS_MissionSpawner::SpawnDirtActorTimer()
 
 void AEYS_MissionSpawner::StartFixActorSpawening()
 {
-	GetWorld()->GetTimerManager().SetTimer(FixTimerHandle, this, &AEYS_MissionSpawner::SpawnFixActorTimer, 60.0f, false);
+	GetWorld()->GetTimerManager().SetTimer(FixTimerHandle, this, &AEYS_MissionSpawner::SpawnFixActorTimer, 30.0f, false);
 	
 }
 

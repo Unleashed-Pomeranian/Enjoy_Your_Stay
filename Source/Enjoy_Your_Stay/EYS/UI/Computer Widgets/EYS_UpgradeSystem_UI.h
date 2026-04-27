@@ -70,6 +70,8 @@ class ENJOY_YOUR_STAY_API UEYS_UpgradeSystem_UI : public UUserWidget
 	UPROPERTY(meta = (BindWidget))
 	UOverlay* Overlay_UpgradeText;
 
+	UPROPERTY(meta = (BindWidget))
+	UOverlay* Overlay_Tutorial;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -159,9 +161,10 @@ protected:
 	TArray<FText> HeaderText;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	TArray<int32> UpgradePrice;
-
-	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	TArray<UTexture2D*> DisableTextures;
+
+	/*---------------------Upgrade-------------------------------------*/
+	UFUNCTION() void CheckTutorialforUpdate();
 
 };

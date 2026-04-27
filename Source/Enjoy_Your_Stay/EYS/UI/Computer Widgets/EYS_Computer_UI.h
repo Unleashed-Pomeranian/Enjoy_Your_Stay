@@ -33,6 +33,7 @@ protected:
 	UFUNCTION() void OpenSecurityWidget();
 	UFUNCTION() void OpenUpgradeWidget();
 	UFUNCTION() void CloseComputerWidget();
+	UFUNCTION(BlueprintNativeEvent) void SetDefaultCursor();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<UEYS_SecurityCamera_UI> SecurityCameraWidgetClass;

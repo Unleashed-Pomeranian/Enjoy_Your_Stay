@@ -61,6 +61,8 @@ void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlaye
 		if (DayWidgetClass)
 			DayWidgetInstance = CreateWidget<UEYS_Day_UI>(PC, DayWidgetClass);
 
+	
+
 		if (AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass())))
 		{
 			OrderSpawner->SpawnOrder();
@@ -72,7 +74,7 @@ void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlaye
 			DayWidgetInstance->SetFocus();
 			DayWidgetInstance->AddToViewport();
 			DayCycleActor->SetTimeOfDay(10.0f);
-			DayCycleActor->FSetTimer();
+			DayCycleActor->FDayTimer();
 			DayCycleActor->Play();
 			PC->bShowMouseCursor = true;
 			PC->SetInputMode(FInputModeUIOnly());

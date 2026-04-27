@@ -60,7 +60,7 @@ void AEYS_GuestSpawner::SpawnGuestTimer()
 
 void AEYS_GuestSpawner::StartGuestSpawning()
 {
-	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, 100.0f, false);
+	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, 55.0f, false);
 }
 
 

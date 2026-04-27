@@ -38,8 +38,11 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 	{
 		if (MyCharacterUIIns)
 		{
-			MyCharacterUIIns->SetSubtitle(FoundRow->SubtitleText, FoundRow->SubtitleDuration);
-
+			if (!FoundRow->SubtitleText.IsEmpty())
+			{
+				MyCharacterUIIns->SetSubtitle(FoundRow->SubtitleText, FoundRow->SubtitleDuration);
+			}
+			
 			MyCharacterUIIns->SetMissionText(FoundRow->MissionObjective);
 		}
 		if (TargetSpeaker)
@@ -59,20 +62,17 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 
 			}
 		}
-		if (DayManager)
+		if (DayManager&&!(FoundRow->DayTime==0.0f))
 		{
 			DayManager->SetDayHour(FoundRow->DayTime);
 		}
 
-		if (CurrentStep == ETutorialStep::WaitTheGuest)
-		{
-			OnFirstPhaseEnd.Broadcast();
-		}
-		if (CurrentStep == ETutorialStep::WaitTheGuest)
-		{
-			OnFirstPhaseEnd.Broadcast();
-		}
 
+		if (CurrentStep == ETutorialStep::WaitTheGuest)
+		{
+			OnFirstPhaseEnd.Broadcast();
+		}
+	
 		if(CurrentStep == ETutorialStep::GiveRightFood|| CurrentStep == ETutorialStep::GiveWrongFood)
 		{
 			CurrentStep = ETutorialStep::WaitForPipe;

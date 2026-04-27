@@ -40,15 +40,22 @@ enum class ETutorialStep: uint8
 	WaitGuestOrder UMETA(DisplayName = "Wait Guest Order"),
 	TakeGuestOrder UMETA(DisplayName = "Take Guest Order"),
 	TakeFoodBag UMETA(DisplayName = "Take Food Bag"),
-	GoToGuestRoom UMETA(DisplayName = "Go To Guest Room"),
+	GoToGuestRoom UMETA(DisplayName = "Go to Guest Room"),
 	GiveWrongFood UMETA(DisplayName = "Give Wrong Food"),
 	GiveRightFood UMETA(DisplayName = "Give Right Food"),
 	WaitForPipe UMETA(DisplayName = "Wait For Pipe"),
-	GoToHammer UMETA(DisplayName = "Go To Hammer"),
+	GoToHammer UMETA(DisplayName = "Go to Hammer"),
 	TakeHammer UMETA(DisplayName = "Take Hammer"),
 	FixBrokenPipe UMETA(DisplayName = "Fix Broken Pipe"),
-	WaitForUpdate UMETA(DisplayName = "Wait For Update"),
-
+	WaitForCheckout UMETA(DisplayName = "Wait for Checkout"),
+	CheckoutGuest UMETA(DisplayName = "Checkout Guest"),
+	PutKey UMETA(DisplayName = "Put Key"),
+	WaitForUpdate UMETA(DisplayName = "Wait for Update"),
+	GoToComputer  UMETA(DisplayName = "Go to Computer"),
+	OpenComputer UMETA(DisplayName = "Open Computer"),
+	MakeAnyUpgrade   UMETA(DisplayName = "Make Any Update"),
+	CloseComputer     UMETA(DisplayName = "Close Computer"),
+	EndTutorial       UMETA(DisplayName = "Close Computer"),
 };
 USTRUCT(BlueprintType)
 struct FTutorialMissionData:public FTableRowBase

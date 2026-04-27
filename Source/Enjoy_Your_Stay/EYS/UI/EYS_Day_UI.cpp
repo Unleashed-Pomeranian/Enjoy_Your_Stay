@@ -4,6 +4,7 @@
 #include "EYS/UI/EYS_Day_UI.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void UEYS_Day_UI::NativeConstruct()
 {
@@ -27,7 +28,12 @@ void UEYS_Day_UI::StarNewDay()
         UGameplayStatics::SetGamePaused(GetWorld(), false);
         myPC->bShowMouseCursor = false;
         myPC->SetInputMode(FInputModeGameOnly());
+
        
+    }
+    if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+    {
+        TS->UpdateTutorialState(ETutorialStep::EndDay, ETutorialStep::TakeFoodBox);
     }
 }
 

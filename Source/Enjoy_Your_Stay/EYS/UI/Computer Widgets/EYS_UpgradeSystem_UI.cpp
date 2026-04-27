@@ -4,6 +4,7 @@
 #include "EYS/UI/Computer Widgets/EYS_UpgradeSystem_UI.h"
 #include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 #include "EYS/Game Managers/EYS_EconomySubsystem.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void UEYS_UpgradeSystem_UI::NativeConstruct()
 {
@@ -58,8 +59,9 @@ void UEYS_UpgradeSystem_UI::NativeConstruct()
 	if (Button_EquipmentUp) Button_EquipmentUp->OnClicked.AddDynamic(this, &UEYS_UpgradeSystem_UI::OnSingleUp2);
 	if (Button_DoormatUp) Button_DoormatUp->OnClicked.AddDynamic(this, &UEYS_UpgradeSystem_UI::OnSingleUp3);
 
-
+	
 	if(Button_Close) Button_Close->OnClicked.AddDynamic(this, &UEYS_UpgradeSystem_UI::CloseUpgradeWidget);
+	CheckTutorialforUpdate();
 	CheckUpgrades();
 	UpdateCurrentMoney();
 }
@@ -154,6 +156,12 @@ void UEYS_UpgradeSystem_UI::SetBoilerUpgrade(int32 UpgradeIndex)
 				Button_BoilerUp2->SetIsEnabled(true);
 				Button_BoilerUp1->WidgetStyle.Normal.SetResourceObject(DisableTextures[3]);
 				UpdateCurrentMoney();
+				if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+				{
+					TS->UpdateTutorialState(ETutorialStep::MakeAnyUpgrade, ETutorialStep::CloseComputer);
+					Overlay_Tutorial->SetVisibility(ESlateVisibility::Hidden);
+				}
+
 			}
 			break;
 		}
@@ -401,6 +409,22 @@ void UEYS_UpgradeSystem_UI::CheckUpgrades()
 
 }
 
+void UEYS_UpgradeSystem_UI::CheckTutorialforUpdate()
+{
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		if (TS->CurrentStep == ETutorialStep::MakeAnyUpgrade)
+		{
+			Button_GuestUp1->SetIsEnabled(false);
+			Button_GenUp1->SetIsEnabled(false);
+			Button_MyCharacterUp->SetIsEnabled(false);
+			Button_EquipmentUp->SetIsEnabled(false);
+			Button_DoormatUp->SetIsEnabled(false);
+			Overlay_Tutorial->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+}
+
 
 void UEYS_UpgradeSystem_UI::CloseUpgradeWidget()
 {
@@ -418,3 +442,4 @@ void UEYS_UpgradeSystem_UI::UpdateCurrentMoney()
 	}
 
 }
+

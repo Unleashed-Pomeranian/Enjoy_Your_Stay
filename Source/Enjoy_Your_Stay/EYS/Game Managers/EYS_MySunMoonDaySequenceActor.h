@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Actors/SunMoonDaySequenceActor.h"
-
 #include "EYS_MySunMoonDaySequenceActor.generated.h"
 
 class AEYS_MyCharacterController;
+class UEYS_TutorialSubsystem;
+class UEYS_WorldSubsystem;
 
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MySunMoonDaySequenceActor : public ASunMoonDaySequenceActor
@@ -16,18 +17,24 @@ class ENJOY_YOUR_STAY_API AEYS_MySunMoonDaySequenceActor : public ASunMoonDaySeq
 
 
 
-	FTimerHandle TimerHandle;
+	FTimerHandle DayTimerHandle;
 
  
 protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
-	AEYS_MyCharacterController* PC;
+	AEYS_MyCharacterController* PC= nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
+	UEYS_TutorialSubsystem* TS = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
+	UEYS_WorldSubsystem* Director = nullptr;
 	
 public:
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION() void FSetTimer();
+	UFUNCTION() void FDayTimer();
 	UFUNCTION() void SetDayHour(float TimeValue);
+	UFUNCTION() void CheckTimeForTutorial();
 	UPROPERTY() int32 DayNum=1;
 };

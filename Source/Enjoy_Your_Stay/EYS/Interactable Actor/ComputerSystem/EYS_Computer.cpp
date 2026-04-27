@@ -6,6 +6,8 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/UI/Computer Widgets/EYS_ComputerLoading_UI.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+
 
 // Sets default values
 AEYS_Computer::AEYS_Computer()
@@ -56,6 +58,11 @@ void  AEYS_Computer::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 		PC->PlayerCameraManager->StartCameraFade(2.0f, 0.0f, 1.5f, FLinearColor::Black, false, true);
 		PC->MobilizeCharacter(true, true, true);
 		OpenComputer();
+
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::OpenComputer, ETutorialStep::MakeAnyUpgrade);
+		}
 	}
 	
 }

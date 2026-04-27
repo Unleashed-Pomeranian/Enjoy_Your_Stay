@@ -11,19 +11,25 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 {
 
      PC =Cast<AEYS_MyCharacterController>(UGameplayStatics::GetPlayerController(this, 0));
+	 TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+	 Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 
-	SetTimeOfDay(10.0f);
-	SetTimePerCycle(1.0f);
+	 SetTimeOfDay(10.0f);
+	 SetTimePerCycle(1.0f);
+	 GetWorld()->GetTimerManager().SetTimer(DayTimerHandle, this, &AEYS_MySunMoonDaySequenceActor::FDayTimer, 10.0f, true);
 
-	UKismetSystemLibrary::K2_SetTimer(this, "FSetTimer", 2.0f, true);
-	SetTimePerCycle(0.016f);
-	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	if (TS)
 	{
 		TS->DayManager = this;
+		if (TS->bIsTutorialFinished)
+		{
+			Play();
+		}
+
 	}
 }
 
-void AEYS_MySunMoonDaySequenceActor::FSetTimer()
+void AEYS_MySunMoonDaySequenceActor::FDayTimer()
 {
 	if (GetTimeOfDay() >= 22.0f)
 	{
@@ -31,15 +37,28 @@ void AEYS_MySunMoonDaySequenceActor::FSetTimer()
 	}
 if (PC) PC->SetHourWidget(GetTimeOfDay());
 
-	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
+CheckTimeForTutorial();
+	 
 	if (!Director) return;
-
 	Director->CheckOutPlayer(DayNum,GetTimeOfDay());
+	
+
 }
 
 void AEYS_MySunMoonDaySequenceActor::SetDayHour(float TimeValue)
 {
 	SetTimeOfDay(TimeValue);
+}
+
+void AEYS_MySunMoonDaySequenceActor::CheckTimeForTutorial()
+{
+	if (DayNum<=5&&DayNum >= 3 && GetTimeOfDay() > 15.00)
+	{
+		if (TS)
+		{
+			TS->UpdateTutorialState(ETutorialStep::WaitForUpdate, ETutorialStep::GoToComputer);
+		}
+	}
 }
 
 void AEYS_MySunMoonDaySequenceActor::Tick(float DeltaTime)

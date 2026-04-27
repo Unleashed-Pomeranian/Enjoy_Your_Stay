@@ -70,7 +70,7 @@ void AEYS_FixActor::SetPipeMesh()
 		GetWorld()->SpawnActor<AActor>(SinglePipeRef, GetActorTransform());
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 		{
-			TS->UpdateTutorialState(ETutorialStep::FixBrokenPipe, ETutorialStep::WaitForUpdate);
+			TS->UpdateTutorialState(ETutorialStep::FixBrokenPipe, ETutorialStep::WaitForCheckout);
 		}
 		Destroy();
 

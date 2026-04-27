@@ -64,7 +64,8 @@ public:
 	float RotStartValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float RotEndValue;
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool bIsTrigrred = false;
 
 	 

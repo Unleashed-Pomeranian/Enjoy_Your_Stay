@@ -64,16 +64,21 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 		case 3:
 			{
 				TS->UpdateTutorialState(ETutorialStep::TakeHammer, ETutorialStep::FixBrokenPipe);
+				break;
 			}
 		case 4:
 		{
-			TS->UpdateTutorialState(ETutorialStep::TakeMop, ETutorialStep::CleanDirt);
-			AEYS_MissionSpawner* MissionSpawner = Cast<AEYS_MissionSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionSpawner::StaticClass()));
-			if (MissionSpawner)
+			
+			if (TS->CurrentStep == ETutorialStep::TakeMop)
 			{
-				for (int i = 0; i <= 5; i++)
+				TS->UpdateTutorialState(ETutorialStep::TakeMop, ETutorialStep::CleanDirt);
+				
+				if (AEYS_MissionSpawner* MissionSpawner = Cast<AEYS_MissionSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionSpawner::StaticClass())))
 				{
-					MissionSpawner->SpawnDirtActor();
+					for (int i = 0; i <= 5; i++)
+					{
+						MissionSpawner->SpawnDirtActor();
+					}
 				}
 			}
 			break;

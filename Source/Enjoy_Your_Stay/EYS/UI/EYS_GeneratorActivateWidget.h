@@ -13,6 +13,7 @@
 /**
  * 
  */
+class AEYS_Generator;
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_GeneratorActivateWidget : public UUserWidget
 {
@@ -41,4 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable) void FStartTimer();
 	UFUNCTION(BlueprintCallable) void FSetImageRotation(float Angle);
 	UFUNCTION(BlueprintCallable) void TimerFTimer();
+
+	UPROPERTY() AEYS_Generator* GeneratorRef=nullptr;
 };
