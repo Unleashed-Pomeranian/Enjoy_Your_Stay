@@ -12,6 +12,7 @@ class UImage;
 class UOverlay;
 class UProgressBar;
 class URichTextBlock;
+class AEYS_MyCharacterController;
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_MyCharacter_UI : public UUserWidget
 {
@@ -41,14 +42,20 @@ public:
 	UImage* Dot_Image;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BindWidget))
 	URichTextBlock* Text_Mission;
-
+	
 protected:
 	UFUNCTION() void SetStaminaBar(float StaminaValue,bool bIsRecovery);
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Color")
 	TArray<FLinearColor> BarColors;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 CurrentMoney=0;
 public:
 	UFUNCTION(BlueprintNativeEvent) void SetSubtitle(const FText& Subtitle,float Duration);
 	UFUNCTION(BlueprintNativeEvent) void SetMissionText(const FText& MissionText);
+	UFUNCTION(BlueprintNativeEvent) void SetChangedMoney(const int32 ChangedValue);
+	UFUNCTION(BlueprintCallable) void SetMoneyText(int32 AddValue);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Controller")
+	AEYS_MyCharacterController* PC;
 	
 };

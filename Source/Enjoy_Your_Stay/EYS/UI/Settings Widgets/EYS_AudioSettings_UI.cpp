@@ -9,8 +9,8 @@
 void UEYS_AudioSettings_UI::NativeConstruct()
 {
 	Super::NativeConstruct();
-	UEYS_UserSettingsSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
-	
+       US = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
+	   if (!US) return; 
 
 	if (Row_MasterVolume)
 	{
@@ -37,32 +37,45 @@ void UEYS_AudioSettings_UI::NativeConstruct()
 		Row_AmbientVolume->SetInitialValue(US->AmbientVolume,true);
 		Row_AmbientVolume->OnSliderSettingChanged.AddDynamic(this, &UEYS_AudioSettings_UI::OnAmbientVolumeChanged);
 	}
+	if (Row_UIVolume)
+	{
+		Row_UIVolume->SetSettingName(FText::FromString("UI Volume"));
+		Row_UIVolume->SetInitialValue(US->UIVolume, true);
+		Row_UIVolume->OnSliderSettingChanged.AddDynamic(this, &UEYS_AudioSettings_UI::OnUIVolumeChanged);
+	}
+
 	
 
 }
 
 void UEYS_AudioSettings_UI::OnMasterVolumeChanged(float NewValue)
 {
-	UEYS_UserSettingsSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
+	
 	US->SetMasterVolume(NewValue);
 	
 }
 
 void UEYS_AudioSettings_UI::OnMusicVolumeChanged(float NewValue)
 {
-	UEYS_UserSettingsSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
+	
 	US->SetMusicVolume(NewValue);
 }
 
 void UEYS_AudioSettings_UI::OnSFXVolumeChanged(float NewValue)
 {
-	UEYS_UserSettingsSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
+	
 	US->SetSFXVolume(NewValue);
+}
+
+void UEYS_AudioSettings_UI::OnUIVolumeChanged(float NewValue)
+{
+
+	US->SetUIVolume(NewValue);
 }
 
 void UEYS_AudioSettings_UI::OnAmbientVolumeChanged(float NewValue)
 {
-	UEYS_UserSettingsSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
+
 	US->SetAmbientVolume(NewValue);
 }
 

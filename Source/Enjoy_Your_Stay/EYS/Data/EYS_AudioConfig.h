@@ -26,6 +26,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Audio Settings")
 	class USoundClass* SFXClass;
+	UPROPERTY(EditAnywhere, Category = "Audio Settings")
+	class USoundClass* UIClass;
 
 	UPROPERTY(EditAnywhere, Category = "Audio Settings")
 	class USoundClass* AmbientClass;

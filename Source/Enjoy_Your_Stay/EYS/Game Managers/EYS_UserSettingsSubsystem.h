@@ -24,6 +24,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float SFXVolume = 1.0f;
 	UPROPERTY(BlueprintReadWrite)
+	float UIVolume = 1.0f;
+	UPROPERTY(BlueprintReadWrite)
 	float AmbientVolume = 1.0f;
 	
 	/*--------Gameplay---------*/
@@ -36,6 +38,7 @@ public:
 	void SetMusicVolume(float NewValue);
 	void SetSFXVolume(float NewValue);
 	void SetAmbientVolume(float NewValue);
+	void SetUIVolume(float NewValue);
 
 public:
 	// Bu fonksiyonu UI veya GameMode bir kez çağırıp Data Asset'i teslim etmeli

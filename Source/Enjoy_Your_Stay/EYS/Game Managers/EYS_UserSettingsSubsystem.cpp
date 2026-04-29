@@ -32,6 +32,12 @@ void UEYS_UserSettingsSubsystem::SetAmbientVolume(float NewValue)
     if (AudioConfig) UpdateSoundVolume(AudioConfig->AmbientClass, NewValue);
 }
 
+void UEYS_UserSettingsSubsystem::SetUIVolume(float NewValue)
+{
+    UIVolume = NewValue;
+    if (AudioConfig) UpdateSoundVolume(AudioConfig->UIClass, NewValue);
+}
+
 
 void UEYS_UserSettingsSubsystem::InitializeAudio(UEYS_AudioConfig* Config)
 {

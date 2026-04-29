@@ -11,6 +11,7 @@
  * 
  */
 class UEYS_SliderSetting_UI;
+class UEYS_UserSettingsSubsystem;
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_AudioSettings_UI : public UUserWidget
 {
@@ -34,6 +35,8 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UEYS_SliderSetting_UI* Row_AmbientVolume;
+	UPROPERTY(meta = (BindWidget))
+	UEYS_SliderSetting_UI* Row_UIVolume;
 
 	UFUNCTION()
 	void OnMasterVolumeChanged(float NewValue);
@@ -43,6 +46,8 @@ protected:
 
 	UFUNCTION()
 	void OnSFXVolumeChanged(float NewValue);
+	UFUNCTION()
+	void OnUIVolumeChanged(float NewValue);
 
 	UFUNCTION()
 	void OnAmbientVolumeChanged(float NewValue);
@@ -52,4 +57,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Audio")
 	USoundClass* MasterClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	UEYS_UserSettingsSubsystem* US;
 };

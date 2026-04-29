@@ -22,7 +22,7 @@ AEYS_MyCharacterController::AEYS_MyCharacterController()
 void AEYS_MyCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Money = 2000;
 	if (ULocalPlayer* LP = GetLocalPlayer())
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsys =
@@ -49,6 +49,8 @@ void AEYS_MyCharacterController::BeginPlay()
 
 		if (MyCharacterUIInstance)
 		{
+			MyCharacterUIInstance->PC =this;
+			MyCharacterUIInstance->SetMoneyText(Money);
 			UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 			if (TS) 
 			{ 
@@ -62,8 +64,8 @@ void AEYS_MyCharacterController::BeginPlay()
 
 
 	OwnerCharacter = Cast<AEYS_MyCharacter>(GetPawn());
-	Money = 2000;
-	SetMoneyWidget(0);
+
+
 
 
 }
@@ -112,9 +114,11 @@ void AEYS_MyCharacterController::CloseEquipmentWidget()
 void AEYS_MyCharacterController::SetMoneyWidget(int32 AddValue)
 {
 	Money += AddValue;
-	FString MoneyText = FString::FromInt(Money);
-	MyCharacterUIInstance->Money_Text->SetText(FText::FromString(MoneyText));
-
+	if (MyCharacterUIInstance)
+	{
+		MyCharacterUIInstance->SetChangedMoney(AddValue);
+	}
+	
 }
 
 void AEYS_MyCharacterController::SetInteractionWidget(FString InterctionText)

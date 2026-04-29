@@ -144,7 +144,7 @@ void AEYS_MyCharacter::SetRoot()
 	}
 	if (bIsHaveKey&&PoseNum==2)
 	SetEquipmentMesh(6);
-	else
+	else	
 	SetEquipmentMesh(PoseNum);
 
 
@@ -267,6 +267,9 @@ void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
 		HeldEquipment->DettachActor();
 		HeldEquipment = nullptr;
 		bIsHandsFull = false;
+		PoseNum = 0;
+		SetRoot();
+		
 	}
 }
 
@@ -416,6 +419,7 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::Action(const FInputActionValue& Value)
 {
+	float FrameMultiplier = GetWorld()->GetDeltaSeconds() * 60.0f;
 	if (bIsKeyMode)
 		Action_MouseTrace();
 	else
@@ -457,21 +461,21 @@ void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
 void AEYS_MyCharacter::Action_ForwardTrace()
 {
 	bIsAction = true;
-	FHitResult* Hit = new FHitResult();
+	FHitResult Hit; 
+
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
-	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
-	if (Hit->GetActor() != nullptr)
+
+	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>(), EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
+
+	if (Hit.GetActor() != nullptr)
 	{
-		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
+		if (Hit.GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
 		{
-			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
-			IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this,PoseNum);
-		
+			
+			IEYS_InteractInterface::Execute_aInteract(Hit.GetActor(), this, PoseNum);
 		}
 	}
-
 
 }
 
@@ -554,6 +558,7 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 
 		else
 		{
+			if(InteractableActors.IsValidIndex(MeshValue))
 			ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
 		}
 

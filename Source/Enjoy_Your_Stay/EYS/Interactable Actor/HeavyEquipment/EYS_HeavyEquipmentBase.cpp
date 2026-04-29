@@ -44,7 +44,7 @@ void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	AttachToComponent(myPlayer->FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "HeavyEquipment");
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	myPlayer->PoseNum = 6;
+	myPlayer->PoseNum = 7;
 	myPlayer->SetRoot();
 	myPlayer->HeldEquipment = this;
 	myPlayer->bIsHandsFull = true;

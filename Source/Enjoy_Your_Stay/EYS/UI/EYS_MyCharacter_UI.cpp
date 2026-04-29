@@ -15,8 +15,8 @@ void UEYS_MyCharacter_UI::NativeConstruct()
     Overlay->SetVisibility(ESlateVisibility::Hidden);
     Interaction_Text->SetVisibility(ESlateVisibility::Hidden);
 
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetOwningPlayer());
 
+    if(PC)
 	PC->OnStaminaChanged.AddDynamic(this, &UEYS_MyCharacter_UI::SetStaminaBar);
     
 
@@ -53,6 +53,20 @@ void UEYS_MyCharacter_UI::SetStaminaBar(float StaminaValue,bool bIsRecovery)
         }
 
     }
+}
+
+void UEYS_MyCharacter_UI::SetMoneyText(int32 AddValue)
+{
+    CurrentMoney += AddValue;
+    FString CM = FString(TEXT("₽")) + FString::FromInt(CurrentMoney);
+
+   Money_Text->SetText(FText::FromString(CM));
+  
+}
+
+void UEYS_MyCharacter_UI::SetChangedMoney_Implementation(const int32 ChangedValue)
+{
+  
 }
 
 void UEYS_MyCharacter_UI::SetMissionText_Implementation(const FText& MissionText)
