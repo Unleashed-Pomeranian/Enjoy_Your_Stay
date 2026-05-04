@@ -92,7 +92,7 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 		}
 		case 6:
 		{
-			TS->UpdateTutorialState(ETutorialStep::TakeShovel, ETutorialStep::GoToBoilerRoom);
+			TS->UpdateTutorialState(ETutorialStep::TakeShovel, ETutorialStep::SpawnSecondHorrorActor);
 		}
 		default:
 			break;

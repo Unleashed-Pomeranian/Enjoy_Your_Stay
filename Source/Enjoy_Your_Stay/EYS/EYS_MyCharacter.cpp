@@ -60,6 +60,7 @@ void AEYS_MyCharacter::BeginPlay()
 	MyPC = Cast<AEYS_MyCharacterController>(GetController());
 	UKismetSystemLibrary::K2_SetTimer(this, TEXT("InteractUI"), 0.2f, true, false, 0.0f, 0.0f);
 	UserSettingsSubsystem = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
+
 }
 
 // Called every frame
@@ -90,12 +91,14 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		{
 			EIC->BindAction(IA_Sprint, ETriggerEvent::Started, this, &AEYS_MyCharacter::StartSprint);
 			EIC->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &AEYS_MyCharacter::StopSprint);
+			EIC->BindAction(IA_Action, ETriggerEvent::Canceled, this, &AEYS_MyCharacter::StopSprint);
 		}
 	
 		EIC->BindAction(IA_eInteract, ETriggerEvent::Started, this, &AEYS_MyCharacter::Interact);
 		EIC->BindAction(IA_Action, ETriggerEvent::Triggered, this, & AEYS_MyCharacter::Action);
 		EIC->BindAction(IA_Action, ETriggerEvent::Started, this, &AEYS_MyCharacter::ActionStart);
 		EIC->BindAction(IA_Action, ETriggerEvent::Completed, this, &AEYS_MyCharacter::ActionEnd);
+		EIC->BindAction(IA_Action, ETriggerEvent::Canceled, this, &AEYS_MyCharacter::ActionEnd);
 
 		EIC->BindAction(IA_Action2, ETriggerEvent::Started, this, &AEYS_MyCharacter::Action2);
 		EIC->BindAction(IA_Action2, ETriggerEvent::Completed, this, &AEYS_MyCharacter::Action2);
@@ -306,6 +309,7 @@ void AEYS_MyCharacter::EnableMission(const FInputActionValue& Value)
 	if (MissionPPV)
 	{
 		MissionPPV->bEnabled = true;
+		//FVector newPPVLocation = GetActorLocation();
 		MissionPPV->SetMissionPPEnabled(true);
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.25f); // %25 hız
 	}
@@ -316,6 +320,7 @@ void AEYS_MyCharacter::DisableMission(const FInputActionValue& Value)
 	if (MissionPPV)
 	{
 		MissionPPV->bEnabled = false;
+		
 		MissionPPV->SetMissionPPEnabled(false);
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f); // %25 hız
 	}

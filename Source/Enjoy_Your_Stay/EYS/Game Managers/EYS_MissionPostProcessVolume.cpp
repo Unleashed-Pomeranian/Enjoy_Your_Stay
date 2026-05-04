@@ -5,6 +5,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
 
+void AEYS_MissionPostProcessVolume::BeginPlay()
+{
+    Super::BeginPlay();
+
+    
+
+}
 void AEYS_MissionPostProcessVolume::ShowMissions()
 {
  
@@ -25,7 +32,7 @@ void AEYS_MissionPostProcessVolume::ShowMissions()
     for (AEYS_DirtActor* Dirt : DirtActorss)
     {
         if (!Dirt) continue;
-        Dirt->StaticMesh->SetVisibility(true);   // bunu DirtActor'a ekle (aşağıda)
+        Dirt->StaticMesh->SetVisibility(true);  
     }
 }
 
@@ -42,6 +49,9 @@ void AEYS_MissionPostProcessVolume::HideMissions()
 
 void AEYS_MissionPostProcessVolume::SetMissionPPEnabled(bool bEnablePPV)
 {
-  
+   
     bEnablePPV ? ShowMissions() : HideMissions();
+    //SetActorLocation(PPVlocation);
+
+ 
 }

@@ -71,9 +71,8 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 		UKismetSystemLibrary::K2_ClearTimer(this, "StartGenerator");
 		bIsWorking = false;
 
-		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
-
-		if (TS)
+		
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 		{
 			TS->UpdateTutorialState(ETutorialStep::ActivateGenerator, ETutorialStep::FindMop);
 		}

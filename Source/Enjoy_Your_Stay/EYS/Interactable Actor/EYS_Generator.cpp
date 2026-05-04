@@ -8,7 +8,7 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/UI/EYS_GeneratorActivateWidget.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FuelTank.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 // Sets default values
 AEYS_Generator::AEYS_Generator()
 {
@@ -62,6 +62,7 @@ void AEYS_Generator::Interact(AEYS_MyCharacter* myPlayer)
 //Start Engine
 void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
+	
 	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FuelTank::StaticClass()))
 	{
 		CurrentFuelTank = Cast<AEYS_FuelTank>(myPlayer->HeldEquipment);
@@ -88,6 +89,10 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 					PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
 					PC->SetCharacterPositon(GetActorLocation(), 30, 5, FRotator(-45, -90, 0));
 					PC->MobilizeCharacter(true, false, false);
+					if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+					{
+						TS->UpdateTutorialState(ETutorialStep::InteractWithGenerator, ETutorialStep::SpawnFirstHorrorActor);
+					}
 				}
 
 				//myPlayer->PlayMontage(2);

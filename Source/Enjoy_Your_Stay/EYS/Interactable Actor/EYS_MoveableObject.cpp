@@ -39,11 +39,17 @@ void AEYS_MoveableObject::BeginPlay()
 	if (MovementCurve)
 	{
 		MainTimeline->AddInterpFloat(MovementCurve, MovementValue);
-		
+	
 
 	}
+	if (TriggerBox)
+	{
+		TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AEYS_MoveableObject::OnDoorOverlapBegin);
+		TriggerBox->OnComponentEndOverlap.AddDynamic(this, &AEYS_MoveableObject::OnDoorOverlapEnd);
+		
+	}
  
-	
+	RotMainValue = RotEndValue;
 }
 
 
@@ -93,7 +99,7 @@ void AEYS_MoveableObject::DoorInteract()
 		StartRot.Yaw = RotStartValue;
 		EndRot.Yaw = RotEndValue;	
 		bIsTrigrred = true;
-		//UKismetSystemLibrary::K2_SetTimer(this, "DoorInteract", 3.0f, false);
+		
 		PlayMoveableAudio();
 
 	}
@@ -102,12 +108,61 @@ void AEYS_MoveableObject::DoorInteract()
 		MainTimeline->Reverse();
 		bIsTrigrred = false;
 		PlayMoveableAudio();
-		//UKismetSystemLibrary::K2_ClearTimer(this, "DoorInteract");
+		
+	}
+}
+
+void AEYS_MoveableObject::OnDoorOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "isinteract");
+	if (bIsTrigrred) return;
+
+	if (OtherActor && OtherActor != this && OtherActor->IsA(APawn::StaticClass()))
+	{
+		
+		if (Cast<AEYS_MyCharacter>(OtherActor))
+		{
+			return;
+		}
+      
+
+		FVector RotDirection = OtherActor->GetActorLocation() - StaticMesh->GetComponentLocation();
+		RotDirection.Normalize(0.0001);
+		FVector MeshForwardVector = GetActorRightVector(); 
+		float DotResult = FVector::DotProduct(RotDirection, MeshForwardVector);
+
+		if (DotResult < 0)
+		{
+			RotEndValue = -RotMainValue; 
+		}
+		else
+		{
+			RotEndValue = RotMainValue;  
+		}
+		
+		
+		
+		DoorInteract();
+		RotEndValue = RotMainValue;
+	
+	}
+}
+
+void AEYS_MoveableObject::OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (Cast<AEYS_MyCharacter>(OtherActor))
+	{
+		return;
+	}
+	if (OtherActor && OtherActor != this && OtherActor->IsA(APawn::StaticClass()))
+	{
+		DoorInteract();
 	}
 }
 
 void AEYS_MoveableObject::PlayMoveableAudio_Implementation()
 {
+
 }
 
 

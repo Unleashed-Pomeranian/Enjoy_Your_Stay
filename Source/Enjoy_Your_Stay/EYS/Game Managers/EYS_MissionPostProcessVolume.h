@@ -13,9 +13,15 @@ class ENJOY_YOUR_STAY_API AEYS_MissionPostProcessVolume : public APostProcessVol
 {
 	GENERATED_BODY()
 	protected:
+	virtual void BeginPlay() override;
 	UPROPERTY() TArray<AEYS_DirtActor*>  DirtActorss;
+ 
+
+	
+	
 public:
 	UFUNCTION(BlueprintCallable) void ShowMissions();
 	UFUNCTION(BlueprintCallable) void HideMissions();
 	UFUNCTION(BlueprintCallable) void SetMissionPPEnabled(bool bEnablePPV);
+
 };

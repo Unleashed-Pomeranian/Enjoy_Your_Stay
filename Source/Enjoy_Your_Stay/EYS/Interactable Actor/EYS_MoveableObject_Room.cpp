@@ -14,7 +14,34 @@ void AEYS_MoveableObject_Room::eInteract_Implementation(AEYS_MyCharacter* myPlay
 	else
 	{
 		myPlayer->PlayMontage(0);
-		AssignedNPCs->MoveTo(TriggerBox->GetComponentLocation(), 50.0f);
-		AssignedNPCs->bisDialogueEnd = false;
+		if (AssignedNPCs)
+		{
+			AssignedNPCs->MoveTo(TriggerBox->GetComponentLocation(), 50.0f);
+			AssignedNPCs->bisDialogueEnd = false;
+		}
 	}
+
+}
+
+void AEYS_MoveableObject_Room::OnDoorOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::OnDoorOverlapBegin(OverlappedComponent, OtherActor,
+		OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	if (OtherActor && OtherActor->IsA(APawn::StaticClass()))
+	{
+		AEYS_GuestCharacter* OverlappingNPC = Cast<AEYS_GuestCharacter>(OtherActor);
+		if (OverlappingNPC)
+		{
+			AssignedNPCs = OverlappingNPC;
+		}
+	}
+	
+	
+
+}
+void AEYS_MoveableObject_Room::OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Super::OnDoorOverlapEnd(OverlappedComponent, OtherActor,
+		OtherComp, OtherBodyIndex);
 }

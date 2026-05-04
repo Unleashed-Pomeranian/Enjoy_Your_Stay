@@ -9,6 +9,7 @@
 #include "EYS_MoveableObject.generated.h"
 
 class UBoxComponent;
+class UArrowComponent;
 class UTimelineComponent;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MoveableObject : public AActor, public IEYS_InteractInterface
@@ -50,8 +51,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timeline Actor | Mesh")
 	UTimelineComponent* MainTimeline;
 	UFUNCTION(BlueprintNativeEvent)  void PlayMoveableAudio();
-	
-   
+
+	UFUNCTION()void OnDoorOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
+		OtherActor, UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()void OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor*
+		OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex);
+
+
+	float RotMainValue;
 		
 public:	
 	
@@ -64,7 +73,6 @@ public:
 	float RotStartValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float RotEndValue;
-
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool bIsTrigrred = false;
 

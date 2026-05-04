@@ -92,7 +92,7 @@ void AEYS_Boiler::SetCoalAmount(float FuelAddValue)
 		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 		if (TS)
 		{
-			TS->UpdateTutorialState(ETutorialStep::FillBoiler, ETutorialStep::GoToPhone);
+			TS->UpdateTutorialState(ETutorialStep::FillBoiler, ETutorialStep::SpawnThirdHorrorActor);
 		}
 	}
 

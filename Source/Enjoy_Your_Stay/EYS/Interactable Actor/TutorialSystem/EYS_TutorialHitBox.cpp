@@ -60,7 +60,7 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 			}
 			case ETutorialStep::GoToGenerator:
 			{
-				TS->SetTutorialStep(ETutorialStep::ActivateGenerator);
+				TS->SetTutorialStep(ETutorialStep::InteractWithGenerator);
 				break;
 			}
 			case ETutorialStep::FindMop:
@@ -120,9 +120,25 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 
 void AEYS_TutorialHitBox::SpawnEquipment(TSubclassOf<AActor> EquipmentClass)
 {
-	if(EquipmentClass)
+	
+	if (EquipmentClass)
 	{
-		GetWorld()->SpawnActor<AActor>(EquipmentClass, GetActorTransform());
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(EquipmentClass, GetActorTransform(),SpawnParams);
+
+		if (SpawnedActor)
+		{
+			APawn* SpawnedPawn = Cast<APawn>(SpawnedActor);
+
+
+			if (SpawnedPawn)
+			{
+
+				SpawnedPawn->SpawnDefaultController();
+			}
+		}
 	}
 }
 
