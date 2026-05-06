@@ -14,7 +14,8 @@
 				"UMG",
 				"EngineCameras",
 				"DaySequence",
-				"QuickDialogues"
+				"QuickDialogues",
+				"ChaosVehicles"
 			]
 		}
 	],

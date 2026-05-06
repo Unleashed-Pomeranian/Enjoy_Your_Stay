@@ -40,7 +40,7 @@ void AEYS_GuestSpawner::SpawnGuest()
 		UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 		if (!Director) return;
 		if (GuestClass)
-			Director->RequestSpawnNPC(GuestClass, GetActorTransform());
+			
 		EmptyRooms --;
 	}
 	else
@@ -75,4 +75,5 @@ void AEYS_GuestSpawner::SetEmptyRoom()
 		GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 	}
 }
+
 

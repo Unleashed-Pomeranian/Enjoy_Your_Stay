@@ -90,5 +90,5 @@ public:
 	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void DestroyFoodBag();
 	UFUNCTION() void CheckOut(AEYS_MyCharacter* myPlayer);
-	
+	UFUNCTION() void SetGuestMesh(USkeletalMesh* GuestSkin);
 };

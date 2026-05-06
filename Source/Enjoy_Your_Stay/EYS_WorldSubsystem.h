@@ -16,7 +16,7 @@ class ENJOY_YOUR_STAY_API UEYS_WorldSubsystem : public UWorldSubsystem
 public:
 	// NPC spawn API
 	UFUNCTION(BlueprintCallable, Category = "EYS|NPC")
-	AEYS_GuestCharacter* RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform);
+	AEYS_GuestCharacter* RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform, USkeletalMesh* GuestSkel);
 	void SetMentalSlate( const float ReduceValue);
 	void CheckOutPlayer(int32 DayValue,float TimeValue);
 

@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
 
-AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform)
+AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform, USkeletalMesh* GuestSkel)
 {
 	if (!GetWorld())
 	{
@@ -22,7 +22,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	Params.Owner = nullptr; // istersen owner set edersin
+	Params.Owner = nullptr;
 	Params.Instigator = nullptr;
 
 	AEYS_GuestCharacter* Spawned = GetWorld()->SpawnActor<AEYS_GuestCharacter>(NPCClass,SpawnTransform,Params);
@@ -36,6 +36,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	ActiveNPCs.Add(Spawned);
 	if (Spawned)
 	{
+		Spawned->SetGuestMesh(GuestSkel);
 		UKismetSystemLibrary::K2_SetTimer(Spawned, "OrderFood", 120.0f, false);
 		
 	}
@@ -48,6 +49,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 
 	return Spawned;
 }
+
 
 void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
 {

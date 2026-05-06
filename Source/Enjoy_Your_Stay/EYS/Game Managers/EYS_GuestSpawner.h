@@ -34,5 +34,6 @@ protected:
 
 public:	
 	UFUNCTION() void SetEmptyRoom();
+	
 
 };

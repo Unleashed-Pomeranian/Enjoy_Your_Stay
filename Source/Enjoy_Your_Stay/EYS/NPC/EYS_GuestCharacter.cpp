@@ -342,3 +342,9 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 	}
 }
 
+void AEYS_GuestCharacter::SetGuestMesh(USkeletalMesh* GuestSkin)
+{
+	if(GuestSkin)
+	ThirdPersonMesh->SetSkeletalMesh(GuestSkin, true);
+}
+
