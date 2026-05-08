@@ -22,7 +22,10 @@ protected:
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 public:
 	UFUNCTION() void RemoveFood();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
+	EItemType ItemType;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
 	EFoodType FoodType;
+
 	
 };

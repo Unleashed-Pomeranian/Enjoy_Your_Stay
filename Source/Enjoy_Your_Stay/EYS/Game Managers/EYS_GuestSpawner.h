@@ -7,7 +7,8 @@
 #include "EYS_GuestSpawner.generated.h"
 
 class AEYS_GuestCharacter;
-
+class AEYS_GuestCar;
+class AEYS_VehicleSplinePath;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_GuestSpawner : public AActor
 {
@@ -29,7 +30,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector LobyLoc;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TSubclassOf<AEYS_GuestCharacter> GuestClass;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TSubclassOf<AEYS_GuestCar> GuestCarClass;
+	UPROPERTY(EditInstanceOnly, Category = "Parking Setup")
+	TArray<class AEYS_VehicleSplinePath*> ParkingEntries;
 	FTimerHandle GuestTimerHandle;
 
 public:	

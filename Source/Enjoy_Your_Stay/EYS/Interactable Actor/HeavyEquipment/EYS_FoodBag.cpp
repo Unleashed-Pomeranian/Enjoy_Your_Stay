@@ -8,8 +8,7 @@
 void  AEYS_FoodBag::BeginPlay()
 {
 	Super::BeginPlay();
-	AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	AttachActor(myPlayer);
+	
 
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
@@ -25,4 +24,10 @@ void AEYS_FoodBag::RemoveFoodBag()
 	Destroy();
 	
 
+}
+
+void AEYS_FoodBag::AttachFoodBag()
+{
+	AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	AttachActor(myPlayer);
 }

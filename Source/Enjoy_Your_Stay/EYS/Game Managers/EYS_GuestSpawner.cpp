@@ -5,8 +5,9 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
+#include "EYS/NPC/EYS_GuestCar.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
-
+#include "EYS/NPC/EYS_VehicleSplinePath.h"
 // Sets default values
 AEYS_GuestSpawner::AEYS_GuestSpawner()
 {
@@ -21,15 +22,20 @@ void AEYS_GuestSpawner::BeginPlay()
 	Super::BeginPlay();
 	EmptyRooms = 4;
 
-	
+
 
 	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 	if (!Director) return; 
-	Director->LobyLocation = LobyLoc;
+
+	
+		Director->LobyLocation = LobyLoc;;
+		Director->AllParkingEntries = ParkingEntries;
+
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
 		TS->OnFirstPhaseEnd.AddDynamic(this, &AEYS_GuestSpawner::StartGuestSpawning);
 	}
+
 }
 
 void AEYS_GuestSpawner::SpawnGuest()
@@ -39,7 +45,11 @@ void AEYS_GuestSpawner::SpawnGuest()
 	{
 		UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 		if (!Director) return;
-		if (GuestClass)
+		if (GuestCarClass)
+		{
+			Director->RequestSpawnGuestCar(GuestCarClass, GetActorTransform());
+		}
+
 			
 		EmptyRooms --;
 	}
@@ -53,18 +63,15 @@ void AEYS_GuestSpawner::SpawnGuest()
 void AEYS_GuestSpawner::SpawnGuestTimer()
 {
 	SpawnGuest();
-	float RandomDelay = FMath::RandRange(120, 180);
+	float RandomDelay = FMath::RandRange(120.0f, 180.0f);
 	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 
 }
 
 void AEYS_GuestSpawner::StartGuestSpawning()
 {
-	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, 55.0f, false);
+	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, 30.0f, false);
 }
-
-
-
 
 void AEYS_GuestSpawner::SetEmptyRoom()
 {

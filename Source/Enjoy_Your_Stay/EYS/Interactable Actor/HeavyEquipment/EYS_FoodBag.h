@@ -18,6 +18,10 @@ class ENJOY_YOUR_STAY_API AEYS_FoodBag : public AEYS_HeavyEquipmentBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
+	EItemType ItemType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
 	EFoodType FoodType;
 	UFUNCTION() void RemoveFoodBag();
+	UFUNCTION() void AttachFoodBag();
+
 };

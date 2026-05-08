@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_Fridge_Slot.h"
@@ -6,9 +6,10 @@
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
-#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
-#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
+#include "HeavyEquipment/EYS_FoodBox.h"
+#include "HeavyEquipment/EYS_FoodBag.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "HeavyEquipment/EYS_Tray.h"
 // Sets default values
 AEYS_Fridge_Slot::AEYS_Fridge_Slot()
 {
@@ -47,7 +48,7 @@ void AEYS_Fridge_Slot::FAddSlot()
 	}
 }
 
-void AEYS_Fridge_Slot::FDeleteSlot()
+void AEYS_Fridge_Slot::FDeleteSlot(bool bSpawnActor)
 {
 	if (InstanceIndex >= 0)
 	{
@@ -55,8 +56,24 @@ void AEYS_Fridge_Slot::FDeleteSlot()
 		InstancedStaticMesh->RemoveInstance(InstanceIndex);
 		InstanceIndex--;
 
-		GetWorld()->SpawnActor<AActor>(FoodBagActor, GetActorTransform());
+		if (CurrentFoodBag&&bSpawnActor)
+		{
+			
+			if(AEYS_FoodBag* SpawnedFoodBag= GetWorld()->SpawnActor<AEYS_FoodBag>(CurrentFoodBag, GetActorTransform()))
+			{
+				SpawnedFoodBag->AttachFoodBag();
+			}
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Cantake");
+		}
 		
+		
+	}
+	 if (InstanceIndex <= -1)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanIsqdsdnteract");
+		SlotFoodType = EFoodType::None;
+		InstancedStaticMesh->SetStaticMesh(nullptr);
+		CurrentFoodBag = nullptr;
 	}
 }
 
@@ -80,74 +97,188 @@ void   AEYS_Fridge_Slot::Interact(AEYS_MyCharacter* myPlayer)
 void  AEYS_Fridge_Slot::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	if (!PC) return;
+
 	if (myPlayer->HeldEquipment)
 	{
 		
-			if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
-			{
-				AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
+		EFoodType EquipmentType = EFoodType::None;
+		EItemType EquipmentItemType = EItemType::None;
 
-				if (FoodBox->FoodType == SlotFoodType)
+		if (AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment))
+		{
+			EquipmentType = FoodBox->FoodType;
+			EquipmentItemType = FoodBox->ItemType;
+		}
+		else if (AEYS_FoodBag* FoodBag = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment))
+		{
+			EquipmentType = FoodBag->FoodType;
+			EquipmentItemType = FoodBag->ItemType;
+		}
+
+		if (EquipmentItemType != EItemType::None && EquipmentItemType != SlotItemType)
+		{
+		
+			FString CategoryName = (SlotItemType == EItemType::Drink) ? "Drinks" : "Food";
+			PC->SetInteractionWidget("Only " + CategoryName + " allowed here.");
+			return;
+		}
+
+		if (EquipmentType != EFoodType::None)
+		{
+			if (SlotFoodType == EFoodType::None || EquipmentType == SlotFoodType)
+			{
+				if (InstanceIndex < 5)
 				{
 					PC->SetInteractionWidget("[E] Place");
 				}
 				else
-					PC->SetInteractionWidget("Wrong Food Type.");
-			}
-		    else if(myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
-			{ 
-				AEYS_FoodBag* FoodBag = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment);
-				
-				if (FoodBag->FoodType == SlotFoodType)
 				{
-					PC->SetInteractionWidget("[E] Place");
+					PC->SetInteractionWidget("Slot is Full.");
 				}
-				else
-				    PC->SetInteractionWidget("Wrong Food Type.");
 			}
 			else
-				PC->SetInteractionWidget("Your hands are full.");
-			
-		
+			{
+				PC->SetInteractionWidget("Wrong Item Type.");
+			}
+		}
+	
 	}
 	else
-		PC->SetInteractionWidget("[E] Take");
+	{
+		
+		if (InstanceIndex >= 0)
+		{
+			PC->SetInteractionWidget("[E] Take");
+		}
+		else
+		{
+			PC->SetInteractionWidget("");
+		}
+	}
 
 }
 
 void   AEYS_Fridge_Slot::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
-	if (myPlayer->HeldEquipment)
+	if (myPlayer->HeldEquipment != nullptr)
 	{
-		if (myPlayer->HeldEquipment->IsA(AEYS_FoodBox::StaticClass()))
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HeldEquipment");
+		AEYS_Tray* Tray = Cast<AEYS_Tray>(myPlayer->HeldEquipment);
+
+		if (Tray)
 		{
-			AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
-			if (SlotFoodType == FoodBox->FoodType)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Tray");
+			if (InstanceIndex >= 0 && SlotFoodType != EFoodType::None)
 			{
-				if (InstanceIndex < 5)
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "SetItemSlot");
+				if (Tray->IsSlotEmpty(0))
 				{
-					FoodBox->RemoveFood();
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "IsSlotEmpty(0)");
+					Tray->SetItemToSlot(0, CurrentFoodBag, SlotFoodType);
+					FDeleteSlot(false);
+					return; 
 				}
-				FAddSlot();
+				else if (Tray->IsSlotEmpty(1))
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "IsSlotEmpty(1)");
+					Tray->SetItemToSlot(1, CurrentFoodBag, SlotFoodType);
+					FDeleteSlot(false);
+					return; 
+				}
 			}
+
+			
+			for (int32 i = 0; i < 2; i++)
+			{
+				if (!Tray->IsSlotEmpty(i))
+				{
+					
+					EFoodType TrayFoodType = Tray->GetFoodTypeInSlot(i);
+					EItemType TrayItemType = Tray->GetItemTypeInSlot(i);
+
+					
+					if (TrayItemType == SlotItemType)
+					{
+						
+						if ((SlotFoodType == EFoodType::None || SlotFoodType == TrayFoodType) && InstanceIndex < 5)
+						{
+							// İlk kez koyuluyorsa slotu yapılandır
+							if (SlotFoodType == EFoodType::None)
+							{
+								SlotFoodType = TrayFoodType;
+								if (FFoodData* FoundData = FoodDataMap.Find(SlotFoodType))
+								{
+									CurrentFoodBag = FoundData->FoodBagClass;
+									if (FoundData->FoodMesh)
+										InstancedStaticMesh->SetStaticMesh(FoundData->FoodMesh);
+								}
+							}
+							GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "AddItemToSlot");
+							FAddSlot();
+							Tray->SetItemToSlot(i, nullptr, EFoodType::None); 
+							 
+						}
+					}
+				}
+			}
+			return;
 		}
 		
-		if (myPlayer->HeldEquipment&&myPlayer->HeldEquipment->IsA(AEYS_FoodBag::StaticClass()))
+		else
 		{
+			EFoodType EquipmentType = EFoodType::None;
+			EItemType EquipmentItemType = EItemType::None;
+
+
+			AEYS_FoodBox* FoodBox = Cast<AEYS_FoodBox>(myPlayer->HeldEquipment);
 			AEYS_FoodBag* FoodBag = Cast<AEYS_FoodBag>(myPlayer->HeldEquipment);
-			if (SlotFoodType == FoodBag->FoodType)
+
+			if (FoodBox)
 			{
-				if (InstanceIndex < 5)
-				{
-					FoodBag->RemoveFoodBag();
-				}
-				FAddSlot();
+				EquipmentType = FoodBox->FoodType;
+				EquipmentItemType = FoodBox->ItemType;
 			}
+			else if (FoodBag)
+			{
+				EquipmentType = FoodBag->FoodType;
+				EquipmentItemType = FoodBag->ItemType;
+			}
+			
+
+
+			if (SlotItemType != EquipmentItemType) return;
+
+
+			if (EquipmentType != EFoodType::None)
+			{
+
+				if (SlotFoodType == EFoodType::None)
+				{
+					SlotFoodType = EquipmentType;
+					if (FFoodData* FoundData = FoodDataMap.Find(SlotFoodType))
+					{
+						CurrentFoodBag = FoundData->FoodBagClass;
+						if (FoundData->FoodMesh)
+							InstancedStaticMesh->SetStaticMesh(FoundData->FoodMesh);
+					}
+				}
+
+
+				if (SlotFoodType == EquipmentType)
+				{
+					if (FoodBox) FoodBox->RemoveFood();
+					else if (FoodBag) FoodBag->RemoveFoodBag();
+
+					FAddSlot();
+				}
+			}
+			return;
 		}
 		
 	}
 	else
 	{
-		FDeleteSlot();
+		FDeleteSlot(true);
 	}
 }

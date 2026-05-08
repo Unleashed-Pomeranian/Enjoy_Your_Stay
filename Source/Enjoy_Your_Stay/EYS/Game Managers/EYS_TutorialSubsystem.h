@@ -6,7 +6,6 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Types.h"
 #include "EYS_TutorialSubsystem.generated.h"
 
-
 UENUM(BlueprintType)
 enum class ETutorialStep: uint8
 {
@@ -41,6 +40,7 @@ enum class ETutorialStep: uint8
 	TalkWithGuest UMETA(DisplayName = "Talk With Guest"),
 	TakeKey UMETA(DisplayName = "Take Key"),
 	GiveKeyToGuest UMETA(DisplayName = "Give Key to Guest"),
+	SpawnFourthHorrorActor UMETA(DisplayName = "Spawn Fourth Horror Actor"),
 	WaitGuestOrder UMETA(DisplayName = "Wait Guest Order"),
 	TakeGuestOrder UMETA(DisplayName = "Take Guest Order"),
 	TakeFoodBag UMETA(DisplayName = "Take Food Bag"),

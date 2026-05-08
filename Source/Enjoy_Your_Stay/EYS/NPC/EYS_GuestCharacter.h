@@ -11,6 +11,7 @@
 
 class AEYS_GuestAIController;
 class AEYS_FoodBag;
+class AEYS_GuestCar;
 
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_InteractInterface
@@ -91,4 +92,6 @@ public:
 	UFUNCTION() void DestroyFoodBag();
 	UFUNCTION() void CheckOut(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void SetGuestMesh(USkeletalMesh* GuestSkin);
+	UPROPERTY() AEYS_GuestCar* AssignedCar;
+	
 };

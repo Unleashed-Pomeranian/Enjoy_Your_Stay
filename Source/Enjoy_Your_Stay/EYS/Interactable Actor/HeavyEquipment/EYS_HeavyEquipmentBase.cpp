@@ -51,6 +51,8 @@ void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 	PlayHeavyAudio();
 }
 
+
+
 void AEYS_HeavyEquipmentBase::DettachActor()
 {
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);

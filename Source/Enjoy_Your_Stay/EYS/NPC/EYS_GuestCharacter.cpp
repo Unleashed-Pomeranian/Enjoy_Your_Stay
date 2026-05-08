@@ -14,6 +14,7 @@
 #include "EYS_WorldSubsystem.h"
 #include "EYS/Game Managers/EYS_GuestSpawner.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/NPC/EYS_GuestCar.h"
 
 
 // Sets default values
@@ -88,7 +89,11 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 
 	if (DialogueNum == 5)
 	{
-		Destroy();
+		if (AssignedCar)
+		{
+			AssignedCar->DriveBack();
+			Destroy();
+		}
 	}
 	if (bIsCheckOut)
 	{
@@ -132,7 +137,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 								TakeKey(myPlayer);
 								if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 								{
-									TS->UpdateTutorialState(ETutorialStep::GiveKeyToGuest, ETutorialStep::WaitGuestOrder);
+									TS->UpdateTutorialState(ETutorialStep::GiveKeyToGuest, ETutorialStep::SpawnFourthHorrorActor);
 								}
 							}
 							else
@@ -219,7 +224,11 @@ void AEYS_GuestCharacter::destroyme()
 	}
 	case 5:
 	{
-		MoveTo(DestroyLock, 50.0f);
+		if (AssignedCar)
+		{
+			FVector DestroyLocation = AssignedCar->GetActorLocation();
+			MoveTo(DestroyLocation, 50.0f);
+		}
 		break;
 	}
 	default:

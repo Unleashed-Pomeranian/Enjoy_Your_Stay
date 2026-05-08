@@ -6,10 +6,8 @@
 // Sets default values
 AEYS_VehicleSplinePath::AEYS_VehicleSplinePath()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 	PathSpline = CreateDefaultSubobject<USplineComponent>(TEXT("PathSpline"));
-	PathSpline->SetupAttachment(RootComponent);
+	SetRootComponent(PathSpline);
 }
 
 // Called when the game starts or when spawned
@@ -18,9 +16,10 @@ void AEYS_VehicleSplinePath::BeginPlay()
 	Super::BeginPlay();
 	
 }
-
+/**
 FVector AEYS_VehicleSplinePath::GetTangentClosestToWorld(const FVector& worldlock)
 {
+
 	FVector Target = PathSpline->FindTangentClosestToWorldLocation(worldlock, ESplineCoordinateSpace::World);
 	return Target;
 	
@@ -28,11 +27,37 @@ FVector AEYS_VehicleSplinePath::GetTangentClosestToWorld(const FVector& worldloc
 
 FVector AEYS_VehicleSplinePath::GetLocationClosestToWorld(const FVector& worldlock)
 {
+
 	FVector Target = PathSpline->FindLocationClosestToWorldLocation(worldlock, ESplineCoordinateSpace::World);
 	return Target;
+
 	
 }
+*/
 
+float AEYS_VehicleSplinePath::FindInputKeyClosest(const FVector& worldlock)
+{
+
+	return PathSpline->FindInputKeyClosestToWorldLocation(worldlock);
+		
+}
+float AEYS_VehicleSplinePath::GetDistanceAlongSpline(float Key)
+{
+
+	
+	return PathSpline->GetDistanceAlongSplineAtSplineInputKey(Key);
+	
+
+}
+FVector AEYS_VehicleSplinePath::GetLocationAtDistance(float Distance)
+{
+	FVector Target = PathSpline->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
+	return Target;
+}
+float AEYS_VehicleSplinePath::ReturnLength()
+{
+	return PathSpline->GetSplineLength();
+}
 float AEYS_VehicleSplinePath::GetBreakDistance(const FVector& worldlock)
 {
 	float SplineLength = PathSpline->GetSplineLength();

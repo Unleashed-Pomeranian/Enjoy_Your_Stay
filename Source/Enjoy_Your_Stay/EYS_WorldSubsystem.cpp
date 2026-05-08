@@ -3,20 +3,22 @@
 
 #include "EYS_WorldSubsystem.h"
 #include "EYS/NPC/EYS_GuestCharacter.h"
+#include "EYS/NPC/EYS_GuestCar.h"
 #include "Kismet/GameplayStatics.h"
 #include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
+#include "EYS/NPC/EYS_VehicleSplinePath.h"
+
 
 AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform, USkeletalMesh* GuestSkel)
 {
 	if (!GetWorld())
 	{
-		UE_LOG(LogTemp, Error, TEXT("HotelDirectorSubsystem: GetWorld() is null"));
+		
 		return nullptr;
 	}
 
 	if (!*NPCClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("HotelDirectorSubsystem: NPCClass is null"));
 		return nullptr;
 	}
 
@@ -29,7 +31,6 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 
 	if (!Spawned)
 	{
-		UE_LOG(LogTemp, Error, TEXT("HotelDirectorSubsystem: SpawnActor failed"));
 		return nullptr;
 	}
 
@@ -48,6 +49,56 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	}
 
 	return Spawned;
+}
+
+void UEYS_WorldSubsystem::RequestSpawnGuestCar(TSubclassOf<AEYS_GuestCar> GuestCarClass, const FTransform& SpawnTransform)
+{
+	if (!GetWorld())
+	{
+
+		return;
+	}
+
+	if (!*GuestCarClass)
+	{
+		return;
+	}
+	AEYS_VehicleSplinePath* FoundPath = nullptr;
+	for (AEYS_VehicleSplinePath* Path : AllParkingEntries)
+	{
+		if (Path && !Path->bIsOccupied) 
+		{
+			FoundPath = Path;
+			break;
+		}
+	}
+	if (!FoundPath)
+	{
+		return;
+	}
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	Params.Owner = nullptr;
+	Params.Instigator = nullptr;
+
+	AEYS_GuestCar* Spawned = GetWorld()->SpawnActor<AEYS_GuestCar>(GuestCarClass, SpawnTransform, Params);
+	
+	if (Spawned)
+	{
+		
+		
+		FTimerHandle InitHandle;
+		GetWorld()->GetTimerManager().SetTimer(InitHandle, [Spawned, FoundPath]()
+			{
+				if (IsValid(Spawned))
+				{
+					Spawned->InitializeCar(FoundPath);
+				}
+			}, 0.1f, false);
+		FoundPath->bIsOccupied = true;
+	}
+	
+
 }
 
 

@@ -11,6 +11,16 @@
 class UBoxComponent;
 class UInstancedStaticMeshComponent;
 class  AEYS_FoodBag;
+USTRUCT(BlueprintType)
+struct FFoodData
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AEYS_FoodBag> FoodBagClass;
+
+	UPROPERTY(EditAnywhere)
+	UStaticMesh* FoodMesh = nullptr;
+};
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Fridge_Slot : public AActor, public IEYS_InteractInterface
 {
@@ -33,16 +43,20 @@ protected:
 	int32 InstanceIndex=-1;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TArray<FTransform> InstanceTransform;
 	UFUNCTION() void FAddSlot();
-	UFUNCTION() void FDeleteSlot();
+	UFUNCTION() void FDeleteSlot(bool bSpawnActor);
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
+	EItemType SlotItemType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")
 	EFoodType SlotFoodType;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AEYS_FoodBag> FoodBagActor;
+	TMap<EFoodType, FFoodData> FoodDataMap;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AEYS_FoodBag> CurrentFoodBag;
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
