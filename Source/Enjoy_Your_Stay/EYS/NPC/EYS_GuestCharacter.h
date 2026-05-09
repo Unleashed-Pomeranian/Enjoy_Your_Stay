@@ -13,6 +13,21 @@ class AEYS_GuestAIController;
 class AEYS_FoodBag;
 class AEYS_GuestCar;
 
+UENUM(BlueprintType)
+enum class EGuestStatus : uint8
+{
+	Arriving                UMETA(DisplayName = "Arriving"),
+	WaitingForCheckIn  UMETA(DisplayName = "Waiting for Registration"),
+	AbandonHotel UMETA(DisplayName = "Abandon Hotel"),
+	WaitingForKey  UMETA(DisplayName = "Waiting for Key"),
+	GoingToRoom             UMETA(DisplayName = "Going to Room"),
+	InRoom                  UMETA(DisplayName = "In Room"),
+	WaitingForFood          UMETA(DisplayName = "Waiting for Food"),
+	GoToCheckOut             UMETA(DisplayName = "Go Check Out"),
+	ReadyToCheckOut         UMETA(DisplayName = "Ready to Check Out"),
+	Leaving                 UMETA(DisplayName = "Leaving")
+
+};
 UCLASS(Blueprintable)
 class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_InteractInterface
 {
@@ -35,7 +50,8 @@ public:
 	void TakeKey(AEYS_MyCharacter* myPlayer);
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* ThirdPersonMesh;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
+	class AEYS_MyCharacter* MyCharacter = nullptr;
 public:
 	UFUNCTION()
 	void GuestStartDialogue(AEYS_MyCharacter* myPlayer);
@@ -48,8 +64,6 @@ public:
 	bool bIsHaveRoom = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsOrderFood = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsCorrupted = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsCheckOut = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -64,34 +78,39 @@ public:
 
 
 protected:
-	// Called when the game starts or when spawned
+	
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(EditAnyWhere,BlueprintReadWrite) FVector MainLock;
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite) FVector DestroyLock;
+	UPROPERTY(EditAnyWhere,BlueprintReadWrite) FVector RoomLocation;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)  FVector DiningHallLocation;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite) int32 RoomNumber;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	UEYS_QDialoguesSpeakerComponent* DialogueComponent;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Food")
-	EFoodType FoodType;
+	
 	UFUNCTION(BlueprintNativeEvent) void PlayNPCAudio();
-
-	FTimerHandle DestroyFoodTimer;
+	
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);
-	UFUNCTION() void destroyme();
-	UFUNCTION() void CorruptTheGuest();
+	UFUNCTION() void OnDialogueFinished();
+
 	UFUNCTION() void OrderFood();
+	UFUNCTION() void FGuestAbandon();
 	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void DestroyFoodBag();
 	UFUNCTION() void CheckOut(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void SetGuestMesh(USkeletalMesh* GuestSkin);
 	UPROPERTY() AEYS_GuestCar* AssignedCar;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	EGuestStatus CurrentStatus;
 	
+
+	//UFUNCTION() void CorruptTheGuest()
+	/*--Timers--*/
+	FTimerHandle AbandonTimer;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly) float AbandonTime = 30.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) float HallAbandonTime = 30.0f;
+
 };

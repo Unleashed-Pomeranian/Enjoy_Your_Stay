@@ -127,8 +127,9 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-void AEYS_MyCharacter::SetRoot()
+void AEYS_MyCharacter::SetRoot(int32 Value)
 {
+	PoseNum = Value;
 	if (PoseNum != 0)
 	{
 		FAttachmentTransformRules Rules(EAttachmentRule::KeepWorld, true);
@@ -145,10 +146,8 @@ void AEYS_MyCharacter::SetRoot()
 		FirstPersonMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -80.0f));
 		FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	}
-	if (bIsHaveKey&&PoseNum==2)
-	SetEquipmentMesh(6);
-	else	
-	SetEquipmentMesh(PoseNum);
+	
+	SetEquipmentMesh(Value);
 
 
 }
@@ -270,8 +269,7 @@ void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
 		HeldEquipment->DettachActor();
 		HeldEquipment = nullptr;
 		bIsHandsFull = false;
-		PoseNum = 0;
-		SetRoot();
+		SetRoot(0);
 		
 	}
 }
@@ -292,15 +290,14 @@ void AEYS_MyCharacter::StaminaRecovery()
 
 void AEYS_MyCharacter::OpenNotebook(const FInputActionValue& Value)
 {
-	PoseNum = 1;
+	
 	ChildActorNotebook->SetVisibility(true);
-	SetRoot();
+	SetRoot(1);
 }
 void AEYS_MyCharacter::CloseNotebook(const FInputActionValue& Value)
 {
 	ChildActorNotebook->SetVisibility(false);
-	PoseNum = LastPoseNum;
-	SetRoot();
+	SetRoot(LastPoseNum);
 }
 void AEYS_MyCharacter::EnableMission(const FInputActionValue& Value)
 {
@@ -358,8 +355,8 @@ void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 
 			MyPC->CloseEquipmentWidget();
 		}
-		PoseNum = LastPoseNum;
-		SetRoot();
+		
+		SetRoot(LastPoseNum);
 	}
 }
 
@@ -514,8 +511,8 @@ void AEYS_MyCharacter::Action_MouseTrace()
 				IEYS_InteractInterface::Execute_aInteract(Hit->GetActor(), this,PoseNum);
 				if (bIsHaveKey)
 				{
-					PoseNum = 2;
-					SetRoot();
+					
+					SetRoot(6);
 					
 				}
 
@@ -536,11 +533,11 @@ void AEYS_MyCharacter::PlayMontage(int32 MontageIndex)
 		}
 		else
 		{
-			PoseNum = 0;
+		
 			AnimInst->Montage_Play(MyCharacterMontages[MontageIndex]);
 		
 			if (MontageIndex == 0)
-				SetRoot();
+				SetRoot(0);
 		}
 	
 		
@@ -556,17 +553,8 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 
 	if(ChildActor)
 	{
-		if (MeshValue==6)
-		{
-			ChildActor->SetChildActorClass(TSubclassOf<AActor>(KeyActor));
-		}
-
-		else
-		{
 			if(InteractableActors.IsValidIndex(MeshValue))
 			ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
-		}
-
 	}
 	
 }

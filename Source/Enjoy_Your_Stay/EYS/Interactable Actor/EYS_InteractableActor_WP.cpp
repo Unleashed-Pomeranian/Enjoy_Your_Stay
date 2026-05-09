@@ -38,7 +38,7 @@ void AEYS_InteractableActor_WP::Tick(float DeltaTime)
 void  AEYS_InteractableActor_WP::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	PC->SetInteractionWidget("[E] Take");
+	if(PC) PC->SetInteractionWidget("[E] Take");
 }
 void AEYS_InteractableActor_WP::PlayEquipAudio_Implementation()
 {
@@ -54,7 +54,7 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 {
 
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	PC->EquipmentWheelInstance->EnableButtons(Index, true, ESlateVisibility::Visible);
+	if(PC)PC->EquipmentWheelInstance->EnableButtons(Index, true, ESlateVisibility::Visible);
 	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 	if (TS)
 

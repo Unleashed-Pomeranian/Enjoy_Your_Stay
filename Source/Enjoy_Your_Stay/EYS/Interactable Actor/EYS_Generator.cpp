@@ -35,17 +35,17 @@ void AEYS_Generator::BeginPlay()
 	
 	AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	 PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
-	if (PC)
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
-		GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
-		if (GeneratorActivateWidgetInstance)
-		{
-			WidgetMesh->SetWidget(GeneratorActivateWidgetInstance);
-			GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
-			GeneratorActivateWidgetInstance->GeneratorRef = this;
-		}
-	}
+	 if (PC)
+	 {
+		 //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
+		 GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
+		 if (GeneratorActivateWidgetInstance)
+		 {
+			 WidgetMesh->SetWidget(GeneratorActivateWidgetInstance);
+			 GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+			 GeneratorActivateWidgetInstance->GeneratorRef = this;
+		 }
+	 }
 	
 		PointLight->SetLightColor(LightColor[0]);
 
@@ -84,8 +84,8 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 				if (!(GeneratorActivateWidgetInstance->bIsWorking))
 				{
-					myPlayer->PoseNum = 0;
-					myPlayer->SetRoot();
+					if (!PC || !myPlayer) return;
+					myPlayer->SetRoot(0);
 					PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
 					PC->SetCharacterPositon(GetActorLocation(), 30, 5, FRotator(-45, -90, 0));
 					PC->MobilizeCharacter(true, false, false);

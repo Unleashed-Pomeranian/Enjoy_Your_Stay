@@ -28,7 +28,8 @@ void AEYS_GuestSpawner::BeginPlay()
 	if (!Director) return; 
 
 	
-		Director->LobyLocation = LobyLoc;;
+		Director->LobyLocation = LobyLoc;
+
 		Director->AllParkingEntries = ParkingEntries;
 
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())

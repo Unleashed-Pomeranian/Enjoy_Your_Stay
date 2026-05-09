@@ -38,8 +38,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	if (Spawned)
 	{
 		Spawned->SetGuestMesh(GuestSkel);
-		UKismetSystemLibrary::K2_SetTimer(Spawned, "OrderFood", 120.0f, false);
-		
+		Spawned->MoveTo(LobyLocation, 50);
 	}
 
 	if (AEYS_MySunMoonDaySequenceActor* DayActor = Cast<AEYS_MySunMoonDaySequenceActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MySunMoonDaySequenceActor::StaticClass())))
@@ -117,7 +116,26 @@ void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
 		}
 
 	}
-	if (!bIsAnyGuestCorrupted)
+}
+
+void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
+{
+	
+
+
+		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
+		{
+			if ((ActiveNPCs[i]->CheckOutDay == DayValue) && (ActiveNPCs[i]->CheckOutTime <= TimeValue)&&!(ActiveNPCs[i]->bIsCheckOut))
+			{
+				ActiveNPCs[i]->MoveTo(LobyLocation, 50);
+				ActiveNPCs[i]->CurrentStatus = EGuestStatus::GoToCheckOut;
+				ActiveNPCs.RemoveAtSwap(i);
+			}
+
+		}
+	
+}
+/*if (!bIsAnyGuestCorrupted)
 	{
 		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
 		{
@@ -148,21 +166,4 @@ void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
     }
 	
 }
-
-void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
-{
-	
-
-
-		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
-		{
-			if ((ActiveNPCs[i]->CheckOutDay == DayValue) && (ActiveNPCs[i]->CheckOutTime <= TimeValue)&&!(ActiveNPCs[i]->bIsCheckOut))
-			{
-				ActiveNPCs[i]->MoveTo(LobyLocation, 50);
-				ActiveNPCs[i]->bIsCheckOut = true;
-				ActiveNPCs.RemoveAtSwap(i);
-			}
-
-		}
-	
-}
+*/

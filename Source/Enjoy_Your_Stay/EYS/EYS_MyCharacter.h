@@ -157,7 +157,7 @@ public:
 
 
 public:
-	UFUNCTION(BlueprintCallable) virtual void SetRoot();
+	UFUNCTION(BlueprintCallable) virtual void SetRoot(int32 Value);
 	UFUNCTION(BlueprintCallable) virtual void SetRootBP();
 	UFUNCTION() virtual void PlayMontage(int32 MontageIndex);
 

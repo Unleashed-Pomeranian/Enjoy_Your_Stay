@@ -17,13 +17,13 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 	 SetTimeOfDay(10.0f);
 	 SetTimePerCycle(1.0f);
 	 GetWorld()->GetTimerManager().SetTimer(DayTimerHandle, this, &AEYS_MySunMoonDaySequenceActor::FDayTimer, 10.0f, true);
-
+	 Play();
 	if (TS)
 	{
 		TS->DayManager = this;
 		if (TS->bIsTutorialFinished)
 		{
-			Play();
+		
 		}
 
 	}

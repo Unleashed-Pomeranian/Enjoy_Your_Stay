@@ -27,7 +27,8 @@ public:
     TArray<UQuickDialoguesNodeTree*> DialoguePool;
     UFUNCTION(BlueprintCallable)
     void SetDialogueRuntime();
-    UFUNCTION() void StartDialogue(AEYS_MyCharacter* myPlayer,int32 dialogueindex);
+    void UpdateDialog(int32 dialogueindex);
+    UFUNCTION() void StartDialogue(AEYS_MyCharacter* myPlayer);
     UPROPERTY(EditAnywhere)
     AEYS_MyCharacter* MyPlayer;
 protected:

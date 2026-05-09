@@ -26,7 +26,7 @@ void AEYS_GuestAIController::MoveToPoint(const FVector& Destiniton, float Acccep
    
 }
 
-void AEYS_GuestAIController::CorruptedNPC()
+/*void AEYS_GuestAIController::CorruptedNPC()
 {
 	if ((GuestCharacter->bIsCorrupted))
 	{
@@ -49,33 +49,23 @@ void AEYS_GuestAIController::CorruptedNPC()
 		Iscorrapted = false;
 	}
 }
-
-void AEYS_GuestAIController::BrokePipe()
+*/
+/*void AEYS_GuestAIController::BrokePipe()
 {
 	if (BrokenPipeRef)
 		GetWorld()->SpawnActor<AActor>(BrokenPipeRef, SinglePipeRef->GetActorTransform());
 	SinglePipeRef->Destroy();
 	CorruptedNPC();
 
-}
+}*/
 
 void AEYS_GuestAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
 {
     Super::OnMoveCompleted(RequestID, Result);
 
-    if (Result.IsSuccess())
-    {
-		
-     
+    if (Result.IsSuccess())	
+	{
         OnAIMoveComplete.Broadcast();
-		
-	
-		if (Iscorrapted)
-		{
-			GuestCharacter->ThirdPersonMesh->GetAnimInstance()->Montage_Play(GuestAnimMontage);
-			UKismetSystemLibrary::K2_SetTimer(this, "BrokePipe", 3.0f, false);
-			
-		}
 
     }
 }

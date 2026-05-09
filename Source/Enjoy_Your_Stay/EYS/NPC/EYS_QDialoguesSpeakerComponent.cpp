@@ -13,8 +13,7 @@ void UEYS_QDialoguesSpeakerComponent::BeginPlay()
     {
         const int32 Index = FMath::RandRange(0, DialoguePool.Num() - 1);
 
-        // ÖNEMLİ: Super::BeginPlay'den ÖNCE set et
-        // Çünkü base class BeginPlay içinde Dialogue->SetUp(GetOwner()) çalışıyor
+ 
         Dialogue = DialoguePool[Index];
     }
     */
@@ -32,7 +31,7 @@ void UEYS_QDialoguesSpeakerComponent::SetDialogueRuntime()
     }
 }
 
-void UEYS_QDialoguesSpeakerComponent::StartDialogue(AEYS_MyCharacter* myPlayer, int32 dialogueindex)
+void UEYS_QDialoguesSpeakerComponent::UpdateDialog(int32 dialogueindex)
 {
     if (DialoguePool.IsValidIndex(dialogueindex))
     {
@@ -45,6 +44,14 @@ void UEYS_QDialoguesSpeakerComponent::StartDialogue(AEYS_MyCharacter* myPlayer, 
 
         }
     }
+}
+
+void UEYS_QDialoguesSpeakerComponent::StartDialogue(AEYS_MyCharacter* myPlayer)
+{
+    if (Dialogue && GetOwner())
+    {
+        Dialogue->SetUp(GetOwner());
+
+    }
     myPlayer->MyDialogueComponent->FStartDialogue(Dialogue, this);
-    
 }

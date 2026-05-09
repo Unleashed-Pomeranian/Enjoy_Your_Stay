@@ -32,15 +32,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ai")
 	void MoveToPoint(const FVector& Destiniton, float AccceptanceRadius);
-	UFUNCTION(BlueprintCallable, Category = "Ai")
-	void CorruptedNPC();
-	UFUNCTION() void  BrokePipe();
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
-	UClass* PipeRef;
-	AActor* SinglePipeRef;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UClass* BrokenPipeRef;
-	bool Iscorrapted = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	AEYS_GuestCharacter* GuestCharacter;
 

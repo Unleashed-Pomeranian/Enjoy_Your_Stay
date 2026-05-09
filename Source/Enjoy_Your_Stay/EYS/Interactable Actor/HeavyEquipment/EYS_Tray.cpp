@@ -67,31 +67,36 @@ void AEYS_Tray::BeginPlay()
 
 void AEYS_Tray::DettachActor()
 {
+	
 	Super::DettachActor();
     UChildActorComponent* Slots[] = { Slot1, Slot2 };
 
     for (int i = 0; i < 2; i++)
     {
-        if (Slots[i])
-        {
-            AActor* ChildItem = Slots[i]->GetChildActor();
-            if (ChildItem)
-            {
-				ChildItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-                if (UPrimitiveComponent* RootPrim = Cast<UPrimitiveComponent>(ChildItem->GetRootComponent()))
-                {
-                   
-                    RootPrim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-					RootPrim->SetSimulatePhysics(true);
-                    
-                }
+		if (Slots[i] && Slots[i]->GetChildActor())
+		{
+			AActor* ItemToFree = Slots[i]->GetChildActor();
+
+
+			FActorSpawnParameters Params;
+			Params.Owner = this;
+			AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(ItemToFree->GetClass(), ItemToFree->GetActorTransform(), Params);
+			
+			if (!SpawnedItem) return;
+
+			if (UPrimitiveComponent* RootPrim = Cast<UPrimitiveComponent>(SpawnedItem->GetRootComponent()))
+			{
 				
-                Slots[i]->SetChildActorClass(nullptr);
+				RootPrim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				RootPrim->SetSimulatePhysics(true);
+			
+			}
 
-                if (i == 0) Slot1FoodType = EFoodType::None;
-                else Slot2FoodType = EFoodType::None;
-            }
-        }
-    }
-
+			Slots[i]->SetChildActorClass(nullptr);
+		
+			if (i == 0) Slot1FoodType = EFoodType::None;
+			else Slot2FoodType = EFoodType::None;
+		}
+	}
+	
 }
