@@ -28,7 +28,7 @@ protected:
 	UFUNCTION() void StartGuestSpawning();
 	UPROPERTY(EditAnywhere,BlueprintReadWrite) FVector SpawnLock;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector LobyLoc;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector DiningHallLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector DiningHallLoc;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TSubclassOf<AEYS_GuestCharacter> GuestClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) TSubclassOf<AEYS_GuestCar> GuestCarClass;

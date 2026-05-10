@@ -4,7 +4,6 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/UI/EYS_Phone_UI.h"
-#include "EYS/UI/Order Widgets/EYS_Guest_UI.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
@@ -98,57 +97,20 @@ void AEYS_Phone::SetupCloseAttachment(AEYS_MyCharacter* myPlayer)
 
 void AEYS_Phone::OpenUI()
 {
-	if (bIsGuestCalling)
-	{
-		if (!(GuestWidgetInstance->IsInViewport()))
-		{
-			GuestWidgetInstance->AddToViewport();
-			PhoneAudio->Stop();
-		}
-	}
-	else
-	{
 		PhoneWidgetInstance = CreateWidget<UEYS_Phone_UI>(PC, PhoneWidgetClass);
 
 		if (PhoneWidgetInstance && !(PhoneWidgetInstance->IsInViewport()))
 		{
 			PhoneWidgetInstance->AddToViewport();
-
 		}
-	}
 }
 
 void AEYS_Phone::CloseUI()
 {
-	if (bIsGuestCalling)
-	{
-		if (GuestWidgetInstance->IsInViewport())
-			GuestWidgetInstance->RemoveFromParent();	
-		bIsGuestCalling = false;
-	}
-	else
-	{ 
+
 		if ((PhoneWidgetInstance->IsInViewport()))
 			PhoneWidgetInstance->RemoveFromParent();
-		
-	}
-
 	PlayPhoneCloseMontage();
-}
-
-void AEYS_Phone::SetGuestUI(FString Foodtype,int32 RoomNum)
-{
-	GuestWidgetInstance = CreateWidget<UEYS_Guest_UI>(PC, GuestWidgetClass);
-	if (GuestWidgetInstance)
-	{
-		if (RingingSound)
-		{
-			PhoneAudio->SetSound(RingingSound);
-			PhoneAudio->Play();
-		}
-		GuestWidgetInstance->SetGuestText(Foodtype, RoomNum);
-		bIsGuestCalling = true;
-	}
 }
 
 void AEYS_Phone::PlayPhoneMontage_Implementation(AEYS_MyCharacter* myPlayer)

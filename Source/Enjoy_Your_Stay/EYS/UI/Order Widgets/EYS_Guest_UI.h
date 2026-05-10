@@ -9,6 +9,8 @@
 #include "Components/RichTextBlock.h"
 #include "EYS_Guest_UI.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOrderDialogEnd);
+
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_Guest_UI : public UUserWidget
 {
@@ -35,6 +37,8 @@ protected:
 	UFUNCTION() void RejectOrder();
 
 public:
-	UFUNCTION() void SetGuestText(FString foodType, int32 roomNum);
+	UFUNCTION() void SetGuestText(FString foodType, FString drinktype);
 
+	UPROPERTY(BlueprintAssignable)
+	FOrderDialogEnd OrderDialogEnd;
 };

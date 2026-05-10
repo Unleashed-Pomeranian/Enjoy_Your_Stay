@@ -7,7 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
 #include "EYS/NPC/EYS_VehicleSplinePath.h"
-
+#include "EYS/NPC/EYS_Chair.h"
+#include "EngineUtils.h"
 
 AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform, USkeletalMesh* GuestSkel)
 {
@@ -39,6 +40,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	{
 		Spawned->SetGuestMesh(GuestSkel);
 		Spawned->MoveTo(LobyLocation, 50);
+		Spawned->DiningHallLocation = DiningHallLocation;
 	}
 
 	if (AEYS_MySunMoonDaySequenceActor* DayActor = Cast<AEYS_MySunMoonDaySequenceActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MySunMoonDaySequenceActor::StaticClass())))
@@ -49,6 +51,8 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 
 	return Spawned;
 }
+
+
 
 void UEYS_WorldSubsystem::RequestSpawnGuestCar(TSubclassOf<AEYS_GuestCar> GuestCarClass, const FTransform& SpawnTransform)
 {
@@ -118,22 +122,89 @@ void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
 	}
 }
 
+
+
+EFoodType UEYS_WorldSubsystem::GetRandomType(EItemType WantedItemType)
+{
+	if (!FoodDatabase)
+	{
+		return EFoodType::None;
+	}
+
+	TArray<FFoodDatabase*> Rows;
+	FoodDatabase->GetAllRows<FFoodDatabase>(TEXT("Food Database"), Rows);
+	TArray<EFoodType> AvailableTypes;
+
+	for (const FFoodDatabase* Row : Rows)
+	{
+		if (!Row)
+		{
+			continue;
+		}
+
+		if (!Row->IsActivated)
+		{
+			continue;
+		}
+
+		if (Row->FoodType == EFoodType::None)
+		{
+			continue;
+		}
+
+		if (Row->ItemType == WantedItemType)
+		{
+			AvailableTypes.Add(Row->FoodType);
+		}
+	}
+
+	if (AvailableTypes.Num() <= 0)
+	{
+		return EFoodType::None;
+	}
+	return AvailableTypes[FMath::RandRange(0, AvailableTypes.Num() - 1)];
+
+}
+AEYS_Chair* UEYS_WorldSubsystem::GetAvailableChair()
+{
+	TArray<AEYS_Chair*> AvailableChairs;
+
+	for (TActorIterator<AEYS_Chair> It(GetWorld()); It; ++It)
+	{
+		AEYS_Chair* CurrentChair = *It;
+		if (CurrentChair && !CurrentChair->bIsOccupied)
+		{
+			AvailableChairs.Add(CurrentChair);
+		}
+	}
+
+	if (AvailableChairs.Num() == 0)
+	{
+		return nullptr;
+	}
+
+	int32 RandomIdx = FMath::RandRange(0, AvailableChairs.Num() - 1);
+
+	return AvailableChairs[RandomIdx];
+}
+
 void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
 {
-	
 
 
-		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
+
+	for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
+	{
+		if ((ActiveNPCs[i]->CheckOutDay == DayValue) && (ActiveNPCs[i]->CheckOutTime <= TimeValue) && !(ActiveNPCs[i]->bIsCheckOut))
 		{
-			if ((ActiveNPCs[i]->CheckOutDay == DayValue) && (ActiveNPCs[i]->CheckOutTime <= TimeValue)&&!(ActiveNPCs[i]->bIsCheckOut))
-			{
-				ActiveNPCs[i]->MoveTo(LobyLocation, 50);
-				ActiveNPCs[i]->CurrentStatus = EGuestStatus::GoToCheckOut;
-				ActiveNPCs.RemoveAtSwap(i);
-			}
-
+			ActiveNPCs[i]->MoveTo(LobyLocation, 50);
+			ActiveNPCs[i]->bIsCheckOut = true;
+			ActiveNPCs[i]->CurrentStatus = EGuestStatus::GoToCheckOut;
+			ActiveNPCs.RemoveAtSwap(i);
 		}
-	
+
+	}
+
 }
 /*if (!bIsAnyGuestCorrupted)
 	{

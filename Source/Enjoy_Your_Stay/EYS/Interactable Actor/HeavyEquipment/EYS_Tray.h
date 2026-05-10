@@ -40,6 +40,7 @@ public:
 	bool IsSlotEmpty(int32 SlotIndex) const;
 	EFoodType GetFoodTypeInSlot(int32 SlotIndex) const;
 	EItemType GetItemTypeInSlot(int32 SlotIndex) const;
-
+	UFUNCTION() int32 CheckItemTypes(TArray<EFoodType> GuestOrders);
+	UFUNCTION() void CleanSlots();
 
 };

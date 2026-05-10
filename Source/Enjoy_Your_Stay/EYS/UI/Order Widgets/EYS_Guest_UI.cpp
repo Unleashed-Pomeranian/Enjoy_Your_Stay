@@ -25,31 +25,25 @@ void  UEYS_Guest_UI::NativeConstruct()
 
 void UEYS_Guest_UI::TakeOrder()
 {
-	AEYS_Phone* Phone = Cast<AEYS_Phone>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Phone::StaticClass()));
-	if (Phone)
-	{
-		Phone->CloseUI();
-
-	}
+	
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
 		TS->UpdateTutorialState(ETutorialStep::TakeGuestOrder, ETutorialStep::TakeFoodBag);
 	}
+	OrderDialogEnd.Broadcast();
+	RemoveFromParent();
+	
 }
 
 void UEYS_Guest_UI::RejectOrder()
 {
-	AEYS_Phone* Phone = Cast<AEYS_Phone>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Phone::StaticClass()));
-	if (Phone)
-	{
-		Phone->CloseUI();
-	}
+
 }
 
-void UEYS_Guest_UI::SetGuestText(FString foodType, int32 roomNum)
+void UEYS_Guest_UI::SetGuestText(FString foodType, FString drinktype)
 {
-	FString Settedtext = "Could I have one <key>" + foodType + "</> sent to room <key>" + FString::FromInt(roomNum) + "</>, please?";
-	Text_Customer->SetText(FText::FromString(Settedtext));
+	FString SettedText = "Could I have one <key>" + foodType + "</> and one <key>" + drinktype + "</>, please?";
+	Text_Customer->SetText(FText::FromString(SettedText));
 
 }
 

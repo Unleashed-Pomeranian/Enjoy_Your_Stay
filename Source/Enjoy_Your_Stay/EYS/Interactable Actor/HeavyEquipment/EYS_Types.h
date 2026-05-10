@@ -16,7 +16,7 @@ UENUM(BlueprintType)
 enum class EFoodType : uint8
 {
 	//Food
-	None       UMETA(DisplayName = "None", Category = "Food"),
+	None       UMETA(DisplayName = "None", Category = "None"),
 	Kasha      UMETA(DisplayName = "Kasha", Category = "Food"),
 	Vareniki   UMETA(DisplayName = "Vareniki" ,Category = "Food"),
 	Pirozhki   UMETA(DisplayName = "Pirozhki" ,Category = "Food"),
@@ -28,4 +28,18 @@ enum class EFoodType : uint8
 	Kefir_Peach         UMETA(DisplayName = "Peach Kefir", Category = "Drink"),
 
 	Count             UMETA(Hidden)
+};
+
+USTRUCT(BlueprintType)
+struct FFoodDatabase : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsActivated=false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EItemType ItemType= EItemType::None;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EFoodType FoodType= EFoodType::None;
+
 };

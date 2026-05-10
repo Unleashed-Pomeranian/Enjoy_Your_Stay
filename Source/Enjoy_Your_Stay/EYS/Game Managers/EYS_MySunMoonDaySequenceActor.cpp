@@ -38,8 +38,9 @@ void AEYS_MySunMoonDaySequenceActor::FDayTimer()
 if (PC) PC->SetHourWidget(GetTimeOfDay());
 
 CheckTimeForTutorial();
-	 
+
 	if (!Director) return;
+	Director->Hour = GetTimeOfDay();
 	Director->CheckOutPlayer(DayNum,GetTimeOfDay());
 	
 

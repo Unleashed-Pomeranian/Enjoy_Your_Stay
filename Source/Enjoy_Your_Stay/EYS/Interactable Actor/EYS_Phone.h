@@ -46,10 +46,7 @@ protected:
 	UEYS_Phone_UI* PhoneWidgetInstance = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UEYS_Phone_UI> PhoneWidgetClass;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
-	UEYS_Guest_UI* GuestWidgetInstance = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UEYS_Guest_UI> GuestWidgetClass;
+
 
 	UPROPERTY() bool bCanInteract= true;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -64,6 +61,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable) void OpenUI();
 	UFUNCTION(BlueprintCallable) void CloseUI();
-	UFUNCTION() void SetGuestUI(FString Foodtype, int32 RoomNum);
+
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly) bool bIsGuestCalling =false;
 };

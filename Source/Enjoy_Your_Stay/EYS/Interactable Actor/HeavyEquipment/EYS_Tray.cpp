@@ -60,6 +60,41 @@ EItemType AEYS_Tray::GetItemTypeInSlot(int32 SlotIndex) const
 	return EItemType::None;
 }
 
+int32 AEYS_Tray::CheckItemTypes(TArray<EFoodType> GuestOrders)
+{
+	
+	int32 CorrectCount = 0;
+
+  
+    TArray<EFoodType> TrayItems;
+    TrayItems.Add(Slot1FoodType); 
+    TrayItems.Add(Slot2FoodType); 
+
+
+    for (EFoodType Order : GuestOrders)
+    {
+       
+        if (TrayItems.Contains(Order))
+        {
+            CorrectCount++;
+            TrayItems.RemoveSingle(Order);
+        }
+    }
+
+    return CorrectCount;
+	return int32();
+}
+
+void AEYS_Tray::CleanSlots()
+{
+	Slot1 = nullptr;
+	Slot2 = nullptr;
+	Slot1FoodType = EFoodType::None;
+	Slot2FoodType = EFoodType::None;
+	
+	
+}
+
 void AEYS_Tray::BeginPlay()
 {
 	Super::BeginPlay();

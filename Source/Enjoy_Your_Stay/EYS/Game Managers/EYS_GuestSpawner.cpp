@@ -29,6 +29,7 @@ void AEYS_GuestSpawner::BeginPlay()
 
 	
 		Director->LobyLocation = LobyLoc;
+		Director->DiningHallLocation = DiningHallLoc;
 
 		Director->AllParkingEntries = ParkingEntries;
 

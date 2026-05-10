@@ -3,19 +3,19 @@
 
 #include "EYS/NPC/EYS_GuestCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "EYS/NPC/EYS_GuestAIController.h"
+#include "EYS_GuestAIController.h"
 #include "Kismet/GameplayStatics.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
-#include "EYS/Interactable Actor/EYS_Phone.h"
+#include "EYS/UI/Order Widgets/EYS_Guest_UI.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/Game Managers/EYS_GuestSpawner.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/NPC/EYS_GuestCar.h"
-
+#include "EYS/Interactable Actor/HeavyEquipment/EYS_Tray.h"
+#include "EYS_Chair.h"
 
 // Sets default values
 AEYS_GuestCharacter::AEYS_GuestCharacter()
@@ -41,14 +41,14 @@ void AEYS_GuestCharacter::BeginPlay()
 	CurrentStatus = EGuestStatus::Arriving;
 	
 	DialogueComponent->UpdateDialog(0);
+
+
 }
 
 void AEYS_GuestCharacter::PlayNPCAudio_Implementation()
 {
 
 }
-
-
 void AEYS_GuestCharacter::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
@@ -93,6 +93,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 			if (Spawner) Spawner->SetEmptyRoom();
 			AssignedCar->DriveBack();
 			Destroy();
+			bCanInteract = true;
 		}
 		break;
 	}
@@ -105,7 +106,18 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 		break;
 	}
 
-	
+	case EGuestStatus::GoToDiningHall:
+	{
+		CurrentStatus = EGuestStatus::WaitingForOrder;
+		GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, HallAbandonTime, false);
+		bCanInteract = true;
+		break;
+	}
+	case EGuestStatus::GoToSit:
+	{
+		SitOnChair();
+		break;
+	}
 	case EGuestStatus::GoToCheckOut:
 	{
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
@@ -114,6 +126,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 		}
 		DialogueComponent->UpdateDialog(5);
 		CurrentStatus = EGuestStatus::ReadyToCheckOut;
+		bCanInteract = true;
 		break;
 	}
 	case EGuestStatus::Leaving:
@@ -165,8 +178,17 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 		GuestStartDialogue(myPlayer);
 		break;
 	}
-		
+	case EGuestStatus::WaitingForOrder:
+	{
+		OrderFood(myPlayer);
+		GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
+		break;
+	}
+		break;
 	case EGuestStatus::WaitingForFood:
+	{
+		CheckFood(myPlayer);
+	}
 		break;
 	case EGuestStatus::ReadyToCheckOut:
 	{
@@ -200,6 +222,10 @@ void AEYS_GuestCharacter::TakeKey(AEYS_MyCharacter* myPlayer)
 	bIsHaveRoom = true;
 	CurrentStatus = EGuestStatus::GoingToRoom;
 
+	float RandomValue = FMath::RandRange(120.0f, 180.0f);
+	GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
+	GetWorld()->GetTimerManager().SetTimer(OrderTimer, this, &AEYS_GuestCharacter::SetDinnerTime, RandomValue, false);
+
 }
 void AEYS_GuestCharacter::OnDialogueFinished()
 {
@@ -209,7 +235,6 @@ void AEYS_GuestCharacter::OnDialogueFinished()
 		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 		switch (CurrentStatus)
 		{
-
 		case EGuestStatus::WaitingForCheckIn:
 		{
 			if(TS) TS->UpdateTutorialState(ETutorialStep::TalkWithGuest, ETutorialStep::TakeKey);
@@ -223,10 +248,35 @@ void AEYS_GuestCharacter::OnDialogueFinished()
 			MoveTo(RoomLocation, 50.0f);
 			break;
 		}
-			
-		case EGuestStatus::WaitingForFood:
+		case EGuestStatus::WaitingForOrder:
+		{
+			if (MyCharacter)
+			{
+				AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(MyCharacter->GetController());
+				if (PC) PC->MobilizeCharacter(false, false, false);
+			}
+			CurrentStatus = EGuestStatus::WaitingForFood;
+			GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, HallAbandonTime, false);
 			break;
+		}
+		
 
+		case EGuestStatus::TakeFood:
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "DialogEnd");
+			CurrentStatus = EGuestStatus::GoToSit;
+			TakeFood(MyCharacter);
+			
+			break;
+		}
+		
+		case EGuestStatus::WrongOrder:
+		{
+			CurrentStatus = EGuestStatus::GoingToRoom;
+			MoveTo(RoomLocation, 20);
+			break;
+		}
+			
 		case EGuestStatus::ReadyToCheckOut:
 		{
 			if (AssignedCar)
@@ -234,42 +284,203 @@ void AEYS_GuestCharacter::OnDialogueFinished()
 				FVector DestroyLocation = AssignedCar->GetActorLocation();
 				MoveTo(DestroyLocation, 50);
 				CheckOut(MyCharacter);
+				
 			}
 			
-
-		}
 			break;
-
+		}
+	
 		default:
 			break;
 		}
 	
 }
 
-/**void AEYS_GuestCharacter::CorruptTheGuest()
-{
-	if (!bIsCheckOut&&!bIsOrderFood)
-	{
-		if (IsValid(CachedAIController))
-		{
-			PlayNPCAudio();
-			bIsCorrupted = true;
-			CachedAIController->CorruptedNPC();
-			DialogueNum = 4;
-			UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
-			if (!Director) return;
-			Director->bIsAnyGuestCorrupted = true;
-			
 
+
+void AEYS_GuestCharacter::SetDinnerTime()
+{
+	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem<UEYS_WorldSubsystem>();
+	if (!Director) return;
+	 float DayTime = Director->Hour;
+	 if (DayTime <= 21.0f&& !bIsCheckOut)
+	 {
+		 MoveTo(DiningHallLocation, 20.0f);
+		 CurrentStatus = EGuestStatus::GoToDiningHall;
+
+	 }
+	 else
+	 {
+		 GetWorld()->GetTimerManager().ClearTimer(OrderTimer);
+		 GetWorld()->GetTimerManager().SetTimer(OrderTimer, this, &AEYS_GuestCharacter::SetDinnerTime, 30.0f, false);
+	 }
+}
+
+void AEYS_GuestCharacter::OrderFood(AEYS_MyCharacter* myPlayer)
+{
+	MyCharacter = myPlayer;
+	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem<UEYS_WorldSubsystem>();
+     FoodOrder = Director->GetRandomType(EItemType::Food);
+	 DrinkOrder = Director->GetRandomType(EItemType::Drink);
+	FString FoodName = StaticEnum<EFoodType>()->GetDisplayNameTextByValue(static_cast<int64>(FoodOrder)).ToString();
+	FString DrinkName = StaticEnum<EFoodType>()->GetDisplayNameTextByValue(static_cast<int64>(DrinkOrder)).ToString();
+
+	if (GuestWidgetClass && myPlayer)
+	{
+		if(!GuestWidgetInstance)GuestWidgetInstance = CreateWidget<UEYS_Guest_UI>(GetWorld(), GuestWidgetClass);
+	}
+	if (GuestWidgetInstance)
+	{
+		GuestWidgetInstance->SetGuestText(FoodName, DrinkName);
+		GuestWidgetInstance->OrderDialogEnd.RemoveDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
+		GuestWidgetInstance->OrderDialogEnd.AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
+		GuestWidgetInstance->AddToViewport();
+		AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+		if (PC) PC->MobilizeCharacter(true, true, true);
+	}
+}
+void AEYS_GuestCharacter::CheckFood(AEYS_MyCharacter* myPlayer)
+{
+	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_Tray::StaticClass()))
+	{
+
+		GuestTray = Cast<AEYS_Tray>(myPlayer->HeldEquipment);
+		if (!GuestTray) return;
+		TArray<EFoodType> GuestOrders = { FoodOrder, DrinkOrder };
+		OrderScore = GuestTray->CheckItemTypes(GuestOrders);
+	
+		if (OrderScore >= 2) 
+		{
+			DialogueComponent->UpdateDialog(2); 
+			CurrentStatus = EGuestStatus::TakeFood;
+		}
+		else if (OrderScore == 1) 
+		{
+			DialogueComponent->UpdateDialog(3); 
+			CurrentStatus = EGuestStatus::TakeFood;
+		}
+		else 
+		{
+			DialogueComponent->UpdateDialog(4);
+			CurrentStatus = EGuestStatus::WrongOrder;
+		}
+	
+		FTimerHandle InitHandle;
+		GetWorld()->GetTimerManager().SetTimer(InitHandle, [myPlayer,this]()
+			{
+				if (IsValid(myPlayer))
+				{
+					GuestStartDialogue(myPlayer);
+				}
+			}, 0.5f, false);
+		
+
+	}
+}
+void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TakeFood");
+	if (!myPlayer || !GuestTray) return;
+	
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Infood");
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	if (OrderScore >= 2)
+	{
+		MentalSlateValue += 20.0f;
+		if (PC) PC->SetMoneyWidget(200);
+	}
+	else if (OrderScore == 1)
+	{
+		MentalSlateValue -= 10.0f;
+		if (PC) PC->SetMoneyWidget(200);
+	}
+	bIsCarrying = true;
+	GuestTray->AttachToComponent(ThirdPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Tray");
+	myPlayer->SetRoot(0);
+	myPlayer->HeldEquipment = nullptr;
+	myPlayer->bIsHandsFull = false;
+
+	if (UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem<UEYS_WorldSubsystem>())
+	{
+		TargetChair = Director->GetAvailableChair();
+
+		if (TargetChair)
+		{
+			TargetChair->bIsOccupied = true;
+
+		
+			FVector SitLocation = TargetChair->GetActorLocation();
+
+			MoveTo(SitLocation, 10.0f);
+			CurrentStatus = EGuestStatus::GoToSit;
+		}
+		else
+		{
+		
+			MoveTo(RoomLocation, 50.0f);
+			CurrentStatus = EGuestStatus::GoingToRoom;
 		}
 	}
 	
-	
-}*/
+		
+}
+void AEYS_GuestCharacter::SitOnChair()
+{	
+		if (TargetChair)
+		{
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			if (GuestTray)
+			{
+				
+				GuestTray->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+				
+			
+				FTransform TableTransform = TargetChair->GetTableTransform();
+				GuestTray->SetActorTransform(TableTransform);
+			}
 
-void AEYS_GuestCharacter::OrderFood()
-{
+			
+			FTransform ChairTransform = TargetChair->GetChairTransform();
+			SetActorLocation(ChairTransform.GetLocation());
+			SetActorRotation(ChairTransform.GetRotation());
+
+			CurrentStatus = EGuestStatus::Sitting;
+			bIsCarrying = false;
+			bIsSitting = true;
+
+			GetWorld()->GetTimerManager().SetTimer(SitTimer, this, &AEYS_GuestCharacter::FinishDining, 30.0f, false);
+		}
 	
+}
+void AEYS_GuestCharacter::FinishDining()
+{
+	bIsSitting = false;
+	
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+	if (GuestTray)
+	{
+		GuestTray->CleanSlots();
+		GuestTray = nullptr;
+	}
+
+	if (TargetChair)
+	{
+		TargetChair->bIsOccupied = false;
+		FVector GetUpLoc = TargetChair->GetLeaveLocation();
+	
+			SetActorLocation(GetUpLoc);
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			TargetChair = nullptr;
+	}
+
+	
+
+
+
+	CurrentStatus = EGuestStatus::GoingToRoom;
+	MoveTo(RoomLocation, 50);
 }
 
 void AEYS_GuestCharacter::FGuestAbandon()
@@ -286,24 +497,23 @@ void AEYS_GuestCharacter::FGuestAbandon()
 		break;
 	}
 
+	case EGuestStatus::WaitingForOrder:
+	{
+		bCanInteract = false;
+		MoveTo(RoomLocation, 50.0f);
+		CurrentStatus = EGuestStatus::GoingToRoom;
+		break;
+	}
 	case EGuestStatus::WaitingForFood:
 	{
 		bCanInteract = false;
 		MoveTo(RoomLocation, 50.0f);
 		CurrentStatus = EGuestStatus::GoingToRoom;
+		break;
 	}
+	default: break;
 	}
 }
-
-void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
-{
-	
-
-	GuestStartDialogue(myPlayer);
-
-}
-
-
 void AEYS_GuestCharacter::GuestStartDialogue(AEYS_MyCharacter* myPlayer)
 {
 
@@ -314,16 +524,12 @@ void AEYS_GuestCharacter::GuestStartDialogue(AEYS_MyCharacter* myPlayer)
 
 	SetActorRotation(LookAtRot);
 
+	myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
 	DialogueComponent->StartDialogue(myPlayer);
+	
 	
 
 }
-void AEYS_GuestCharacter::DestroyFoodBag()
-{
-	if(FoodBagRef)
-	FoodBagRef->Destroy();
-}
-
 void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 {
 	if (!myPlayer) return;
@@ -346,3 +552,11 @@ void AEYS_GuestCharacter::SetGuestMesh(USkeletalMesh* GuestSkin)
 	ThirdPersonMesh->SetSkeletalMesh(GuestSkin, true);
 }
 
+void AEYS_GuestCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	
+	GetWorld()->GetTimerManager().ClearTimer(OrderTimer);
+	GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
+
+	Super::EndPlay(EndPlayReason);
+}
