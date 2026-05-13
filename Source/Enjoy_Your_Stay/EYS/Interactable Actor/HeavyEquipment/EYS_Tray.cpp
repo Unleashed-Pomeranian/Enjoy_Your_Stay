@@ -87,11 +87,23 @@ int32 AEYS_Tray::CheckItemTypes(TArray<EFoodType> GuestOrders)
 
 void AEYS_Tray::CleanSlots()
 {
-	Slot1 = nullptr;
-	Slot2 = nullptr;
+	
+	if (Slot1 && Slot1->GetChildActor())
+	{
+		Slot1->GetChildActor()->Destroy(); 
+		Slot1->SetChildActorClass(nullptr); 
+	}
+
+	if (Slot2 && Slot2->GetChildActor())
+	{
+		Slot2->GetChildActor()->Destroy();
+		Slot2->SetChildActorClass(nullptr);
+	}
+
+
 	Slot1FoodType = EFoodType::None;
 	Slot2FoodType = EFoodType::None;
-	
+	Super::DettachActor();
 	
 }
 

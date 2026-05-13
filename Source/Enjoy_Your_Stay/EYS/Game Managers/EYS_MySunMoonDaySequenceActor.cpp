@@ -14,7 +14,7 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 	 TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 	 Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 
-	 SetTimeOfDay(5.0f);
+	 SetTimeOfDay(10.0f);
 	 SetTimePerCycle(1.0f);
 	// GetWorld()->GetTimerManager().SetTimer(DayTimerHandle, this, &AEYS_MySunMoonDaySequenceActor::FDayTimer, 10.0f, true);
 	

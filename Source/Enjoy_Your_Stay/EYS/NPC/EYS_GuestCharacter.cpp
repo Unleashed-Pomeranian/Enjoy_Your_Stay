@@ -38,8 +38,8 @@ void AEYS_GuestCharacter::BeginPlay()
 
 	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
-	CurrentStatus = EGuestStatus::Arriving;
-	
+	CurrentStatus = EGuestStatus::GoToDiningHall;
+	MoveTo(DiningHallLocation, 15);
 	DialogueComponent->UpdateDialog(0);
 
 
@@ -338,6 +338,12 @@ void AEYS_GuestCharacter::OrderFood(AEYS_MyCharacter* myPlayer)
 		AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 		if (PC) PC->MobilizeCharacter(true, true, true);
 	}
+	FVector NPC_Loc = GetActorLocation();
+	FVector Player_Loc = myPlayer->GetActorLocation();
+	Player_Loc.Z = NPC_Loc.Z;
+	FRotator LookAtRot = (Player_Loc - NPC_Loc).Rotation();
+
+	SetActorRotation(LookAtRot);
 }
 void AEYS_GuestCharacter::CheckFood(AEYS_MyCharacter* myPlayer)
 {
@@ -412,8 +418,9 @@ void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 		
 			FVector SitLocation = TargetChair->GetActorLocation();
 
-			MoveTo(SitLocation, 10.0f);
+			MoveTo(SitLocation, 100.0f);
 			CurrentStatus = EGuestStatus::GoToSit;
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Infood");
 		}
 		else
 		{
