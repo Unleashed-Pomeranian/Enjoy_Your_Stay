@@ -3,10 +3,10 @@
 
 #include "EYS/Game Managers/EYS_MissionSpawner.h"
 #include "Kismet/GameplayStatics.h"
-#include "Engine/TargetPoint.h"
 #include "EYS/Interactable Actor/EYS_FixActor.h"
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Interactable Actor/TargetPoints/EYS_DirtTarget.h"
 
 AEYS_MissionSpawner::AEYS_MissionSpawner()
 {
@@ -27,6 +27,16 @@ void AEYS_MissionSpawner::BeginPlay()
 		TutorialSubsystemRef->OnSecondPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::StartFixActorSpawening);
 	}
 
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), DirtTargetPoint, FoundActors);
+
+	for (AActor* Actor : FoundActors)
+	{
+		if (AEYS_DirtTarget* Target = Cast<AEYS_DirtTarget>(Actor))
+		{
+			AllDirtTargets.Add(Target);
+		}
+	}
 }
 
 void AEYS_MissionSpawner::SpawnFixActor()
@@ -49,19 +59,35 @@ void AEYS_MissionSpawner::SpawnFixActor()
 
 void AEYS_MissionSpawner::SpawnDirtActor()
 {
-	TArray<AActor*> TargetPoints;
+	TArray<AActor*> AllPoints;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), DirtTargetPoint, AllPoints);
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), DirtTargetPoint, TargetPoints);
-	if (TargetPoints.Num() == 0)
+	TArray<AEYS_DirtTarget*> AvailablePoints;
+	for (AActor* Actor : AllPoints)
 	{
-		return;
+		AEYS_DirtTarget* Target = Cast<AEYS_DirtTarget>(Actor);
+		if (Target && !Target->bIsOccupied&&(Target->TargetLocation==ETargetLocation::Main))
+		{
+			AvailablePoints.Add(Target);
+		}
 	}
-	const int32 RandomIndex = FMath::RandRange(0, TargetPoints.Num() - 1);
+
+	if (AvailablePoints.Num() == 0) return;
+
+	const int32 RandomIndex = FMath::RandRange(0, AvailablePoints.Num() - 1);
+	AEYS_DirtTarget* ChosenPoint = AvailablePoints[RandomIndex];
+
 	if (DirtActor)
 	{
-		GetWorld()->SpawnActor<AActor>(DirtActor, TargetPoints[RandomIndex]->GetActorTransform());
-		TargetPoints[RandomIndex]->Destroy();
+		AActor* SpawnedDirt = GetWorld()->SpawnActor<AActor>(DirtActor, ChosenPoint->GetActorTransform());
+
+		if (SpawnedDirt)
+		{
 		
+			ChosenPoint->bIsOccupied = true;
+			AEYS_DirtActor* Dirt = Cast<AEYS_DirtActor>(SpawnedDirt);
+			if (Dirt) Dirt->MySpawnPoint = ChosenPoint;
+		}
 	}
 	
 }

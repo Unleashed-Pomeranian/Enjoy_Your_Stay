@@ -9,6 +9,7 @@
 
 
 class UBoxComponent;
+
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_DirtActor : public AActor ,public IEYS_InteractInterface
 {
@@ -36,15 +37,15 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<TObjectPtr<UMaterial>> DirtMaterial;
+	TArray<TObjectPtr<UMaterialInstance>> DirtMaterial;
 	UFUNCTION()void SetGuestMentalHealth();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* TargetPointRef;
+
 	UFUNCTION(BlueprintNativeEvent) void PlayCleaningAudio();
 public:	
 	// Called every frame
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) class AEYS_DirtTarget* MySpawnPoint;
 
 	float opacityValue = 3.0f;
 	float cleaningValue= 0.012f;

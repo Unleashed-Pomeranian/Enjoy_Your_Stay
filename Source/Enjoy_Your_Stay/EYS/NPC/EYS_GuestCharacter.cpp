@@ -38,8 +38,7 @@ void AEYS_GuestCharacter::BeginPlay()
 
 	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
-	CurrentStatus = EGuestStatus::GoToDiningHall;
-	MoveTo(DiningHallLocation, 15);
+	CurrentStatus = EGuestStatus::Arriving;
 	DialogueComponent->UpdateDialog(0);
 
 
@@ -221,6 +220,8 @@ void AEYS_GuestCharacter::TakeKey(AEYS_MyCharacter* myPlayer)
 	RoomNumber = myPlayer->RoomNumb;
 	bIsHaveRoom = true;
 	CurrentStatus = EGuestStatus::GoingToRoom;
+	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+	if (TS) TS->UpdateTutorialState(ETutorialStep::GiveKeyToGuest, ETutorialStep::SpawnFourthHorrorActor);
 
 	float RandomValue = FMath::RandRange(120.0f, 180.0f);
 	GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);

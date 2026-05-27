@@ -44,7 +44,7 @@ void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	AttachToComponent(myPlayer->FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "HeavyEquipment");
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	myPlayer->SetRoot(7);
+	myPlayer->SetRoot(8);
 	myPlayer->HeldEquipment = this;
 	myPlayer->bIsHandsFull = true;
 	PlayHeavyAudio();

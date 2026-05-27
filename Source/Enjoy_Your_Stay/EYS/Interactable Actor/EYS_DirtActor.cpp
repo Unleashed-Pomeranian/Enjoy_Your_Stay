@@ -3,6 +3,7 @@
 
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
 #include "EYS/Interactable Actor/EYS_Notebook.h"
+#include "TargetPoints/EYS_DirtTarget.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "Components/DecalComponent.h"
@@ -110,7 +111,7 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 				Notebook->CleaningMission();
 
 			}
-			GetWorld()->SpawnActor<AActor>(TargetPointRef, GetActorTransform());
+			if (MySpawnPoint) MySpawnPoint->bIsOccupied=false;
 			Destroy();
 
 		}

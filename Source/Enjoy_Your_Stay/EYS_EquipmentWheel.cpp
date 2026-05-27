@@ -19,7 +19,15 @@ void UEYS_EquipmentWheel::NativeConstruct()
 	if (Btn_Slot7) Btn_Slot7->OnHovered.AddDynamic(this, &UEYS_EquipmentWheel::OnSlot7);
 	if (Btn_Slot8) Btn_Slot8->OnHovered.AddDynamic(this, &UEYS_EquipmentWheel::OnSlot8);
 
-	
+	if (Btn_Slot1) Btn_Slot1->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot2) Btn_Slot2->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot3) Btn_Slot3->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot4) Btn_Slot4->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot5) Btn_Slot5->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot6) Btn_Slot6->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot7) Btn_Slot7->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+	if (Btn_Slot8) Btn_Slot8->OnUnhovered.AddDynamic(this, &UEYS_EquipmentWheel::HideEquipmentOverlay);
+
 }
 
 void UEYS_EquipmentWheel::OnBtnSlotHovered(int32 SlotIndex)
@@ -28,11 +36,37 @@ void UEYS_EquipmentWheel::OnBtnSlotHovered(int32 SlotIndex)
 	AEYS_MyCharacter* OwnerCharacter = Cast<AEYS_MyCharacter>(GetOwningPlayerPawn());
 
 	OwnerCharacter->LastPoseNum = SlotIndex;
-	
+	SetEquipmentText(SlotIndex);
 
 
 	
 
+}
+
+void UEYS_EquipmentWheel::SetEquipmentText(int32 Index)
+{
+	if (Index != 0) Index -= 1;
+	
+	if (Text_EquipmentName&& EquipmentName.IsValidIndex(Index))
+	{
+		Text_EquipmentName->SetText(EquipmentName[Index]);
+		if (Text_EquipmentInfo && EquipmentInfo.IsValidIndex(Index))
+		{
+			Text_EquipmentInfo->SetText(EquipmentInfo[Index]);
+			if (Overlay_EquipmentText)
+				Overlay_EquipmentText->SetVisibility(ESlateVisibility::Visible);
+
+		}
+	}
+
+}
+
+void UEYS_EquipmentWheel::HideEquipmentOverlay()
+{
+	if (Overlay_EquipmentText)
+	{
+		Overlay_EquipmentText->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibility VisibleIcon)
@@ -68,7 +102,12 @@ void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibi
 		Shovel_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
-
+	case 7:
+	{
+		Btn_Slot6->SetIsEnabled(bIsEnable);
+		
+		break;
+	}
 	default:
 
 		break;

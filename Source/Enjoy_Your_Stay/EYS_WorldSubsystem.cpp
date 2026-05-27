@@ -39,7 +39,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	if (Spawned)
 	{
 		Spawned->SetGuestMesh(GuestSkel);
-		Spawned->MoveTo(LobyLocation, 50);
+		Spawned->MoveTo(LobyLocation, 10);
 		Spawned->DiningHallLocation = DiningHallLocation;
 	}
 

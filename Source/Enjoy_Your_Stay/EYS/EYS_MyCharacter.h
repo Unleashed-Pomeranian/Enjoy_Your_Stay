@@ -62,6 +62,8 @@ protected:
 	float Stamina=100.0f;
 	float StaminaRecoveryValue = 0.2f;
 	class UEYS_UserSettingsSubsystem* UserSettingsSubsystem;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible",meta = (AllowPrivateAccess = "true"))
+	TArray<FName> EquipSocketName;
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Move;

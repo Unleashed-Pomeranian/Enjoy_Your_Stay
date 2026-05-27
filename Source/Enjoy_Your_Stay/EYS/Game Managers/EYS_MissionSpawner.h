@@ -7,7 +7,7 @@
 #include "EYS_MissionSpawner.generated.h"
 class AEYS_FixActor;
 class AEYS_DirtActor;
-class ATargetPoint;
+class AEYS_DirtTarget;
 class UEYS_TutorialSubsystem;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MissionSpawner : public AActor
@@ -29,13 +29,16 @@ protected:
 	UClass* PipeRef;
 	AActor* SinglePipeRef;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<ATargetPoint> DirtTargetPoint;
+	TSubclassOf<AEYS_DirtTarget> DirtTargetPoint;
 
 	UPROPERTY()
 	 UEYS_TutorialSubsystem* TutorialSubsystemRef;
 	/*------------TimerHandle----------*/
 	FTimerHandle DirtTimerHandle;
 	FTimerHandle FixTimerHandle;
+
+	TArray<AEYS_DirtTarget*> AllDirtTargets;
+
 public:
 	UFUNCTION() void SpawnFixActor();
 	UFUNCTION() void SpawnDirtActor();

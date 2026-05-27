@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
+#include "Components/RichTextBlock.h"
+#include "Components/Overlay.h"
 #include "EYS_EquipmentWheel.generated.h"
 
 
@@ -60,6 +63,15 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UImage* Shovel_Icon;
 
+    /*----EqupmentText------------*/
+    UPROPERTY(meta = (BindWidget))
+    UOverlay* Overlay_EquipmentText;
+    UPROPERTY(meta = (BindWidget))
+    UTextBlock* Text_EquipmentName;
+    UPROPERTY(meta = (BindWidget))
+    URichTextBlock* Text_EquipmentInfo;
+
+
     virtual void NativeConstruct() override;
 
 private:
@@ -84,7 +96,13 @@ private:
     UFUNCTION()
     void OnSlot8() { OnBtnSlotHovered(8); }
 
+    UFUNCTION() void SetEquipmentText(int32 Index);
+    UFUNCTION() void HideEquipmentOverlay();
+    UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Text", meta = (AllowPrivateAccess = "true"))
+    TArray<FText> EquipmentName;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Text", meta = (AllowPrivateAccess = "true"))
+    TArray<FText> EquipmentInfo;
 public:
     UFUNCTION() void EnableButtons(int32 Index, bool bIsEnable, ESlateVisibility VisibleIcon);
-	
+  
 };

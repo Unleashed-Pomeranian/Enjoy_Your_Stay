@@ -421,7 +421,7 @@ void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::Action(const FInputActionValue& Value)
 {
-	float FrameMultiplier = GetWorld()->GetDeltaSeconds() * 60.0f;
+	
 	if (bIsKeyMode)
 		Action_MouseTrace();
 	else
@@ -468,7 +468,7 @@ void AEYS_MyCharacter::Action_ForwardTrace()
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
 
-	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>(), EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
+	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
 
 	if (Hit.GetActor() != nullptr)
 	{
@@ -553,9 +553,23 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 
 	if(ChildActor)
 	{
-			if(InteractableActors.IsValidIndex(MeshValue))
-			ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
+		if (InteractableActors.IsValidIndex(MeshValue))
+		{
+			if (MeshValue==7)
+			{
+				ChildActor->SetChildActorClass(TSubclassOf<AActor>(KeyActor));
+			}
+			else
+			{
+				ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
+				ChildActor->AttachToComponent(FirstPersonMesh,FAttachmentTransformRules::SnapToTargetNotIncludingScale,EquipSocketName[MeshValue]);
+			}
+
+		}
+			
+		
 	}
+	
 	
 }
 
