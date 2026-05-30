@@ -2,6 +2,7 @@
 
 
 #include "EYS/Interactable Actor/EYS_SnowPileActor.h"
+#include "TargetPoints/EYS_DirtTarget.h"
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
@@ -67,7 +68,7 @@ void AEYS_SnowPileActor::Interact(AEYS_MyCharacter* myPlayer)
 
 		if (PileValue <= 0.002f)
 		{
-		
+			if (MySnowTarget) MySnowTarget->bIsOccupied = false;
 			Destroy();
 
 		}

@@ -35,6 +35,6 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent) void PlaySnowAudio();
 public:	
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) class AEYS_DirtTarget* MySnowTarget;
 
 };

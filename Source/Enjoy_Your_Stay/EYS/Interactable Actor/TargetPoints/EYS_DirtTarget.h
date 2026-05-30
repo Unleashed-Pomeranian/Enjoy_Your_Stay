@@ -11,6 +11,8 @@ UENUM(BlueprintType)
 enum class ETargetLocation: uint8
 {
 	Main UMETA(DisplayName = "Reception"),
+	Wall UMETA(DisplayName = "Wall"),
+	Snow UMETA(DisplayName = "Entry"),
 	R101 UMETA(DisplayName = "101"),
 	R102 UMETA(DisplayName = "102"),
 	R103 UMETA(DisplayName = "103"),
@@ -25,6 +27,6 @@ class ENJOY_YOUR_STAY_API AEYS_DirtTarget : public ATargetPoint
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	bool bIsOccupied = false;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) 
 	ETargetLocation TargetLocation;
 };

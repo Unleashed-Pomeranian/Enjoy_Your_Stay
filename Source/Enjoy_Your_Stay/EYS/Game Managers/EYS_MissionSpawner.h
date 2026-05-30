@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EYS_MissionSpawner.generated.h"
+
 class AEYS_FixActor;
 class AEYS_DirtActor;
+class AEYS_SnowPileActor;
 class AEYS_DirtTarget;
 class UEYS_TutorialSubsystem;
 UCLASS()
@@ -26,7 +28,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AEYS_DirtActor> DirtActor;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<AEYS_DirtActor> WallDirtActor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<AEYS_SnowPileActor> SnowPileActor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UClass* PipeRef;
+
 	AActor* SinglePipeRef;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AEYS_DirtTarget> DirtTargetPoint;
@@ -35,15 +42,21 @@ protected:
 	 UEYS_TutorialSubsystem* TutorialSubsystemRef;
 	/*------------TimerHandle----------*/
 	FTimerHandle DirtTimerHandle;
+	FTimerHandle WallDirtTimerHandle;
 	FTimerHandle FixTimerHandle;
+	FTimerHandle SnowPileTimerHandle;
 
 	TArray<AEYS_DirtTarget*> AllDirtTargets;
 
 public:
 	UFUNCTION() void SpawnFixActor();
 	UFUNCTION() void SpawnDirtActor();
+	UFUNCTION() void SpawnWallDirtActor();
+	UFUNCTION() void SpawnSnowPileActor();
 	UFUNCTION() void SpawnFixActorTimer();
 	UFUNCTION() void SpawnDirtActorTimer();
+	UFUNCTION() void SpawnSnowPileActorTimer();
+	UFUNCTION() void SpawnWallDirtActorTimer();
 	UFUNCTION() void StartFixActorSpawening();
 	UFUNCTION() void SetStepOfTutorial();
 
