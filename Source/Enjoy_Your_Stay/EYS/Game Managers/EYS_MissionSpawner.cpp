@@ -86,7 +86,7 @@ void AEYS_MissionSpawner::SpawnDirtActor()
 		
 			ChosenPoint->bIsOccupied = true;
 			AEYS_DirtActor* Dirt = Cast<AEYS_DirtActor>(SpawnedDirt);
-			if (Dirt) Dirt->MySpawnPoint = ChosenPoint;
+			if (Dirt) Dirt->MyDirtTarget = ChosenPoint;
 		}
 	}
 	

@@ -67,9 +67,9 @@ void AEYS_DirtActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
 }
 void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
-	if (Value == 3)
+	if (Value == EquipmentValue)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " test");
+		
 		Interact(myPlayer);
 	}
 }
@@ -111,7 +111,7 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 				Notebook->CleaningMission();
 
 			}
-			if (MySpawnPoint) MySpawnPoint->bIsOccupied=false;
+			if (MyDirtTarget) MyDirtTarget->bIsOccupied=false;
 			Destroy();
 
 		}

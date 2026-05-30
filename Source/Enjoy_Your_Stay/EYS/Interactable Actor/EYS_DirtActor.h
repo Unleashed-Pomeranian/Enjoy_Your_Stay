@@ -38,14 +38,16 @@ protected:
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<TObjectPtr<UMaterialInstance>> DirtMaterial;
-	UFUNCTION()void SetGuestMentalHealth();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) int32 EquipmentValue=3;
+	
 
+	UFUNCTION()void SetGuestMentalHealth();
 	UFUNCTION(BlueprintNativeEvent) void PlayCleaningAudio();
 public:	
-	// Called every frame
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) class AEYS_DirtTarget* MySpawnPoint;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) class AEYS_DirtTarget* MyDirtTarget;
 
 	float opacityValue = 3.0f;
 	float cleaningValue= 0.012f;
