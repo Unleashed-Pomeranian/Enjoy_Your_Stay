@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 // Sets default values
 AEYS_SnowPileActor::AEYS_SnowPileActor()
 {
@@ -69,6 +70,11 @@ void AEYS_SnowPileActor::Interact(AEYS_MyCharacter* myPlayer)
 		if (PileValue <= 0.002f)
 		{
 			if (MySnowTarget) MySnowTarget->bIsOccupied = false;
+			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+			{
+				TS->UpdateTutorialState(ETutorialStep::ShovelSnowPile, ETutorialStep::WaitTheGuest);
+			}
+			
 			Destroy();
 
 		}

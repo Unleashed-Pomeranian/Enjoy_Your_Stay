@@ -23,9 +23,11 @@ void AEYS_MissionSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	TutorialSubsystemRef = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
-	if (TutorialSubsystemRef)
+	if (TutorialSubsystemRef||TutorialSubsystemRef->bIsTutorialFinished)
 	{
 		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnDirtActorTimer);
+		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnWallDirtActorTimer);
+		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnSnowPileActorTimer);
 		TutorialSubsystemRef->OnSecondPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::StartFixActorSpawening);
 	}
 
@@ -40,8 +42,6 @@ void AEYS_MissionSpawner::BeginPlay()
 		}
 	}
 
-	SpawnWallDirtActorTimer();
-	SpawnSnowPileActorTimer();
 
 	if (UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>())
 	{
@@ -129,7 +129,7 @@ void AEYS_MissionSpawner::SpawnMissionActor(ESurfaceType TargetSurfaceType, ERoo
 	{
 		if (Target && !Target->bIsOccupied && Target->SurfaceType == TargetSurfaceType)
 		{
-			if (TargetRoomID == ERoomID::None || Target->RoomID == TargetRoomID)
+			if (Target->RoomID == TargetRoomID)
 			{
 				AvailablePoints.Add(Target);
 			}

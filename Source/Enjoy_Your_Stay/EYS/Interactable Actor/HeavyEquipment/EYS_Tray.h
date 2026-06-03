@@ -27,6 +27,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UChildActorComponent* Slot2;
 
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+
 	EFoodType Slot1FoodType;
 	EFoodType Slot2FoodType;
 

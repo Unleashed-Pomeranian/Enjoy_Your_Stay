@@ -102,6 +102,27 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 		case 6:
 		{
 			TS->UpdateTutorialState(ETutorialStep::TakeShovel, ETutorialStep::SpawnSecondHorrorActor);
+			break;
+		}
+		case 7:
+		{
+			if (TS->CurrentStep == ETutorialStep::TakeSponge)
+			{
+				TS->UpdateTutorialState(ETutorialStep::TakeSponge, ETutorialStep::CleanWallDirt);
+				{
+					if (AEYS_MissionSpawner* MissionSpawner = Cast<AEYS_MissionSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionSpawner::StaticClass())))
+					{
+						if (MissionSpawner)
+						{
+							for (int i = 0; i <= 3; i++)
+							{
+								MissionSpawner->SpawnMissionActor(ESurfaceType::Wall, ERoomID::None, true);
+							}
+						}
+					}
+				}
+			}
+			break;
 		}
 		default:
 			break;

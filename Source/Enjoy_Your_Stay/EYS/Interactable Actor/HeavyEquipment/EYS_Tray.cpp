@@ -3,6 +3,7 @@
 
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Tray.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 AEYS_Tray::AEYS_Tray()
 {
@@ -26,6 +27,10 @@ void AEYS_Tray::SetItemToSlot(int32 SlotIndex, TSubclassOf<class AActor> ItemCla
 	if (TargetSlot)
 	{
 		TargetSlot->SetChildActorClass(ItemClass);
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::TakeFoodBag, ETutorialStep::GiveTrayToGuest);
+		}
 	
 		TargetFoodType = NewFoodType;
 	}
@@ -106,7 +111,19 @@ void AEYS_Tray::CleanSlots()
 	Super::DettachActor();
 	
 }
+void AEYS_Tray::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	Super::eInteract_Implementation(myPlayer);
 
+
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->UpdateTutorialState(ETutorialStep::TakeTray, ETutorialStep::TakeFoodBag);
+	}
+
+
+
+}
 void AEYS_Tray::BeginPlay()
 {
 	Super::BeginPlay();

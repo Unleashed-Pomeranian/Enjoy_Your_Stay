@@ -97,6 +97,17 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 				break;
  
 			}
+			case ETutorialStep::FindSponge:
+			{
+				TS->SetTutorialStep(ETutorialStep::TakeSponge);
+				break;
+			}
+			case ETutorialStep::GoToSnowPile:
+			{
+				TS->SetTutorialStep(ETutorialStep::ShovelSnowPile);
+				break;
+			}
+
 			case ETutorialStep::GoToHammer:
 			{
 				TS->SetTutorialStep(ETutorialStep::TakeHammer);

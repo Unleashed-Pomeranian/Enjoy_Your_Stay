@@ -69,4 +69,12 @@ void AEYS_MoveableObject_Room::OnDoorOverlapEnd(UPrimitiveComponent* OverlappedC
 {
 	Super::OnDoorOverlapEnd(OverlappedComponent, OtherActor,
 		OtherComp, OtherBodyIndex);
+    if (AEYS_GuestCharacter* OverlappingNPC = Cast<AEYS_GuestCharacter>(OtherActor))
+    {
+        if (OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut)
+        {
+            bIsDoorLocked = false;
+        }
+    }
+
 }

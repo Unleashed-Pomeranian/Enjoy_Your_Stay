@@ -114,6 +114,6 @@ void UEYS_TutorialSubsystem::RegisterFilledSlot(EFoodType FilledType)
 	FilledFridgeSlots.AddUnique(FilledType);
 	if (FilledFridgeSlots.Num() >= 4)
 	{
-		UpdateTutorialState(ETutorialStep::PlaceFoodBox, ETutorialStep::WaitTheGuest);
+		UpdateTutorialState(ETutorialStep::PlaceFoodBox, ETutorialStep::FindSponge);
 	}
 }

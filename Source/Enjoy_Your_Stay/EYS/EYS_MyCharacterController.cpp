@@ -55,7 +55,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			if (TS) 
 			{ 
 				TS->MyCharacterUIIns = MyCharacterUIInstance; 
-				TS->SetTutorialStep(ETutorialStep::WaitTheGuest);
+				TS->SetTutorialStep(ETutorialStep::FindSponge);
 			}
 
 			MyCharacterUIInstance->AddToViewport();

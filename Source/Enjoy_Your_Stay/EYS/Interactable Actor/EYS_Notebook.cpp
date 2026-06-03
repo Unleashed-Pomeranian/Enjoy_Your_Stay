@@ -63,8 +63,10 @@ void AEYS_Notebook::CleaningMission()
 		if (TS)
 		{
 			TS->UpdateTutorialState(ETutorialStep::CleanDirt, ETutorialStep::GoToBasement);
+			TS->UpdateTutorialState(ETutorialStep::CleanWallDirt, ETutorialStep::GoToSnowPile);
 	
 		}
+
 		NotebookWidgetInstance->CleanMissionBox(1);
 	}
 }
