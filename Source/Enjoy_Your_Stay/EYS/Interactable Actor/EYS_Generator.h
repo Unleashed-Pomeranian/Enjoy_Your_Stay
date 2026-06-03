@@ -46,7 +46,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	UFUNCTION() void ReduceFuel();
 	UFUNCTION() void AddFuel();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")

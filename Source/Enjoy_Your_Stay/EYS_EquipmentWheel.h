@@ -62,6 +62,8 @@ protected:
     UImage* Flashlight_Icon;
     UPROPERTY(meta = (BindWidget))
     UImage* Shovel_Icon;
+    UPROPERTY(meta = (BindWidget))
+    UImage* Sponge_Icon;
 
     /*----EqupmentText------------*/
     UPROPERTY(meta = (BindWidget))

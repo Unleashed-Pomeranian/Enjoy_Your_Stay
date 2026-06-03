@@ -105,7 +105,7 @@ void UEYS_EquipmentWheel::EnableButtons(int32 Index,bool bIsEnable, ESlateVisibi
 	case 7:
 	{
 		Btn_Slot6->SetIsEnabled(bIsEnable);
-		
+		Sponge_Icon->SetVisibility(VisibleIcon);
 		break;
 	}
 	default:

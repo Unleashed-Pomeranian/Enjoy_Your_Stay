@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EYS/EYS_InteractInterface.h"
+#include "EYS/Interactable Actor\HeavyEquipment\EYS_Types.h"
 #include "EYS_KeyHolder.generated.h"
 
 UCLASS()
@@ -18,9 +19,11 @@ public:
 
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 
-   UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
-   void SetPose();
+
+   UFUNCTION(BlueprintCallable)
+   void UpdateKeyDisplay(ERoomID TargetRoom, bool bNewVisibility);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

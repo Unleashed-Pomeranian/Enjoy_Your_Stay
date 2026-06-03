@@ -34,15 +34,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<TObjectPtr<UMaterialInstance>> DirtMaterial;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) int32 EquipmentValue=3;
-	
-
 	UFUNCTION()void SetGuestMentalHealth();
 	UFUNCTION(BlueprintNativeEvent) void PlayCleaningAudio();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (AllowPrivateAccess = "true"))
+	float MentalReduceValue = 0.5f;
+
+	FTimerHandle DirtTimerHandle;
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -51,4 +53,6 @@ public:
 
 	float opacityValue = 3.0f;
 	float cleaningValue= 0.012f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsEffectMental=true;
 };

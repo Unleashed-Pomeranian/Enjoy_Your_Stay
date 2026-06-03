@@ -39,7 +39,7 @@ void AEYS_GuestCharacter::BeginPlay()
 	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 	CurrentStatus = EGuestStatus::Arriving;
-	DialogueComponent->UpdateDialog(0);
+	
 
 
 }
@@ -48,7 +48,7 @@ void AEYS_GuestCharacter::PlayNPCAudio_Implementation()
 {
 
 }
-void AEYS_GuestCharacter::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_GuestCharacter::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (PC&&bCanInteract)
@@ -81,8 +81,14 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 
 		}
 	    	CurrentStatus = EGuestStatus::WaitingForCheckIn;
-		    bCanInteract = true;
+			bCanInteract = true;
 			break;
+	}
+	case EGuestStatus::DirtyRoom:
+	{
+		GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, AbandonTime, false);
+		DialogueComponent->UpdateDialog(6);
+		break;
 	}
 	case EGuestStatus::AbandonHotel:
 	{
@@ -104,7 +110,11 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 		bCanInteract = true;
 		break;
 	}
-
+	case EGuestStatus::InRoom:
+	{
+		bCanInteract = true;
+		break;
+	}
 	case EGuestStatus::GoToDiningHall:
 	{
 		CurrentStatus = EGuestStatus::WaitingForOrder;
@@ -177,6 +187,13 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 		GuestStartDialogue(myPlayer);
 		break;
 	}
+	case EGuestStatus::DirtyRoom:
+	{
+		GuestStartDialogue(myPlayer);
+		GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
+		break;
+
+	}
 	case EGuestStatus::WaitingForOrder:
 	{
 		OrderFood(myPlayer);
@@ -187,13 +204,15 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 	case EGuestStatus::WaitingForFood:
 	{
 		CheckFood(myPlayer);
-	}
 		break;
+	}
+		
 	case EGuestStatus::ReadyToCheckOut:
 	{
 		GuestStartDialogue(myPlayer);
-	}
 		break;
+	}
+		
 	case EGuestStatus::Leaving:
 		break;
 	default:
@@ -217,7 +236,7 @@ void AEYS_GuestCharacter::TakeKey(AEYS_MyCharacter* myPlayer)
 	MoveTo(RoomLocation, 100.0f);
 	bCanInteract = false;
 	DialogueNum++;
-	RoomNumber = myPlayer->RoomNumb;
+	GuestRoomID = myPlayer->MyRoomID;
 	bIsHaveRoom = true;
 	CurrentStatus = EGuestStatus::GoingToRoom;
 	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
@@ -247,6 +266,11 @@ void AEYS_GuestCharacter::OnDialogueFinished()
 		case EGuestStatus::InRoom:
 		{
 			MoveTo(RoomLocation, 50.0f);
+			break;
+		}
+		case EGuestStatus::DirtyRoom:
+		{
+			FGuestAbandon();
 			break;
 		}
 		case EGuestStatus::WaitingForOrder:
@@ -504,7 +528,14 @@ void AEYS_GuestCharacter::FGuestAbandon()
 		CurrentStatus = EGuestStatus::AbandonHotel;
 		break;
 	}
-
+	case EGuestStatus::DirtyRoom:
+	{
+		bCanInteract = false;
+		FVector CarLoc = AssignedCar->GetActorLocation();
+		MoveTo(CarLoc, 50.0f);
+		CurrentStatus = EGuestStatus::AbandonHotel;
+		break;
+	}
 	case EGuestStatus::WaitingForOrder:
 	{
 		bCanInteract = false;
@@ -542,7 +573,7 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 {
 	if (!myPlayer) return;
 	myPlayer->bIsHaveKey = true;
-	myPlayer->RoomNumb = RoomNumber;
+	myPlayer->MyRoomID = GuestRoomID;
 	myPlayer->SetRoot(2);
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (PC) PC->SetMoneyWidget(500);

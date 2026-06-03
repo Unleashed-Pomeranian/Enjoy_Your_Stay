@@ -51,7 +51,7 @@ void AEYS_Generator::BeginPlay()
 
 }
 
-void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	PC->SetInteractionWidget("[E] Open");
 }

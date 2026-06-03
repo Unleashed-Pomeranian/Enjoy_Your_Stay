@@ -27,7 +27,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	UFUNCTION() void OpenComputer();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget")

@@ -32,7 +32,7 @@ public:
 	UBoxComponent* TriggerBox;
 
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 
 
@@ -52,10 +52,10 @@ protected:
 	UTimelineComponent* MainTimeline;
 	UFUNCTION(BlueprintNativeEvent)  void PlayMoveableAudio();
 
-	UFUNCTION()void OnDoorOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
+	UFUNCTION()virtual void OnDoorOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 		OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION()void OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor*
+	UFUNCTION()virtual void OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor*
 		OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
 

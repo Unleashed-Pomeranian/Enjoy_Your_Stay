@@ -367,65 +367,67 @@ void AEYS_MyCharacter::CloseEquipmentWidget(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::InteractUI()
 {
-	FHitResult* Hit = new FHitResult();
+	FHitResult Hit;
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
 	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 1.0f);
-	if (Hit->GetActor() != nullptr)
-	{
-		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
-		{
-			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
-			IEYS_InteractInterface::Execute_InteractUI(Hit->GetActor(), this);
-
+		, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 1.0f);
+	AActor* CurrentHitActor = Hit.GetActor();
 	
+		if (CurrentHitActor &&Hit.GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
+		{
+			if (CurrentHitActor != LastHitActor)
+			{
+				// Eski objenin odağını kapat
+				if (LastHitActor)
+				{
+					IEYS_InteractInterface::Execute_InteractUI(LastHitActor, this, false);
+				}
+
+				if (MyPC)
+				{
+					MyPC->CloseInteractionWidget();
+				}
+				IEYS_InteractInterface::Execute_InteractUI(CurrentHitActor, this, true);
+				LastHitActor = CurrentHitActor;
+			}
 		}
 		else
+		{
+			if (LastHitActor)
+			{
+				IEYS_InteractInterface::Execute_InteractUI(LastHitActor, this, false);
+				LastHitActor = nullptr;
+			}
 			MyPC->CloseInteractionWidget();
-	
-	}
-
-	else
-		MyPC->CloseInteractionWidget();
+		}
+		
 	
 }
 
 void AEYS_MyCharacter::Interact(const FInputActionValue& Value)
 {
-
-
-
-
-	FHitResult* Hit = new FHitResult();
-	FVector Start = FirstPersonCamera->GetComponentLocation();
-	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
-	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>()
-		, EDrawDebugTrace::None, *Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
-	if (Hit->GetActor() != nullptr)
-	{
-		if (Hit->GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
-		{
-			//Cast<IEYS_InteractInterface>(Hit->GetActor())->mInteract(this);
-			IEYS_InteractInterface::Execute_eInteract(Hit->GetActor(), this);
-
+if (AActor* Target = GetInteractActor(200.0f))
+    {
+        if (Target->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
+        {
+            IEYS_InteractInterface::Execute_eInteract(Target, this);
+        }
+    }
 		
-		}
-		
-	}
-
-	
-		
-
 }
 
 void AEYS_MyCharacter::Action(const FInputActionValue& Value)
 {
-	
-	if (bIsKeyMode)
-		Action_MouseTrace();
-	else
-		Action_ForwardTrace();
+
+	bIsAction = true;
+	if (AActor* Target = GetInteractActor(200.0f))
+	{
+		if (Target->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
+		{
+			IEYS_InteractInterface::Execute_aInteract(Target, this, PoseNum);
+		}
+	}
 }
 
 void AEYS_MyCharacter::Action2(const FInputActionValue& Value)
@@ -439,7 +441,6 @@ void AEYS_MyCharacter::Action2(const FInputActionValue& Value)
 
 	
 }
-
 void AEYS_MyCharacter::ActionStart(const FInputActionValue& Value)
 {
 	AEYS_InteractableActor* Item =
@@ -460,28 +461,31 @@ void AEYS_MyCharacter::ActionEnd(const FInputActionValue& Value)
 
 
 
-void AEYS_MyCharacter::Action_ForwardTrace()
+AActor* AEYS_MyCharacter::GetInteractActor(float Distance)
 {
-	bIsAction = true;
-	FHitResult Hit; 
-
+	FHitResult Hit;
 	FVector Start = FirstPersonCamera->GetComponentLocation();
-	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * 200.f;
+	FVector End = Start + FirstPersonCamera->GetComponentRotation().Vector() * Distance;
 
-	UKismetSystemLibrary::LineTraceSingle(this, Start, End, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, Hit, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
 
-	if (Hit.GetActor() != nullptr)
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(this);
+
+	bool bHit = UKismetSystemLibrary::LineTraceSingle(
+		this, Start, End,
+		UEngineTypes::ConvertToTraceType(ECC_Visibility),
+		false, ActorsToIgnore, 
+		EDrawDebugTrace::None, Hit, true
+	);
+
+	if (bHit && Hit.GetActor())
 	{
-		if (Hit.GetActor()->GetClass()->ImplementsInterface(UEYS_InteractInterface::StaticClass()))
-		{
-			
-			IEYS_InteractInterface::Execute_aInteract(Hit.GetActor(), this, PoseNum);
-		}
+		return Hit.GetActor();
 	}
-
+	return nullptr;
 }
 
-void AEYS_MyCharacter::Action_MouseTrace()
+/*void AEYS_MyCharacter::Action_MouseTrace()
 {
 	
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -512,14 +516,14 @@ void AEYS_MyCharacter::Action_MouseTrace()
 				if (bIsHaveKey)
 				{
 					
-					SetRoot(6);
+					
 					
 				}
 
 			}
 		}
 	}
- }
+ }*/
 
 void AEYS_MyCharacter::PlayMontage(int32 MontageIndex)
 {
@@ -553,20 +557,22 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 
 	if(ChildActor)
 	{
-		if (InteractableActors.IsValidIndex(MeshValue))
-		{
+		
+		
 			if (MeshValue==7)
 			{
 				ChildActor->SetChildActorClass(TSubclassOf<AActor>(KeyActor));
+		
 			}
 			else
 			{
-				ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
-				ChildActor->AttachToComponent(FirstPersonMesh,FAttachmentTransformRules::SnapToTargetNotIncludingScale,EquipSocketName[MeshValue]);
+				if (InteractableActors.IsValidIndex(MeshValue))
+				{
+					ChildActor->SetChildActorClass(TSubclassOf<AActor>(InteractableActors[MeshValue]));
+					
+				}
 			}
-
-		}
-			
+			ChildActor->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, EquipSocketName[MeshValue]);
 		
 	}
 	

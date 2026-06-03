@@ -31,7 +31,7 @@ class AEYS_MyCharacter;
       void aInteract(AEYS_MyCharacter* myPlayer, int32 Value);
 
       UFUNCTION(BlueprintNativeEvent, Category = Interact)
-      void InteractUI(AEYS_MyCharacter* myPlayer);
+      void InteractUI(AEYS_MyCharacter* myPlayer, bool bIsFocused);
 
   public:
      

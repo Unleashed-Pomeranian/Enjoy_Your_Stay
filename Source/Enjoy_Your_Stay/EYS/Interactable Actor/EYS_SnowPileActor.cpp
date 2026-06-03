@@ -28,7 +28,7 @@ void AEYS_SnowPileActor::BeginPlay()
 }
 
 // Called every frame
-void AEYS_SnowPileActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_SnowPileActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 

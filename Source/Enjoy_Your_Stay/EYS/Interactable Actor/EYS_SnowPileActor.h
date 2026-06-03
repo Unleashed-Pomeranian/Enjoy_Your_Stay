@@ -28,7 +28,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	float PileValue = 1.0f;
 	float PlowValue = 0.004f;

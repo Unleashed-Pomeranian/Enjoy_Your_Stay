@@ -47,7 +47,7 @@ void AEYS_Phone::Interact(AEYS_MyCharacter* myPlayer)
 {
 	return;
 }
-void AEYS_Phone::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_Phone::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
    
 	if (bCanInteract&& !PC)

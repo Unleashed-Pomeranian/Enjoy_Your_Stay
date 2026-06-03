@@ -7,6 +7,7 @@
 #include "EYS_MoveableObject_Room.generated.h"
 
 class AEYS_GuestCharacter;
+class AEYS_DirtTarget;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MoveableObject_Room : public AEYS_MoveableObject
 {
@@ -18,6 +19,8 @@ protected:
 	bool bIsDoorLocked = false;
     virtual void OnDoorOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<AEYS_DirtTarget*> MyRoomTargets;
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Door")
 	AEYS_GuestCharacter* AssignedNPCs;

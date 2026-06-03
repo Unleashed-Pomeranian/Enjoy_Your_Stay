@@ -41,7 +41,7 @@ void   AEYS_MyCharacters_Bed::Interact(AEYS_MyCharacter* myPlayer)
 	return;
 }
 
-void   AEYS_MyCharacters_Bed::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void   AEYS_MyCharacters_Bed::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (DayCycleActor->GetTimeOfDay()>=21.9f)

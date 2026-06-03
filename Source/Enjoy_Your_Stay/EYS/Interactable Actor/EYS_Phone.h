@@ -33,7 +33,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION(BlueprintNativeEvent)  void PlayPhoneMontage(AEYS_MyCharacter* myPlayer);
 	UFUNCTION(BlueprintNativeEvent)  void PlayPhoneCloseMontage();

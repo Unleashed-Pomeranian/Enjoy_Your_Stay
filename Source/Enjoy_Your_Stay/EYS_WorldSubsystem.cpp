@@ -8,6 +8,7 @@
 #include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
 #include "EYS/NPC/EYS_VehicleSplinePath.h"
 #include "EYS/NPC/EYS_Chair.h"
+#include "EYS/Game Managers/EYS_MissionSpawner.h"
 #include "EngineUtils.h"
 
 AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform, USkeletalMesh* GuestSkel)
@@ -41,6 +42,7 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 		Spawned->SetGuestMesh(GuestSkel);
 		Spawned->MoveTo(LobyLocation, 10);
 		Spawned->DiningHallLocation = DiningHallLocation;
+		Spawned->LobyLocation = LobyLocation;
 	}
 
 	if (AEYS_MySunMoonDaySequenceActor* DayActor = Cast<AEYS_MySunMoonDaySequenceActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MySunMoonDaySequenceActor::StaticClass())))
@@ -200,11 +202,26 @@ void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
 			ActiveNPCs[i]->MoveTo(LobyLocation, 50);
 			ActiveNPCs[i]->bIsCheckOut = true;
 			ActiveNPCs[i]->CurrentStatus = EGuestStatus::GoToCheckOut;
+			SpawnCheckOutDirt(ActiveNPCs[i]->GuestRoomID);
 			ActiveNPCs.RemoveAtSwap(i);
+
 		}
 
 	}
 
+}
+void UEYS_WorldSubsystem::SpawnCheckOutDirt(ERoomID TargetRoom)
+{
+	if (!TargetMissionSpawner) return;
+
+		
+		for (int i = 0; i < 2; i++)
+		{
+		
+			TargetMissionSpawner->SpawnMissionActor(ESurfaceType::Floor, TargetRoom,false);
+			TargetMissionSpawner->SpawnMissionActor(ESurfaceType::Wall, TargetRoom,false);
+		}
+	
 }
 /*if (!bIsAnyGuestCorrupted)
 	{

@@ -13,6 +13,7 @@ AEYS_HeavyEquipmentBase::AEYS_HeavyEquipmentBase()
 	PrimaryActorTick.bCanEverTick = true;
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh_Box"));
 	RootComponent = StaticMesh;
+	StaticMesh->SetCustomDepthStencilValue(5);
 }
 
 // Called when the game starts or when spawned
@@ -61,9 +62,9 @@ void AEYS_HeavyEquipmentBase::DettachActor()
 }
 
 
-void  AEYS_HeavyEquipmentBase::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void  AEYS_HeavyEquipmentBase::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
-
+	StaticMesh->SetRenderCustomDepth(bIsFocused);
 }
 
 void   AEYS_HeavyEquipmentBase::eInteract_Implementation(AEYS_MyCharacter* myPlayer)

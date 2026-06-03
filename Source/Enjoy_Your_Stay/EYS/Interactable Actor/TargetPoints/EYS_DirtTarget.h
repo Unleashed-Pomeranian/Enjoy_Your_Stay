@@ -4,20 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TargetPoint.h"
+#include "EYS/Interactable Actor\HeavyEquipment\EYS_Types.h"
 #include "EYS_DirtTarget.generated.h"
 
-
-UENUM(BlueprintType)
-enum class ETargetLocation: uint8
-{
-	Main UMETA(DisplayName = "Reception"),
-	Wall UMETA(DisplayName = "Wall"),
-	Snow UMETA(DisplayName = "Entry"),
-	R101 UMETA(DisplayName = "101"),
-	R102 UMETA(DisplayName = "102"),
-	R103 UMETA(DisplayName = "103"),
-	R104 UMETA(DisplayName = "104"),
-};
 
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_DirtTarget : public ATargetPoint
@@ -27,6 +16,8 @@ class ENJOY_YOUR_STAY_API AEYS_DirtTarget : public ATargetPoint
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	bool bIsOccupied = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ESurfaceType SurfaceType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) 
-	ETargetLocation TargetLocation;
+	ERoomID RoomID;
 };

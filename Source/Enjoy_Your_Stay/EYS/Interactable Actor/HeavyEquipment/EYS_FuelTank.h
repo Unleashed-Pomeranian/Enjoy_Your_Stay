@@ -16,7 +16,7 @@ class ENJOY_YOUR_STAY_API AEYS_FuelTank : public AEYS_HeavyEquipmentBase
 	
 protected:
 	
-	 void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	 void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 public:
 	UFUNCTION() void AttachToGenerator(USceneComponent* Parent);
 	UPROPERTY(EditAnywhere) float FuelValue = 100;

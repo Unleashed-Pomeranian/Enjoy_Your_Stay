@@ -19,9 +19,9 @@ void AEYS_CoalSack::ReduceFuelValue(int32 ReduceValue)
 		Destroy();
 	}
 }
-void AEYS_CoalSack::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_CoalSack::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
-	Super::InteractUI_Implementation(myPlayer);
+	Super::InteractUI_Implementation(myPlayer, bIsFocused);
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 
 	FString InteractionText = "[E] Take(%" +  FString::FromInt(CoalValue) + ")";

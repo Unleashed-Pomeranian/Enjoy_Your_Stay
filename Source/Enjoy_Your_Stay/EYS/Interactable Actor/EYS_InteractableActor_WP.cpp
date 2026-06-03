@@ -21,6 +21,7 @@ AEYS_InteractableActor_WP::AEYS_InteractableActor_WP()
 	StaticMesh->SetupAttachment(DefaultSceneRoot);
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	BoxCollision->SetupAttachment(StaticMesh);
+	StaticMesh->SetCustomDepthStencilValue(5);
 }
 
 void AEYS_InteractableActor_WP::BeginPlay()
@@ -35,10 +36,15 @@ void AEYS_InteractableActor_WP::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-void  AEYS_InteractableActor_WP::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void  AEYS_InteractableActor_WP::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	if(PC) PC->SetInteractionWidget("[E] Take");
+	if (bIsFocused)
+	{
+		AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+		if (PC) PC->SetInteractionWidget("[E] Take");
+	}
+
+	StaticMesh->SetRenderCustomDepth(bIsFocused);
 }
 void AEYS_InteractableActor_WP::PlayEquipAudio_Implementation()
 {
@@ -75,9 +81,12 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 				
 				if (AEYS_MissionSpawner* MissionSpawner = Cast<AEYS_MissionSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionSpawner::StaticClass())))
 				{
-					for (int i = 0; i <= 5; i++)
+					if (MissionSpawner)
 					{
-						MissionSpawner->SpawnDirtActor();
+						for (int i = 0; i <= 5; i++)
+						{
+							MissionSpawner->SpawnMissionActor(ESurfaceType::Floor, ERoomID::None,true);
+						}
 					}
 				}
 			}

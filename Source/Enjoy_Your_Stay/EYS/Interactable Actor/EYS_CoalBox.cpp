@@ -38,7 +38,7 @@ void AEYS_CoalBox::Tick(float DeltaTime)
 
 }
 
-void  AEYS_CoalBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void  AEYS_CoalBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (CoalAmount>0) {

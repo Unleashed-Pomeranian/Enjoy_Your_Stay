@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #pragma once
 
@@ -42,4 +42,21 @@ struct FFoodDatabase : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EFoodType FoodType= EFoodType::None;
 
+};
+
+UENUM(BlueprintType)
+enum class ESurfaceType : uint8 {
+	Floor   UMETA(DisplayName = "Floor"),
+	Wall    UMETA(DisplayName = "Wall"),
+	Exterior UMETA(DisplayName = "Exterior"),
+};
+UENUM(BlueprintType)
+enum class ERoomID : uint8
+{
+
+	None UMETA(DisplayName = "Common Area"),
+	R101 UMETA(DisplayName = "101"),
+	R102 UMETA(DisplayName = "102"),
+	R103 UMETA(DisplayName = "103"),
+	R104 UMETA(DisplayName = "104"),
 };

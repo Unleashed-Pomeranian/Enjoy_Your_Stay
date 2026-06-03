@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EYS/Interactable Actor\HeavyEquipment\EYS_Types.h"
 #include "EYS_MissionSpawner.generated.h"
+
 
 class AEYS_FixActor;
 class AEYS_DirtActor;
@@ -25,10 +27,8 @@ protected:
 	virtual void BeginPlay() override;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<AEYS_FixActor> FixActor;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<AEYS_DirtActor> DirtActor;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<AEYS_DirtActor> WallDirtActor;
+	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AEYS_SnowPileActor> SnowPileActor;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -49,16 +49,19 @@ protected:
 	TArray<AEYS_DirtTarget*> AllDirtTargets;
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<AEYS_DirtActor> DirtActor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<AEYS_DirtActor> WallDirtActor;
 	UFUNCTION() void SpawnFixActor();
-	UFUNCTION() void SpawnDirtActor();
-	UFUNCTION() void SpawnWallDirtActor();
-	UFUNCTION() void SpawnSnowPileActor();
+
 	UFUNCTION() void SpawnFixActorTimer();
 	UFUNCTION() void SpawnDirtActorTimer();
 	UFUNCTION() void SpawnSnowPileActorTimer();
 	UFUNCTION() void SpawnWallDirtActorTimer();
 	UFUNCTION() void StartFixActorSpawening();
 	UFUNCTION() void SetStepOfTutorial();
+	UFUNCTION() void SpawnMissionActor(ESurfaceType TargetSurfaceType, ERoomID TargetRoomID,bool bisReduceMental);
 
 public:	
 	

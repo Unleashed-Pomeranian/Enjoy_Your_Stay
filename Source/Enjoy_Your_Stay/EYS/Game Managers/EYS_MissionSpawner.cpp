@@ -6,6 +6,7 @@
 #include "EYS/Interactable Actor/EYS_FixActor.h"
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS_WorldSubsystem.h"
 #include "EYS/Interactable Actor/TargetPoints/EYS_DirtTarget.h"
 #include "EYS/Interactable Actor/EYS_SnowPileActor.h"
 
@@ -41,6 +42,12 @@ void AEYS_MissionSpawner::BeginPlay()
 
 	SpawnWallDirtActorTimer();
 	SpawnSnowPileActorTimer();
+
+	if (UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>())
+	{
+		Director->TargetMissionSpawner = this;
+	}
+	
 }
 void AEYS_MissionSpawner::SpawnFixActorTimer()
 {
@@ -74,113 +81,82 @@ void AEYS_MissionSpawner::SpawnFixActor()
 void AEYS_MissionSpawner::SpawnDirtActorTimer()
 {
 
-	SpawnDirtActor();
+	SpawnMissionActor(ESurfaceType::Floor, ERoomID::None,true);
 	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
 	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_MissionSpawner::SpawnDirtActorTimer, RandomDelay, false);
 
 }
-void AEYS_MissionSpawner::SpawnDirtActor()
-{
-	if (!DirtActor) return;
 
-	TArray<AEYS_DirtTarget*> AvailablePoints;
-	for (AEYS_DirtTarget* Target : AllDirtTargets)
-	{
-		if (Target && !Target->bIsOccupied && (Target->TargetLocation == ETargetLocation::Main))
-		{
-			AvailablePoints.Add(Target);
-		}
-	}
-
-	if (AvailablePoints.Num() == 0) return;
-
-	const int32 RandomIndex = FMath::RandRange(0, AvailablePoints.Num() - 1);
-	AEYS_DirtTarget* ChosenPoint = AvailablePoints[RandomIndex];
-
-	if (AActor* SpawnedDirt = GetWorld()->SpawnActor<AActor>(DirtActor, ChosenPoint->GetActorTransform()))
-	{
-		ChosenPoint->bIsOccupied = true;
-		AEYS_DirtActor* Dirt = Cast<AEYS_DirtActor>(SpawnedDirt);
-		if (Dirt) Dirt->MyDirtTarget = ChosenPoint;
-	}
-	
-}
 
 
 void AEYS_MissionSpawner::SpawnWallDirtActorTimer()
 {
-	SpawnWallDirtActor();
+	SpawnMissionActor(ESurfaceType::Wall, ERoomID::None,true);
 	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
 	GetWorld()->GetTimerManager().SetTimer(WallDirtTimerHandle, this, &AEYS_MissionSpawner::SpawnWallDirtActorTimer, RandomDelay, false);
 }
 
-
-void AEYS_MissionSpawner::SpawnWallDirtActor()
+void AEYS_MissionSpawner::SpawnSnowPileActorTimer()
 {
-	if (!WallDirtActor) return;
+	SpawnMissionActor(ESurfaceType::Exterior, ERoomID::None,true);
+	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	GetWorld()->GetTimerManager().SetTimer(SnowPileTimerHandle, this, &AEYS_MissionSpawner::SpawnSnowPileActorTimer, RandomDelay, false);
+}
+
+void AEYS_MissionSpawner::SpawnMissionActor(ESurfaceType TargetSurfaceType, ERoomID TargetRoomID,bool bisReduceMental)
+{
+	UClass* ClassToSpawn = nullptr;
+
+	switch (TargetSurfaceType)
+	{
+	case ESurfaceType::Floor:
+		ClassToSpawn = DirtActor.Get();
+		break;
+	case ESurfaceType::Wall:
+		ClassToSpawn = WallDirtActor.Get();
+		break;
+	case ESurfaceType::Exterior:
+		ClassToSpawn = SnowPileActor;
+		break;
+	default:
+		return;
+	}
+
+	if (!ClassToSpawn) return;
 
 	TArray<AEYS_DirtTarget*> AvailablePoints;
 	for (AEYS_DirtTarget* Target : AllDirtTargets)
 	{
-		if (Target && !Target->bIsOccupied && (Target->TargetLocation == ETargetLocation::Wall))
+		if (Target && !Target->bIsOccupied && Target->SurfaceType == TargetSurfaceType)
 		{
-			AvailablePoints.Add(Target);
+			if (TargetRoomID == ERoomID::None || Target->RoomID == TargetRoomID)
+			{
+				AvailablePoints.Add(Target);
+			}
 		}
 	}
 
 	if (AvailablePoints.Num() == 0) return;
 
-	const int32 RandomIndex = FMath::RandRange(0, AvailablePoints.Num() - 1);
-	AEYS_DirtTarget* ChosenPoint = AvailablePoints[RandomIndex];
+	AEYS_DirtTarget* ChosenPoint = AvailablePoints[FMath::RandRange(0, AvailablePoints.Num() - 1)];
 
-	if (AActor* SpawnedDirt = GetWorld()->SpawnActor<AActor>(WallDirtActor, ChosenPoint->GetActorTransform()))
+	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ClassToSpawn, ChosenPoint->GetActorTransform());
+
+	if (SpawnedActor)
 	{
 		ChosenPoint->bIsOccupied = true;
-		AEYS_DirtActor* Dirt = Cast<AEYS_DirtActor>(SpawnedDirt);
-		if (Dirt) Dirt->MyDirtTarget = ChosenPoint;
-	}
-}
 
-
-void AEYS_MissionSpawner::SpawnSnowPileActorTimer()
-{
-	SpawnSnowPileActor();
-	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
-	GetWorld()->GetTimerManager().SetTimer(SnowPileTimerHandle, this, &AEYS_MissionSpawner::SpawnSnowPileActorTimer, RandomDelay, false);
-}
-
-void AEYS_MissionSpawner::SpawnSnowPileActor()
-{
-	TArray<AEYS_DirtTarget*> AvailablePoints;
-
-	for (AEYS_DirtTarget* Target : AllDirtTargets) 
-	{
-		if (Target && !Target->bIsOccupied && (Target->TargetLocation == ETargetLocation::Snow))
+		if (AEYS_DirtActor* Dirt = Cast<AEYS_DirtActor>(SpawnedActor))
 		{
-			AvailablePoints.Add(Target);
+			Dirt->MyDirtTarget = ChosenPoint;
+			Dirt->bIsEffectMental = bisReduceMental;
 		}
-	}
-
-	if (AvailablePoints.Num() == 0 || !SnowPileActor) return;
-
-	const int32 RandomIndex = FMath::RandRange(0, AvailablePoints.Num() - 1);
-	AEYS_DirtTarget* ChosenPoint = AvailablePoints[RandomIndex];
-
-	
-	if (SnowPileActor)
-	{
-		AActor* SpawnedSnowPile = GetWorld()->SpawnActor<AActor>(SnowPileActor, ChosenPoint->GetActorTransform());
-
-		if (SpawnedSnowPile)
+		else if (AEYS_SnowPileActor* Snow = Cast<AEYS_SnowPileActor>(SpawnedActor))
 		{
-			ChosenPoint->bIsOccupied = true;
-			AEYS_SnowPileActor* SnowPile = Cast<AEYS_SnowPileActor>(SpawnedSnowPile);
-			if (SnowPile) SnowPile->MySnowTarget = ChosenPoint;
+			Snow->MySnowTarget = ChosenPoint;
 		}
 	}
 }
-
-
 
 
 
@@ -198,6 +174,4 @@ void AEYS_MissionSpawner::SetStepOfTutorial()
 		TutorialSubsystemRef->UpdateTutorialState(ETutorialStep::WaitForPipe, ETutorialStep::GoToHammer);
 	}
 }
-
-
 

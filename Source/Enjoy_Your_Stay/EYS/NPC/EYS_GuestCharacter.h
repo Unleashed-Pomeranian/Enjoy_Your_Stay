@@ -17,11 +17,12 @@ UENUM(BlueprintType)
 enum class EGuestStatus : uint8
 {
 	Arriving                UMETA(DisplayName = "Arriving"),
-	WaitingForCheckIn  UMETA(DisplayName = "Waiting for Registration"),
-	AbandonHotel UMETA(DisplayName = "Abandon Hotel"),
-	WaitingForKey  UMETA(DisplayName = "Waiting for Key"),
+	WaitingForCheckIn       UMETA(DisplayName = "Waiting for Registration"),
+	AbandonHotel            UMETA(DisplayName = "Abandon Hotel"),
+	WaitingForKey           UMETA(DisplayName = "Waiting for Key"),
 	GoingToRoom             UMETA(DisplayName = "Going to Room"),
 	InRoom                  UMETA(DisplayName = "In Room"),
+	DirtyRoom               UMETA(DisplayName = "DirtyRoom"),
 	GoToDiningHall            UMETA(DisplayName = "Go To Dining Hall"),
 	WaitingForOrder          UMETA(DisplayName = "Waiting for Order"),
 	WaitingForFood         UMETA(DisplayName = "Waiting for Food"),
@@ -48,7 +49,7 @@ class ENJOY_YOUR_STAY_API AEYS_GuestCharacter : public ACharacter, public IEYS_I
 public:
 	// Sets default values for this character's properties
 	AEYS_GuestCharacter();
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	UFUNCTION()
@@ -89,7 +90,7 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	UPROPERTY(EditAnyWhere,BlueprintReadWrite) FVector RoomLocation;
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite) int32 RoomNumber;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	UEYS_QDialoguesSpeakerComponent* DialogueComponent;
 	
@@ -111,7 +112,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
 	EGuestStatus CurrentStatus;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite)  FVector DiningHallLocation;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) ERoomID GuestRoomID;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite) FVector LobyLocation;
 
 	//UFUNCTION() void CorruptTheGuest()
 	/*--Timers--*/
@@ -122,6 +125,7 @@ public:
 
 	protected:
 	/*--FoodItems--*/
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	EFoodType FoodOrder;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

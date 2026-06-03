@@ -15,7 +15,7 @@ class ENJOY_YOUR_STAY_API AEYS_CoalSack : public AEYS_HeavyEquipmentBase
 	GENERATED_BODY()
 
 protected:
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 
 public:
 	UFUNCTION() void ReduceFuelValue(int32 ReduceValue);

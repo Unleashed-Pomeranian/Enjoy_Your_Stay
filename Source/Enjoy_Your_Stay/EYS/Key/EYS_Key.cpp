@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "EYS/Key/EYS_Key.h"
 #include "EYS/EYS_MyCharacter.h"
+#include "EYS/EYS_MyCharacterController.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "EYS/Key/EYS_KeyHolder.h"
@@ -16,7 +17,8 @@ AEYS_Key::AEYS_Key()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
 	BoxCollision->SetupAttachment(DefaultSceneRoot);
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	StaticMesh->SetupAttachment(DefaultSceneRoot);
+	StaticMesh->SetupAttachment(DefaultSceneRoot); 
+	StaticMesh->SetCustomDepthStencilValue(5);
 
 	
 }
@@ -25,7 +27,7 @@ AEYS_Key::AEYS_Key()
 void AEYS_Key::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	KeyHolder = Cast<AEYS_KeyHolder>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_KeyHolder::StaticClass()));
 }
 
 // Called every frame
@@ -35,39 +37,51 @@ void AEYS_Key::Tick(float DeltaTime)
 
 }
 
-void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
+void AEYS_Key::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	
-	if (myPlayer->bIsKeyMode)
-	{
-		
-		AEYS_KeyHolder* KeyHolder = Cast<AEYS_KeyHolder>(
-			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_KeyHolder::StaticClass())
-		);
 
+
+
+	if (bIsFocused)
+	{
+		FString RoomNameString = FString::Printf(TEXT("[E] Room %d"), RoomNum);
+		AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+		if (PC) PC->SetInteractionWidget(RoomNameString);
+	}
+
+	StaticMesh->SetRenderCustomDepth(bIsFocused);
+
+}
+
+void AEYS_Key::Interact(AEYS_MyCharacter* myPlayer)
+{
+
+	
+}
+void AEYS_Key::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	if (!myPlayer) return;
+	if (!(myPlayer->bIsHaveKey))
+	{
+
+		
 		if (KeyHolder)
 		{
-			myPlayer->bIsKeyMode = false;
-			KeyHolder->SetPose();   
-			KeyHolder->LastRoomNum = RoomNum;
-		
+			KeyHolder->UpdateKeyDisplay(RoomID,false);
 		}
-		if(UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 		{
 			TS->UpdateTutorialState(ETutorialStep::TakeKey, ETutorialStep::GiveKeyToGuest);
 		}
 		myPlayer->bIsHaveKey = true;
 		myPlayer->RoomLock = RoomLocation;
-		myPlayer->PoseNum = 2;
-		myPlayer->RoomNumb = RoomNum;
-		Destroy();
+		myPlayer->SetRoot(7);
+		myPlayer->MyRoomID = RoomID;
 		
+		
+
 	}
-	
-}
-
-void AEYS_Key::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
-{
-	Interact(myPlayer);
 
 }
+

@@ -45,7 +45,7 @@ protected:
 	UFUNCTION() void FAddSlot();
 	UFUNCTION() void FDeleteSlot(bool bSpawnActor);
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Food")

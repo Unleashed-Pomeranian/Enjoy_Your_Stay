@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "Animation/AnimMontage.h"
 #include "EYS/EYS_QDialoguesListenerComponent.h"
+#include "EYS/Interactable Actor\HeavyEquipment\EYS_Types.h"
 #include "EYS_MyCharacter.generated.h"
  
 
@@ -55,8 +56,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	void Action_ForwardTrace();
-	void Action_MouseTrace();
+	AActor* GetInteractActor(float Distance);
 	bool bIsSprinting = false;
 	bool bCanSprinting = true;
 	float Stamina=100.0f;
@@ -100,6 +100,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float sprintSpeed = 600.0f;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Interact")
+	AActor* LastHitActor;
 
 	UFUNCTION() void Move(const FInputActionValue& Value);
 	UFUNCTION() void Look(const FInputActionValue& Value);
@@ -135,14 +137,14 @@ public:
 	bool bIsAction=false;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")
 	int32 ActionNum = 0;
-	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-	bool bIsKeyMode = false;
+
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsHaveKey = false;
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	FVector RoomLock;
-	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-	int32 RoomNumb;
+	UPROPERTY(BlueprintReadOnly, Category = "Interaction")
+	ERoomID MyRoomID;
+
 	UPROPERTY(BlueprintReadWrite, Category = "Interaction")
 	bool bIsDoorLocked = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")

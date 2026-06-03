@@ -39,7 +39,7 @@ void AEYS_FixActor::Tick(float DeltaTime)
 
 }
 
-void AEYS_FixActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_FixActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	

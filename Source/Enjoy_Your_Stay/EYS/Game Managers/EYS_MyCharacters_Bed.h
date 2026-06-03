@@ -27,7 +27,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
-	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 
      UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Day Actor", meta = (AllowPrivateAcces = "True"))

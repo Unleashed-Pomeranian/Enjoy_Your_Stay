@@ -56,7 +56,7 @@ void   AEYS_Boiler::Interact(AEYS_MyCharacter* myPlayer)
 	return;
 }
 
-void   AEYS_Boiler::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void   AEYS_Boiler::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	
 }

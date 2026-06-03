@@ -43,8 +43,7 @@ void AEYS_DirtActor::BeginPlay()
 			StaticMesh->SetVisibility(false);
 		}
 	}
-	UKismetSystemLibrary::K2_SetTimer(this, "SetGuestMentalHealth", 2.0f, true);
-
+	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_DirtActor::SetGuestMentalHealth, 2.0f, true);
 	if (DirtDecal)
 	{
 		AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
@@ -59,7 +58,7 @@ void AEYS_DirtActor::BeginPlay()
 	}
 	
 }
-void AEYS_DirtActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_DirtActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 
@@ -78,10 +77,17 @@ void AEYS_DirtActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 
 
 void AEYS_DirtActor::SetGuestMentalHealth()
 {
-	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
-	if (!Director) return;
+	if (bIsEffectMental)
+	{
+		UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
+		if (!Director) return;
 
-		Director->SetMentalSlate(0.5f);
+		Director->SetMentalSlate(MentalReduceValue);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(DirtTimerHandle);
+	}
 }
 
 void AEYS_DirtActor::PlayCleaningAudio_Implementation()

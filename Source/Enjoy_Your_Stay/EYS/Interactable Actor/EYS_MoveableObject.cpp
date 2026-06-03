@@ -53,7 +53,7 @@ void AEYS_MoveableObject::BeginPlay()
 }
 
 
-void AEYS_MoveableObject::InteractUI_Implementation(AEYS_MyCharacter* myPlayer)
+void AEYS_MoveableObject::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if(!bIsTrigrred)

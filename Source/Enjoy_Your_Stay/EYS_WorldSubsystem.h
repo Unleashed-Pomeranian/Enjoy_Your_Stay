@@ -27,10 +27,12 @@ public:
 	void  RequestSpawnGuestCar(TSubclassOf<AEYS_GuestCar> GuestCarClass, const FTransform& SpawnTransform);
 	void SetMentalSlate( const float ReduceValue);
 	void CheckOutPlayer(int32 DayValue,float TimeValue);
+	void SpawnCheckOutDirt(ERoomID TargetRoom);
 
 	UPROPERTY(EditInstanceOnly, Category = "Parking Setup")
 	TArray<class AEYS_VehicleSplinePath*> AllParkingEntries;
 
+	UPROPERTY() class AEYS_MissionSpawner* TargetMissionSpawner;
 private:
 	// ?stersen aktif NPC listesi
 	UPROPERTY()
@@ -44,4 +46,5 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UDataTable* FoodDatabase = nullptr;
 	UFUNCTION() EFoodType GetRandomType(EItemType WantedItemType);
+
 };

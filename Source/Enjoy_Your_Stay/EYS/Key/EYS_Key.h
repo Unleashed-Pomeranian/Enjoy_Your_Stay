@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EYS/Interactable Actor\HeavyEquipment\EYS_Types.h"
 #include "EYS/EYS_InteractInterface.h"
 #include "EYS_Key.generated.h"
+
 class UBoxComponent;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Key : public AActor, public IEYS_InteractInterface
@@ -22,11 +24,16 @@ public:
 	// Sets default values for this actor's properties
 	AEYS_Key();
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room")
+	ERoomID RoomID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class AEYS_KeyHolder* KeyHolder;
 
 public:	
 	// Called every frame
@@ -36,4 +43,5 @@ public:
 	int32 RoomNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FVector RoomLocation;
+
 };
