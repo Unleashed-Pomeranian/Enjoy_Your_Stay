@@ -199,9 +199,9 @@ void UEYS_WorldSubsystem::CheckOutPlayer(int32 DayValue, float TimeValue)
 	{
 		if ((ActiveNPCs[i]->CheckOutDay == DayValue) && (ActiveNPCs[i]->CheckOutTime <= TimeValue) && !(ActiveNPCs[i]->bIsCheckOut))
 		{
+			ActiveNPCs[i]->CurrentStatus = EGuestStatus::GoToCheckOut;
 			ActiveNPCs[i]->MoveTo(LobyLocation, 50);
 			ActiveNPCs[i]->bIsCheckOut = true;
-			ActiveNPCs[i]->CurrentStatus = EGuestStatus::GoToCheckOut;
 			SpawnCheckOutDirt(ActiveNPCs[i]->GuestRoomID);
 			ActiveNPCs.RemoveAtSwap(i);
 

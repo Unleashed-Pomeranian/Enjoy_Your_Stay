@@ -19,7 +19,7 @@ class ENJOY_YOUR_STAY_API AEYS_Tray : public AEYS_HeavyEquipmentBase
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void DettachActor() override;
+	virtual void DetachActor() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UChildActorComponent* Slot1;

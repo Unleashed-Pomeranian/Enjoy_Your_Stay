@@ -50,10 +50,11 @@ void AEYS_GuestSpawner::SpawnGuest()
 		if (GuestCarClass)
 		{
 			Director->RequestSpawnGuestCar(GuestCarClass, GetActorTransform());
+
+			EmptyRooms--;
 		}
 
-			
-		EmptyRooms --;
+	
 	}
 	else
 	{
@@ -78,9 +79,10 @@ void AEYS_GuestSpawner::StartGuestSpawning()
 void AEYS_GuestSpawner::SetEmptyRoom()
 {
 	EmptyRooms++;
-	if (EmptyRooms > 0)
+
+	if (!GetWorld()->GetTimerManager().IsTimerActive(GuestTimerHandle))
 	{
-		float RandomDelay = FMath::RandRange(120, 180);
+		float RandomDelay = FMath::RandRange(120.0f, 180.0f);
 		GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 	}
 }

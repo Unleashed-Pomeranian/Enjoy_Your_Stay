@@ -3,7 +3,7 @@
 
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
 #include "EYS/EYS_MyCharacter.h"
-#include "Kismet/GamePlayStatics.h"
+
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void AEYS_FoodBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
@@ -35,11 +35,7 @@ void AEYS_FoodBox::RemoveFood()
 	FoodAmount--;
 	if (FoodAmount == 0)
 	{
-		AEYS_MyCharacter* Player = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		if(Player&&Player->HeldEquipment)
-		Player->HeldEquipment = nullptr;
-		Player->bIsHandsFull = false;
-		Destroy();
+		DetachFromPlayer();
 		
 	}
 }

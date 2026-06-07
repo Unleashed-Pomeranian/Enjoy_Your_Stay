@@ -31,7 +31,13 @@ void AEYS_MoveableObject_Room::OnDoorOverlapBegin(UPrimitiveComponent* Overlappe
     Super::OnDoorOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
     if (!OtherActor) return;
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "InInteract");
+
+    AEYS_GuestCharacter* OverlappingNPC = Cast<AEYS_GuestCharacter>(OtherActor);
+    if (!OverlappingNPC) return;
+
+    if (AssignedNPCs != nullptr) return;
+
+    if (OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut || OverlappingNPC->CurrentStatus == EGuestStatus::Leaving) return;
 
     bool bIsRoomDirty = false;
     for (AEYS_DirtTarget* SingleTarget : MyRoomTargets)
@@ -43,24 +49,19 @@ void AEYS_MoveableObject_Room::OnDoorOverlapBegin(UPrimitiveComponent* Overlappe
         }
     }
 
-    if (AEYS_GuestCharacter* OverlappingNPC = Cast<AEYS_GuestCharacter>(OtherActor))
+    if (bIsRoomDirty)
     {
-        if (bIsRoomDirty)
-        {
-          
-
-          
-            OverlappingNPC->CurrentStatus = EGuestStatus::DirtyRoom;
-            OverlappingNPC->MoveTo(OverlappingNPC->LobyLocation, 50.0f); 
-        }
-        else
-        {
-            
-            AssignedNPCs = OverlappingNPC;
-            bIsDoorLocked = true;
-            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HaveRoom");
-        }
+  
+        OverlappingNPC->CurrentStatus = EGuestStatus::DirtyRoom;
+        OverlappingNPC->MoveTo(OverlappingNPC->LobyLocation, 50.0f);
     }
+    else
+    {
+
+        AssignedNPCs = OverlappingNPC;
+        bIsDoorLocked = true;
+    }
+        
 }
 	
 
@@ -69,12 +70,18 @@ void AEYS_MoveableObject_Room::OnDoorOverlapEnd(UPrimitiveComponent* OverlappedC
 {
 	Super::OnDoorOverlapEnd(OverlappedComponent, OtherActor,
 		OtherComp, OtherBodyIndex);
-    if (AEYS_GuestCharacter* OverlappingNPC = Cast<AEYS_GuestCharacter>(OtherActor))
+
+    if (!OtherActor) return;
+
+    AEYS_GuestCharacter* OverlappingNPC = Cast<AEYS_GuestCharacter>(OtherActor);
+    if (OverlappingNPC)
     {
-        if (OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut)
+
+        if (OverlappingNPC == AssignedNPCs && OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut)
         {
             bIsDoorLocked = false;
+            AssignedNPCs = nullptr;
+            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Oda Boşaltıldı."));
         }
     }
-
 }

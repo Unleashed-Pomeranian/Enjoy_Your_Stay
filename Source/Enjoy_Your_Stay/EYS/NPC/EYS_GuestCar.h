@@ -28,6 +28,7 @@ class ENJOY_YOUR_STAY_API AEYS_GuestCar : public AWheeledVehiclePawn
 	class UChaosWheeledVehicleMovementComponent* WheeledMovement;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* CharacterSkeletalMesh;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* SpawnPoint;
 
@@ -61,5 +62,6 @@ public:
 	AEYS_VehicleSplinePath* GlobalLeavingPath;
 
 	UFUNCTION() void DriveBack();
+
 
 };

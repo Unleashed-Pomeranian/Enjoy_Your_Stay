@@ -7,6 +7,8 @@
 #include "EYS_WorldSubsystem.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "EYS_GuestCharacter.h"
+#include "EYS/Game Managers/EYS_GuestSpawner.h"
+#include "Kismet/GameplayStatics.h"
 AEYS_GuestCar::AEYS_GuestCar()
 {
 	if (GetMesh())
@@ -135,6 +137,8 @@ void AEYS_GuestCar::MoveCar()
 			else if (CurrentState == EGuestCarState::Leaving)
 			{
 				GetWorld()->GetTimerManager().ClearTimer(CarTimerHandle);
+				AEYS_GuestSpawner* Spawner = Cast<AEYS_GuestSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_GuestSpawner::StaticClass()));
+				if (Spawner) Spawner->SetEmptyRoom();
 				Destroy();
 			}
 		}

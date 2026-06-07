@@ -88,14 +88,13 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	{
 		GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, AbandonTime, false);
 		DialogueComponent->UpdateDialog(6);
+		bCanInteract = true;
 		break;
 	}
 	case EGuestStatus::AbandonHotel:
 	{
 		if (AssignedCar)
 		{
-			AEYS_GuestSpawner* Spawner = Cast<AEYS_GuestSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_GuestSpawner::StaticClass()));
-			if (Spawner) Spawner->SetEmptyRoom();
 			AssignedCar->DriveBack();
 			Destroy();
 			bCanInteract = true;
@@ -321,7 +320,7 @@ void AEYS_GuestCharacter::OnDialogueFinished()
 				CheckOut(MyCharacter);
 				CurrentStatus = EGuestStatus::Leaving;;
 				FVector DestroyLocation = AssignedCar->GetActorLocation();
-				MoveTo(DestroyLocation, 50);
+				MoveTo(DestroyLocation, 150);
 				
 				
 			}
@@ -597,11 +596,10 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 	if (!myPlayer) return;
 	myPlayer->bIsHaveKey = true;
 	myPlayer->MyRoomID = GuestRoomID;
-	myPlayer->SetRoot(2);
+	myPlayer->SetRoot(7);
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
 	if (PC) PC->SetMoneyWidget(500);
-	AEYS_GuestSpawner* Spawner = Cast<AEYS_GuestSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_GuestSpawner::StaticClass()));
-	if (Spawner) Spawner->SetEmptyRoom();
+	
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
 		TS->UpdateTutorialState(ETutorialStep::CheckoutGuest, ETutorialStep::PutKey);
