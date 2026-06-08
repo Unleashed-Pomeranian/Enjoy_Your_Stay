@@ -13,5 +13,11 @@ UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_Detergent : public AEYS_HeavyEquipmentBase
 {
 	GENERATED_BODY()
-	
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Detergent Settings")
+	float DetergentValue = 100.0f;
+public:
+
+	float ConsumeDetergent(float AmountNeeded);
 };

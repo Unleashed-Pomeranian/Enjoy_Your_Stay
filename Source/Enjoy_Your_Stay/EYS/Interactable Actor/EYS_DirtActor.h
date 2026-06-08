@@ -55,4 +55,5 @@ public:
 	float cleaningValue= 0.012f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsEffectMental=true;
+
 };
