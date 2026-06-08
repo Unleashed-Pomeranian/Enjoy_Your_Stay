@@ -108,7 +108,7 @@ void AEYS_Tray::CleanSlots()
 
 	Slot1FoodType = EFoodType::None;
 	Slot2FoodType = EFoodType::None;
-	Super::DettachActor();
+	Super::DetachActor();
 	
 }
 void AEYS_Tray::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
@@ -129,10 +129,10 @@ void AEYS_Tray::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEYS_Tray::DettachActor()
+void AEYS_Tray::DetachActor()
 {
 	
-	Super::DettachActor();
+	Super::DetachActor();
     UChildActorComponent* Slots[] = { Slot1, Slot2 };
 
     for (int i = 0; i < 2; i++)

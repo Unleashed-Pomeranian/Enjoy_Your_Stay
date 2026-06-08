@@ -166,4 +166,5 @@ public:
 	UFUNCTION() virtual void PlayMontage(int32 MontageIndex);
 
 	UFUNCTION() void SetEquipmentMesh(int32 MeshValue);
+	UFUNCTION() void DetachHeavyEquipment();
 };

@@ -28,7 +28,7 @@ void UEYS_Guest_UI::TakeOrder()
 	
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
-		TS->UpdateTutorialState(ETutorialStep::WaitGuestOrder, ETutorialStep::TakeTray);
+		TS->UpdateTutorialState(ETutorialStep::TakeGuestOrder, ETutorialStep::TakeTray);
 	}
 	OrderDialogEnd.Broadcast();
 	RemoveFromParent();

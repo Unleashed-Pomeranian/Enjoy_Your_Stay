@@ -15,16 +15,12 @@ void  AEYS_FoodBag::BeginPlay()
 
 void AEYS_FoodBag::RemoveFoodBag()
 {
-	AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	myPlayer->HeldEquipment = nullptr;
-	myPlayer->bIsHandsFull = false;
-	Destroy();
-	
-
+	DetachFromPlayer();
 }
 
 void AEYS_FoodBag::AttachFoodBag()
 {
 	AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (!myPlayer) return;
 	AttachActor(myPlayer);
 }

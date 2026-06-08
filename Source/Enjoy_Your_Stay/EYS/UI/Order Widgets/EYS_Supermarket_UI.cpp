@@ -1,64 +1,135 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/UI/Order Widgets/EYS_Supermarket_UI.h"
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/EYS_OrderSpawner.h"
-#include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/UI/Order Widgets/EYS_ProductButton_UI.h"
+#include "EYS/UI/Order Widgets/EYS_CartRow_UI.h"
 
 void UEYS_Supermarket_UI::NativeConstruct()
 {
-	Button_Pirozhki->OnClicked.AddDynamic(this, &UEYS_Supermarket_UI::OnSlot0);
-	Button_Vareniki->OnClicked.AddDynamic(this, &UEYS_Supermarket_UI::OnSlot1);
-	Button_Kasha->OnClicked.AddDynamic(this, &UEYS_Supermarket_UI::OnSlot2);
-	Button_Medovik->OnClicked.AddDynamic(this, &UEYS_Supermarket_UI::OnSlot3);
+	Super::NativeConstruct();
 
-	SetFoodBoxText();
-
-}
-
-void UEYS_Supermarket_UI::SetFoodBoxText()
-{
-	FString PirozhkiText = "Pirozhki (" + FString(TEXT("\u20BD")) + FString::FromInt(PirozhkiPrice) + ")";
-	Text_Pirozhki->SetText((FText::FromString(PirozhkiText)));
-	FString VarenikiText = "Vareniki (" + FString(TEXT("\u20BD")) + FString::FromInt(VarenikiPrice) + ")";
-	Text_Vareniki->SetText((FText::FromString(VarenikiText)));
-	FString KashaText = "Kasha (" + FString(TEXT("\u20BD")) + FString::FromInt(KashaPrice) + ")";
-	Text_Kasha->SetText((FText::FromString(KashaText)));
-	FString MedovikText = "Medovik (" + FString(TEXT("\u20BD")) + FString::FromInt(MedovikPrice) + ")";
-	Text_Medovik->SetText((FText::FromString(MedovikText)));
-}
-
-
-
-
-void UEYS_Supermarket_UI::OnBtnSlotOrder(int32 SlotIndex, int32 Price)
-{
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetOwningPlayer());
-	if (PC)
+	if (Button_Checkout)
 	{
-		if (PC->Money >= Price)
+		Button_Checkout->OnClicked.AddDynamic(this, &UEYS_Supermarket_UI::OnCheckoutClicked);
+	}
+
+	// Başlangıçta sepeti temizliyoruz gulum
+	ShoppingCart.Empty();
+	TotalCartPrice = 0;
+	UpdateCartUI();
+
+	// Ürün butonlarını otomatik oluşturup dükkan raflarına diziyoruz
+	PopulateMarketProducts();
+}
+
+void UEYS_Supermarket_UI::PopulateMarketProducts()
+{
+	if (!WrapBox_ProductList || !ProductButtonWidgetClass || !MarketProductsTable) return;
+
+	WrapBox_ProductList->ClearChildren();
+
+	// Veritabanındaki tüm satırları (Ürünleri) tek seferde hafızaya çekiyoruz gulum
+	TArray<FSupermarketProduct*> AllProducts;
+	MarketProductsTable->GetAllRows<FSupermarketProduct>(TEXT("Market UI Populate"), AllProducts);
+
+	for (const FSupermarketProduct* ProductPtr : AllProducts)
+	{
+		if (ProductPtr)
 		{
-			PC->SetMoneyWidget(-(Price));
-			AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass()));
-			if (OrderSpawner && FSpawnActor[SlotIndex])
+			if (UEYS_ProductButton_UI* ProductButton = CreateWidget<UEYS_ProductButton_UI>(GetWorld(), ProductButtonWidgetClass))
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "UIOk");
-				OrderSpawner->SetOrderClass(FSpawnActor[SlotIndex]);
+				// Pointer'ı normal struct yapısına çevirip (*ProductPtr) butona paslıyoruz
+				ProductButton->InitButton(*ProductPtr, this);
+				WrapBox_ProductList->AddChild(ProductButton);
 			}
 		}
-		else
-			return;
 	}
-
-	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
-	{
-		TS->RegisterNewOrder(FSpawnActor[SlotIndex]);
-	}
-
 }
 
+void UEYS_Supermarket_UI::AddProductToCart(FSupermarketProduct Product)
+{
+	ShoppingCart.Add(Product);
+	TotalCartPrice += Product.Price;
 
+	UpdateCartUI();
+}
 
+void UEYS_Supermarket_UI::RemoveProductFromCart(FSupermarketProduct ProductToRemove)
+{
+	// Kırılgan index'ler yerine doğrudan nesneyi aratıp siliyoruz gulum
+	int32 RemovedCount = ShoppingCart.RemoveSingle(ProductToRemove);
+
+	if (RemovedCount > 0)
+	{
+		TotalCartPrice -= ProductToRemove.Price;
+		UpdateCartUI();
+	}
+}
+
+void UEYS_Supermarket_UI::UpdateCartUI()
+{
+	if (Text_TotalPrice)
+	{
+		Text_TotalPrice->SetText(FText::FromString(FString::Printf(TEXT("Total: %s%d"), TEXT("\u20BD"), TotalCartPrice)));
+	}
+
+	if (!ScrollBox_CartList || !CartRowWidgetClass) return;
+
+	ScrollBox_CartList->ClearChildren();
+
+	// Sepetteki güncel ürünleri tertemiz basıyoruz
+	for (const FSupermarketProduct& Item : ShoppingCart)
+	{
+		if (UEYS_CartRow_UI* RowWidget = CreateWidget<UEYS_CartRow_UI>(GetWorld(), CartRowWidgetClass))
+		{
+			RowWidget->InitRow(Item, this);
+			ScrollBox_CartList->AddChild(RowWidget);
+		}
+	}
+}
+
+void UEYS_Supermarket_UI::OnCheckoutClicked()
+{
+	if (ShoppingCart.Num() == 0) return;
+
+	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetOwningPlayer());
+	if (!PC) return;
+
+	if (PC->Money < TotalCartPrice)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Yetersiz Bakiye! Alışveriş Yapılamadı."));
+		return;
+	}
+
+	PC->SetMoneyWidget(-TotalCartPrice);
+
+	AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass()));
+	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+
+	for (const FSupermarketProduct& Item : ShoppingCart)
+	{
+		if (Item.EquipmentClass)
+		{
+			if (OrderSpawner)
+			{
+				OrderSpawner->SetOrderClass(Item.EquipmentClass);
+			}
+
+			if (TS)
+			{
+				TS->RegisterNewOrder(Item.EquipmentClass);
+			}
+		}
+	}
+
+	ShoppingCart.Empty();
+	TotalCartPrice = 0;
+	UpdateCartUI();
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Siparişler başarıyla alındı!"));
+}

@@ -4,6 +4,7 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_HeavyEquipmentBase.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "Kismet/GamePlayStatics.h"
 
 class AEYS_MyCharacterController;
 // Sets default values
@@ -51,9 +52,29 @@ void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)
 	PlayHeavyAudio();
 }
 
+void AEYS_HeavyEquipmentBase::DetachFromPlayer()
+{
+	AEYS_MyCharacter* Player = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (Player && Player->HeldEquipment)
+		Player->DetachHeavyEquipment();
+	Destroy();
+}
+
+void AEYS_HeavyEquipmentBase::PlaceOnRack(AEYS_MyCharacter* myPlayer, USceneComponent* TargetSlot)
+{
+	if (!myPlayer || !TargetSlot) return;
+	StaticMesh->SetSimulatePhysics(false);
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); 
+
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	AttachToComponent(TargetSlot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	myPlayer->DetachHeavyEquipment();
+	PlayHeavyAudio();
+}
 
 
-void AEYS_HeavyEquipmentBase::DettachActor()
+
+void AEYS_HeavyEquipmentBase::DetachActor()
 {
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);

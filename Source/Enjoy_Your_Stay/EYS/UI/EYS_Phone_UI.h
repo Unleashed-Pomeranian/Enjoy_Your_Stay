@@ -21,14 +21,9 @@ class ENJOY_YOUR_STAY_API UEYS_Phone_UI : public UUserWidget
 	UButton* Button_Close;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_Close;
-	UPROPERTY(meta = (BindWidget))
-	UButton* Button_SuperMarket;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_SuperMarket;
-	UPROPERTY(meta = (BindWidget))
-	UButton* Button_Ironmonger;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_Ironmonger;
+	
+
+
 
 protected:
 	virtual void NativeConstruct() override;

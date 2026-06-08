@@ -266,7 +266,7 @@ void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
 {
 	if (HeldEquipment)
 	{
-		HeldEquipment->DettachActor();
+		HeldEquipment->DetachActor();
 		HeldEquipment = nullptr;
 		bIsHandsFull = false;
 		SetRoot(0);
@@ -274,6 +274,16 @@ void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
 	}
 }
 
+void AEYS_MyCharacter::DetachHeavyEquipment()
+{
+	if (HeldEquipment)
+	{
+		HeldEquipment = nullptr;
+		bIsHandsFull = false;
+		SetRoot(0);
+	}
+
+}
 
 
 void AEYS_MyCharacter::StaminaRecovery()
@@ -578,4 +588,5 @@ void AEYS_MyCharacter::SetEquipmentMesh(int32 MeshValue)
 	
 	
 }
+
 

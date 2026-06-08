@@ -23,7 +23,7 @@ void AEYS_FuelTank::AttachToGenerator(USceneComponent* Parent)
 	AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (myPlayer && myPlayer->HeldEquipment)
 	{
-		myPlayer->HeldEquipment = nullptr;
-		myPlayer->bIsHandsFull = false;
+		myPlayer->DetachHeavyEquipment();
+		
 	}
 }
