@@ -17,6 +17,10 @@ class ENJOY_YOUR_STAY_API AEYS_Detergent : public AEYS_HeavyEquipmentBase
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Detergent Settings")
 	float DetergentValue = 100.0f;
+protected:
+
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 public:
 
 	float ConsumeDetergent(float AmountNeeded);

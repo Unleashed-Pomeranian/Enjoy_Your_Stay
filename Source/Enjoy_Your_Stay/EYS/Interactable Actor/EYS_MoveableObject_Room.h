@@ -21,6 +21,8 @@ protected:
 	virtual void OnDoorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<AEYS_DirtTarget*> MyRoomTargets;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class AEYS_GuestBed* MyRoomsBed;
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Door")
 	AEYS_GuestCharacter* AssignedNPCs;

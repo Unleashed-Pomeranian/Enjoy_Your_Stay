@@ -18,6 +18,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool bIsDirty = false;
 	virtual void DetachActor() override;
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
+	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<UStaticMesh*> SheetMeshes;
+
 public:
 	UFUNCTION() void AttachSheet();
 	UFUNCTION() void RemoveSheet();

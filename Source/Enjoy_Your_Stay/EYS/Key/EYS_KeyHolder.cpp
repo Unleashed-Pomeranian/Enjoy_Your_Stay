@@ -84,7 +84,7 @@ void AEYS_KeyHolder::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
         myPlayer->bIsHaveKey = false;
         if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
         {
-            TS->UpdateTutorialState(ETutorialStep::PutKey, ETutorialStep::WaitForUpdate);
+            TS->UpdateTutorialState(ETutorialStep::PutKey, ETutorialStep::GoToGuestRoom);
         }
     }
 

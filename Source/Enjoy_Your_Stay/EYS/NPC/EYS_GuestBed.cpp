@@ -5,6 +5,7 @@
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Sheet.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
 AEYS_GuestBed::AEYS_GuestBed()
@@ -54,12 +55,20 @@ void AEYS_GuestBed::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 			SetSheetStatus(bisDirty);
 			MySheet->RemoveSheet();
 			SetSheetMesh(false);
+			if (!(MySheet->GetDirtStatus()))
+			{
+				if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+				{
+					TS->UpdateTutorialState(ETutorialStep::PutCleanSheet, ETutorialStep::WaitForUpdate);
+				}
+			}
 		}
 	}
 		else if (bIsHasSheet && !myPlayer->HeldEquipment)
 		{
 			SetSheetMesh(true);
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, "Simdi Girdi!");
+
 		}
 	
 }
@@ -77,6 +86,11 @@ void AEYS_GuestBed::SetSheetStatus(bool bIsSheetDirty)
 		bIsBedDirty = bIsSheetDirty;
 	}
 
+}
+
+bool AEYS_GuestBed::GetSheetStatus()
+{
+	return !bIsHasSheet || bIsBedDirty;
 }
 
 void AEYS_GuestBed::SetSheetMesh(bool bIstakingSheet)
@@ -100,6 +114,10 @@ void AEYS_GuestBed::SetSheetMesh(bool bIstakingSheet)
 			SheetMesh->SetVisibility(false);
 			bIsHasSheet = false;
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Third");
+			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+			{
+				TS->UpdateTutorialState(ETutorialStep::TakeDirtySheet, ETutorialStep::GoToLaundryRoom);
+			}
 		}
 		
 	}
@@ -107,6 +125,7 @@ void AEYS_GuestBed::SetSheetMesh(bool bIstakingSheet)
 	{
 		SheetMesh->SetVisibility(true);
 		bIsHasSheet = true;
+		
 	}
 	PlayAudioAndVFX();
 }

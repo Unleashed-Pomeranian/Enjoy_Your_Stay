@@ -36,8 +36,11 @@ void   AEYS_HeavyEquipmentBase::Interact(AEYS_MyCharacter* myPlayer)
 	return;
 }
 
-void AEYS_HeavyEquipmentBase::PlayHeavyAudio_Implementation()
+void AEYS_HeavyEquipmentBase::PlayHeavyAudio()
 {
+	if (!HeavySound) return;
+	FVector SoundLocation = GetActorLocation();
+	UGameplayStatics::PlaySoundAtLocation(this, HeavySound, SoundLocation);
 }
 
 void AEYS_HeavyEquipmentBase::AttachActor(AEYS_MyCharacter* myPlayer)

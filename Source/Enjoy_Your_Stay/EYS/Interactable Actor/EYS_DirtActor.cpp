@@ -10,6 +10,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "EYS_WorldSubsystem.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 AEYS_DirtActor::AEYS_DirtActor()
 {
@@ -118,6 +119,16 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 
 			}
 			if (MyDirtTarget) MyDirtTarget->bIsOccupied=false;
+			if (!bIsEffectMental)
+			{
+				if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+				{
+					if (TS->CurrentStep == ETutorialStep::CleanCheckOutDirts)
+					{
+						TS->RegisterCheckoutDirt();
+					}
+				}
+			}
 			Destroy();
 
 		}

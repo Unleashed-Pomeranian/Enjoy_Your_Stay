@@ -114,6 +114,18 @@ void AEYS_TutorialHitBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 				break;
 
 			}
+			case ETutorialStep::GoToGuestRoom:
+			{
+				TS->SetTutorialStep(ETutorialStep::CleanCheckOutDirts);
+				break;
+
+			}
+			case ETutorialStep::GoToLaundryRoom:
+			{
+				TS->SetTutorialStep(ETutorialStep::OpenWashingMachine);
+				break;
+
+			}
 
 			case ETutorialStep::GoToComputer:
 			{

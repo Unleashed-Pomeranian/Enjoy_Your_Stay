@@ -7,6 +7,8 @@
 #include "Components/BoxComponent.h"
 #include "EYS/Interactable Actor/TargetPoints/EYS_DirtTarget.h"
 
+#include "EYS/NPC/EYS_GuestBed.h"
+
 void AEYS_MoveableObject_Room::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	
@@ -40,6 +42,7 @@ void AEYS_MoveableObject_Room::OnDoorOverlapBegin(UPrimitiveComponent* Overlappe
     if (OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut || OverlappingNPC->CurrentStatus == EGuestStatus::Leaving) return;
 
     bool bIsRoomDirty = false;
+    bool bIsBedDirty = false;
     for (AEYS_DirtTarget* SingleTarget : MyRoomTargets)
     {
         if (SingleTarget && SingleTarget->bIsOccupied)
@@ -48,8 +51,12 @@ void AEYS_MoveableObject_Room::OnDoorOverlapBegin(UPrimitiveComponent* Overlappe
             break;
         }
     }
+    if(MyRoomsBed)
+    {
+        bIsBedDirty = MyRoomsBed->GetSheetStatus();
+    }
 
-    if (bIsRoomDirty)
+    if (bIsRoomDirty|| bIsBedDirty)
     {
   
         OverlappingNPC->CurrentStatus = EGuestStatus::DirtyRoom;
@@ -77,11 +84,19 @@ void AEYS_MoveableObject_Room::OnDoorOverlapEnd(UPrimitiveComponent* OverlappedC
     if (OverlappingNPC)
     {
 
-        if (OverlappingNPC == AssignedNPCs && OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut)
+        if (OverlappingNPC == AssignedNPCs)
         {
+          if(OverlappingNPC->CurrentStatus == EGuestStatus::GoToCheckOut)
+          {
+            if (MyRoomsBed)
+            {
+                MyRoomsBed->SetSheetStatus(true);
+            }
             bIsDoorLocked = false;
             AssignedNPCs = nullptr;
             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Oda Boşaltıldı."));
+          }
+
         }
     }
 }

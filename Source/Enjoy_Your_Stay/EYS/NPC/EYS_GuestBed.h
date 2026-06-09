@@ -45,11 +45,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<UStaticMesh*> SheetMeshes;
-	UFUNCTION() void  SetSheetStatus(bool bIsSheetDirty);
+	
 	UFUNCTION() void  SetSheetMesh(bool bIstakingSheet);
 	UFUNCTION(BlueprintNativeEvent) void  PlayAudioAndVFX();
 
 public:	
-
+	UFUNCTION() void  SetSheetStatus(bool bIsSheetDirty);
+	UFUNCTION() bool  GetSheetStatus();
 
 };

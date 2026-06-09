@@ -117,3 +117,12 @@ void UEYS_TutorialSubsystem::RegisterFilledSlot(EFoodType FilledType)
 		UpdateTutorialState(ETutorialStep::PlaceFoodBox, ETutorialStep::FindSponge);
 	}
 }
+
+void UEYS_TutorialSubsystem::RegisterCheckoutDirt()
+{
+	DirtValue++;
+	if (DirtValue >= 4)
+	{
+		UpdateTutorialState(ETutorialStep::CleanCheckOutDirts, ETutorialStep::TakeDirtySheet);
+	}
+}

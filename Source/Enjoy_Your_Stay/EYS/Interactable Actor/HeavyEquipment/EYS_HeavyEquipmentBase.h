@@ -15,20 +15,22 @@ UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_HeavyEquipmentBase : public AActor, public IEYS_InteractInterface
 {
 	GENERATED_BODY()
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* StaticMesh;
+	
 public:	
 	// Sets default values for this actor's properties
 	AEYS_HeavyEquipmentBase();
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* StaticMesh;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
-	UFUNCTION(BlueprintNativeEvent) void PlayHeavyAudio();
-	
+	UFUNCTION() void PlayHeavyAudio();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundBase* HeavySound;
 
 public:	
 	// Called every frame
@@ -37,5 +39,6 @@ public:
 	UFUNCTION() void AttachActor(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void DetachFromPlayer();
 	UFUNCTION() void PlaceOnRack(AEYS_MyCharacter* myPlayer, USceneComponent* TargetSlot);
+	
 	
 };

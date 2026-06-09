@@ -4,6 +4,7 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Sheet.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "Kismet/GamePlayStatics.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void AEYS_Sheet::AttachSheet()
 {
@@ -25,12 +26,39 @@ bool AEYS_Sheet::GetDirtStatus()
 void AEYS_Sheet::SetDirtStatus(bool bDirtStatus)
 {
 	bIsDirty = bDirtStatus;
+	int32 MeshIndex = bIsDirty ? 1 : 0;
+	if (SheetMeshes.IsValidIndex(MeshIndex)&& SheetMeshes[MeshIndex])
+	{
+		StaticMesh->SetStaticMesh(SheetMeshes[MeshIndex]);
+	}
 }
 void AEYS_Sheet::DetachActor()
 {
 
 	Super::DetachActor();
-	bIsDirty = true;
+	SetDirtStatus(true);
+
 	
 	
+}
+void AEYS_Sheet::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
+{
+	Super::InteractUI_Implementation(myPlayer, bIsFocused);
+	if (AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController()))
+	{
+		FString InteractionText = "[E] Take";
+		PC->SetInteractionWidget(InteractionText);
+	}
+	
+
+}
+
+void AEYS_Sheet::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	Super::eInteract_Implementation(myPlayer);
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->UpdateTutorialState(ETutorialStep::TakeCleanSheet, ETutorialStep::PutCleanSheet);
+	}
+
 }

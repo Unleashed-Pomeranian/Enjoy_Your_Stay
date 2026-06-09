@@ -8,6 +8,7 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Sheet.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Detergent.h"
 #include "EYS/Interactable Actor/WashingMachine/EYS_WashingMachineButton.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 
 
@@ -144,6 +145,10 @@ void AEYS_WashingMachine::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 				float PouredAmount = MyDetergent->ConsumeDetergent(NeededValue);
 				DetergentAmount += PouredAmount;
 				PlayWashingAudio(4);
+				if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+				{
+					TS->UpdateTutorialState(ETutorialStep::FillDetergent, ETutorialStep::StartWashingMachine);
+				}
 
 			}
 			else
@@ -183,10 +188,12 @@ void AEYS_WashingMachine::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 					{
 
 						MySheet->PlaceOnRack(myPlayer, CurrentSlot);
-						PlayWashingAudio(5);
 
 						bFoundEmptySlot = true;
-
+						if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+						{
+							TS->UpdateTutorialState(ETutorialStep::PlaceDirtySheet, ETutorialStep::TakeDetergent);
+						}
 
 						break;
 					}
@@ -228,7 +235,12 @@ void AEYS_WashingMachine::ToggleLid()
 		SkeletalMesh->PlayAnimation(AnimAssets[0], false);
 		bIsLidOpen = true;
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Makine Kapağı Açıldı."));
+
 		PlayWashingAudio(0);
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::OpenWashingMachine, ETutorialStep::PlaceDirtySheet);
+		}
 	}
 	else
 	{
@@ -266,7 +278,10 @@ void AEYS_WashingMachine::StartWashing()
 
 		return;
 	}
-
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->UpdateTutorialState(ETutorialStep::StartWashingMachine, ETutorialStep::WaitForWashEnd);
+	}
 	PlayWashingAudio(2);
 	bIsWashing = true;
 	GetWorldTimerManager().SetTimer(WashingTimerHandle, this, &AEYS_WashingMachine::OnWashingComplete,WashingDuration, false);
@@ -303,6 +318,10 @@ void AEYS_WashingMachine::OnWashingComplete()
 				}
 			}
 		}
+	}
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->UpdateTutorialState(ETutorialStep::WaitForWashEnd, ETutorialStep::TakeCleanSheet);
 	}
 	if (WashingMachineButtonRef) WashingMachineButtonRef->SetButtonRotationTimer(WashingDuration, false);
 	DetergentAmount = 0.0f;

@@ -2,6 +2,9 @@
 
 
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Detergent.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+
 
 float AEYS_Detergent::ConsumeDetergent(float AmountNeeded)
 {
@@ -28,4 +31,24 @@ float AEYS_Detergent::ConsumeDetergent(float AmountNeeded)
 
 
 	return ActualAmountToReturn;
+}
+void AEYS_Detergent::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
+{
+	Super::InteractUI_Implementation(myPlayer, bIsFocused);
+	if (AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController()))
+	{
+		FString InteractionText = "[E] Take(%" + FString::FromInt(DetergentValue) + ")";
+		PC->SetInteractionWidget(InteractionText);
+	}
+
+}
+
+void AEYS_Detergent::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
+{
+	Super::eInteract_Implementation(myPlayer);
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		TS->UpdateTutorialState(ETutorialStep::TakeDetergent, ETutorialStep::FillDetergent);
+	}
+
 }

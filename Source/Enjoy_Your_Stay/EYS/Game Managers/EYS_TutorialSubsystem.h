@@ -60,6 +60,18 @@ enum class ETutorialStep: uint8
 	WaitForCheckout UMETA(DisplayName = "Wait for Checkout"),
 	CheckoutGuest UMETA(DisplayName = "Checkout Guest"),
 	PutKey UMETA(DisplayName = "Put Key"),
+	GoToGuestRoom  UMETA(DisplayName = "Go To Guest Room"),
+	CleanCheckOutDirts UMETA(DisplayName = "Clean Checkout Dirts"),
+	TakeDirtySheet UMETA(DisplayName = "Take Dirty Sheet"),
+	GoToLaundryRoom UMETA(DisplayName = "Go to Washing Room"),
+	OpenWashingMachine UMETA(DisplayName = "Open Washing Machine"),
+	PlaceDirtySheet UMETA(DisplayName = "Place Dirty Sheet"),
+	TakeDetergent UMETA(DisplayName = "Take Detergent"),
+	FillDetergent UMETA(DisplayName = "Fill Detergent"),
+	StartWashingMachine UMETA(DisplayName = "StartWashingMachine"),
+	WaitForWashEnd UMETA(DisplayName = "WaitForWashEnd"),
+	TakeCleanSheet UMETA(DisplayName = "TakeCleanSheet"),
+	PutCleanSheet UMETA(DisplayName = "PutCleanSheet"),
 	WaitForUpdate UMETA(DisplayName = "Wait for Update"),
 	GoToComputer  UMETA(DisplayName = "Go to Computer"),
 	OpenComputer UMETA(DisplayName = "Open Computer"),
@@ -151,6 +163,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Tutorial")
 	void RegisterFilledSlot(EFoodType FilledType);
 
+	/*---------------------Checkout Dirt Tutorial------------------------*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tutorial Settings")
+	int32 DirtValue = 0;
+	UFUNCTION(BlueprintCallable, Category = "Tutorial")
+	void RegisterCheckoutDirt();
+	
 
 	/*---------------------Delegate------------------------*/
 
