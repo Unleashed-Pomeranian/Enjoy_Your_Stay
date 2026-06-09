@@ -401,6 +401,10 @@ void AEYS_MyCharacter::InteractUI()
 				IEYS_InteractInterface::Execute_InteractUI(CurrentHitActor, this, true);
 				LastHitActor = CurrentHitActor;
 			}
+			else
+			{
+				IEYS_InteractInterface::Execute_InteractUI(CurrentHitActor, this, true);
+			}
 		}
 		else
 		{

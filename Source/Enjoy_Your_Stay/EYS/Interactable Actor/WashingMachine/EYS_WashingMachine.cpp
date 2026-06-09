@@ -64,12 +64,63 @@ void AEYS_WashingMachine::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, 
 {
 	if (!myPlayer) return;
 
-	if (bIsFocused)
+	FString IntText = "";
+
+	if (myPlayer->HeldEquipment)
+	{
+		if (AEYS_Detergent* MyDetergent = Cast<AEYS_Detergent>(myPlayer->HeldEquipment))
+		{
+			if (DetergentAmount < 100.0f)
+			{
+				IntText = "[E] Fill";
+			}
+			else
+			{
+				
+				IntText = bIsLidOpen ? "[E] Close" : "[E] Open";
+			}
+		}
+		
+		else if (AEYS_Sheet* MySheet = Cast<AEYS_Sheet>(myPlayer->HeldEquipment))
+		{
+			if (!bIsLidOpen)
+			{
+				IntText = "[E] Open";
+			}
+			else
+			{
+				if (MySheet->GetDirtStatus())
+				{
+					
+					IntText = "[E] Place";
+				}
+				else
+				{
+					IntText = "Dirty Sheets Only!";
+				}
+				
+			}
+		}
+	}
+	else 
+	{
+		if (!bIsLidOpen)
+		{
+			IntText = "[E] Open";
+		}
+		else
+		{
+			IntText = "[E] Close";
+		}
+	}
+	if (bIsFocused && !IntText.IsEmpty())
 	{
 		AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-		if (PC) PC->SetInteractionWidget("[E] Take");
+		if (PC)
+		{
+			PC->SetInteractionWidget(IntText);
+		}
 	}
-
 }
 
 void AEYS_WashingMachine::Interact(AEYS_MyCharacter* myPlayer)
