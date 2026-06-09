@@ -50,20 +50,20 @@ void AEYS_WashingMachineButton::Interact(AEYS_MyCharacter* myPlayer)
 }
 void AEYS_WashingMachineButton::UpdateButtonRotation()
 {
-	ButtonCurrentRotation -= ButtonStepAmount;
+	ButtonCurrentRotation += ButtonStepAmount;
 
-	if (ButtonCurrentRotation < 0.0f)
+	if (ButtonCurrentRotation >= 360.0f)
 	{
-		ButtonCurrentRotation = 0.0f;
+		ButtonCurrentRotation = 360.0f;
 		GetWorldTimerManager().ClearTimer(ButtonRotationTimerHandle);
-		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Green, TEXT("Şalter sıfıra ulaştı, zamanlayıcı durduruldu gulum."));
+		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Green, TEXT("Şalter 360 dereceye ulaştı, zamanlayıcı durduruldu"));
 	}
 	
 
 
 	if (StaticMesh)
 	{
-		StaticMesh->SetRelativeRotation(FRotator(0.0f, ButtonCurrentRotation, 0.0f));
+		StaticMesh->SetRelativeRotation(FRotator(ButtonCurrentRotation, 0.0f, 0.0f));
 
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Şalter Döndü: %0.0f Derece"), ButtonCurrentRotation));
 
@@ -73,10 +73,14 @@ void AEYS_WashingMachineButton::SetButtonRotationTimer(float WashingTime, bool b
 {
 	if (bIsStart)
 	{
-		ButtonCurrentRotation = 300.0f;
-		StaticMesh->SetRelativeRotation(FRotator(0.0f, ButtonCurrentRotation, 0.0f));
+		ButtonCurrentRotation = 60.0f;
+		if (StaticMesh)
+		{
+			StaticMesh->SetRelativeRotation(FRotator(ButtonCurrentRotation, 0.0f, 0.0f));
+		}
 		float TotalSteps = WashingTime / 2;
-		ButtonStepAmount = ButtonCurrentRotation / TotalSteps;
+
+		ButtonStepAmount = 300.0f / TotalSteps;
 		GetWorld()->GetTimerManager().SetTimer(ButtonRotationTimerHandle, this, &AEYS_WashingMachineButton::UpdateButtonRotation, 2.0f, true);
 
 		bCanToggle = false;

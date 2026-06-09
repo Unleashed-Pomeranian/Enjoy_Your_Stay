@@ -143,7 +143,7 @@ void AEYS_MyCharacter::SetRoot(int32 Value)
 		FAttachmentTransformRules Rules(EAttachmentRule::KeepWorld, true);
 		FirstPersonMesh->AttachToComponent(GetCapsuleComponent(), Rules);
 
-		FirstPersonMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -80.0f));
+		FirstPersonMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -70.0f));
 		FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	}
 	
