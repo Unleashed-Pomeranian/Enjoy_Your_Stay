@@ -4,11 +4,14 @@
 #include "EYS/Interactable Actor/WashingMachine/EYS_WashingMachine.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "Components/AudioComponent.h"
+#include "Components/WidgetComponent.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Sheet.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Detergent.h"
 #include "EYS/Interactable Actor/WashingMachine/EYS_WashingMachineButton.h"
+#include "EYS/UI/EYS_WashingMachine_UI.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+
 
 
 
@@ -27,7 +30,8 @@ AEYS_WashingMachine::AEYS_WashingMachine()
 	ButtonChildComponent->SetupAttachment(RootComponent);
 	WashingAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("WashingAudioComponent"));
 	WashingAudioComponent->SetupAttachment(RootComponent);
-
+	WidgetMesh = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget Mesh"));
+	WidgetMesh->SetupAttachment(DefaultSceneRoot);
 	WashingAudioComponent->bAutoActivate = false;
 	for (int32 i = 0; i < 3; i++)
 	{
@@ -144,6 +148,7 @@ void AEYS_WashingMachine::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 				float NeededValue = 100.0f - DetergentAmount;
 				float PouredAmount = MyDetergent->ConsumeDetergent(NeededValue);
 				DetergentAmount += PouredAmount;
+				UpdateDetergentUI();
 				PlayWashingAudio(4);
 				if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 				{
@@ -326,6 +331,28 @@ void AEYS_WashingMachine::OnWashingComplete()
 	if (WashingMachineButtonRef) WashingMachineButtonRef->SetButtonRotationTimer(WashingDuration, false);
 	DetergentAmount = 0.0f;
 	PlayWashingAudio(3);
+	UpdateDetergentUI();
 	GetWorldTimerManager().ClearTimer(WashingTimerHandle);
 	
+}
+
+void AEYS_WashingMachine::UpdateDetergentUI()
+{
+	if (WidgetMesh)
+	{
+		
+		UUserWidget* UserWidgetInstance = WidgetMesh->GetUserWidgetObject();
+
+		if (UserWidgetInstance)
+		{
+			
+			UEYS_WashingMachine_UI* MachineUI = Cast<UEYS_WashingMachine_UI>(UserWidgetInstance);
+
+			if (MachineUI)
+			{
+				
+				MachineUI->SetSliderBarValue(DetergentAmount);
+			}
+		}
+	}
 }

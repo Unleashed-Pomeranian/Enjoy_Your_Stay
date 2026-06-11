@@ -73,7 +73,7 @@ void AEYS_WashingMachineButton::SetButtonRotationTimer(float WashingTime, bool b
 {
 	if (bIsStart)
 	{
-		ButtonCurrentRotation = 60.0f;
+		ButtonCurrentRotation = 90.0f;
 		if (StaticMesh)
 		{
 			StaticMesh->SetRelativeRotation(FRotator(ButtonCurrentRotation, 0.0f, 0.0f));
@@ -89,6 +89,7 @@ void AEYS_WashingMachineButton::SetButtonRotationTimer(float WashingTime, bool b
 	{
 		bCanToggle = true;
 		GetWorld()->GetTimerManager().ClearTimer(ButtonRotationTimerHandle);
+		StaticMesh->SetRelativeRotation(FRotator(0, 0.0f, 0.0f));
 	}
 }
 

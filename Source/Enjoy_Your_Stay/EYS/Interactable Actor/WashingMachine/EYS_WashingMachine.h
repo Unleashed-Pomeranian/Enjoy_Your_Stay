@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EYS/EYS_InteractInterface.h"
+
 #include "EYS_WashingMachine.generated.h"
 
 UCLASS()
@@ -25,6 +26,8 @@ public:
 	AEYS_WashingMachine();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Slots",meta = (AllowPrivateAccess = "true"))
 	TArray<USceneComponent*> SheetSlots;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UWidgetComponent* WidgetMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Washing Machine | Audio")
 	class UAudioComponent* WashingAudioComponent;
 protected:
@@ -58,6 +61,7 @@ protected:
 	UFUNCTION() void ToggleLid();
 
 	UFUNCTION()	void OnWashingComplete();
+	UFUNCTION() void UpdateDetergentUI();
 		
 public:	
 	UFUNCTION() void StartWashing();
