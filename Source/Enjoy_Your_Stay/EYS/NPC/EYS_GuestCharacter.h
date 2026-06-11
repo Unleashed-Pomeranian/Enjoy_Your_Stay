@@ -78,6 +78,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsSitting = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsDriving = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MentalSlateValue = 100.0f;
 	UPROPERTY()
 	int32 CheckOutDay;

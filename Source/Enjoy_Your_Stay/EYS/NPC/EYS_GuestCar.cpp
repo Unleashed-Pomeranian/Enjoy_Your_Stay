@@ -176,18 +176,30 @@ void AEYS_GuestCar::SetGuestMesh()
 
 void AEYS_GuestCar::SetGuestSpawn()
 {
-	CharacterSkeletalMesh->SetVisibility(false);
-	CharacterSkeletalMesh->Deactivate();
-	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
-	if (!Director) return;
-	if (GuestClass)
+	if (CharacterSkeletalMesh)
 	{
-		AEYS_GuestCharacter* AssignedNPC = Director->RequestSpawnNPC(GuestClass, SpawnPoint->GetComponentTransform(), CharacterSkeletalMesh->GetSkeletalMeshAsset());
-		AssignedNPC->AssignedCar = this;
+		CharacterSkeletalMesh->SetVisibility(false);
+		CharacterSkeletalMesh->Deactivate();
 	}
-	    CurrentState = EGuestCarState::Waiting;
-		
 
+	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem<UEYS_WorldSubsystem>();
+	if (!Director) return;
+	if (GuestClass && SpawnPoint)
+	{
+		FTransform SpawnTransform = SpawnPoint->GetComponentTransform();
+		SpawnTransform.SetScale3D(FVector(1.0f, 1.0f, 1.0f));
+		AEYS_GuestCharacter* AssignedNPC = Director->RequestSpawnNPC(
+			GuestClass,
+			SpawnTransform,
+			CharacterSkeletalMesh->GetSkeletalMeshAsset()
+		);
+		if (AssignedNPC)
+		{
+			AssignedNPC->AssignedCar = this;
+		}
+	}
+
+	CurrentState = EGuestCarState::Waiting;
 }
 
 void AEYS_GuestCar::DriveBack()

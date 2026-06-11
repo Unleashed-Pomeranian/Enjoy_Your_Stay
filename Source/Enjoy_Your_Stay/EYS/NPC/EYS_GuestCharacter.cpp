@@ -39,7 +39,7 @@ void AEYS_GuestCharacter::BeginPlay()
 	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 	CurrentStatus = EGuestStatus::Arriving;
-	
+	bIsDriving = false;
 
 
 }
@@ -608,8 +608,13 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 
 void AEYS_GuestCharacter::SetGuestMesh(USkeletalMesh* GuestSkin)
 {
-	if(GuestSkin)
+	if (!GuestSkin) return;
+	bIsDriving = false;
 	ThirdPersonMesh->SetSkeletalMesh(GuestSkin, true);
+	if (UClass* AnimBP = GuestSkin->GetPostProcessAnimBlueprint())
+	{
+		ThirdPersonMesh->SetAnimClass(AnimBP);
+	}
 }
 
 void AEYS_GuestCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
