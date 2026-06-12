@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anim")
 	TArray<TObjectPtr<UAnimationAsset>> AnimAssets;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
-	FTimerHandle MyTimerHandle;
+	FTimerHandle BoilerTimerHandle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,12 +38,17 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	int32 Animvalue=0;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Varible")
+	bool bIsBoilerMissionActive = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	float BoilerCoalValue=100.0f;
 	bool bAnimFlip=true;
 	UPROPERTY()
 	UEYS_Boiler_UI* BoilerWidgetInstance;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_Boiler_UI> BoilerWidgetClass;
+	class UEYS_MissionSubsystem* MissionSubsystem;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

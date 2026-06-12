@@ -6,7 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
-
+#include "EYS/Game Managers/EYS_MissionSubsystem.h"
 
 
 // Sets default values
@@ -36,8 +36,9 @@ void AEYS_Boiler::BeginPlay()
 	UUserWidget* Widget = WidgetMesh->GetUserWidgetObject();
 		BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());
 		WidgetMesh->SetWidget(BoilerWidgetInstance);
-		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
-		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
+		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
+		GetWorld()->GetTimerManager().SetTimer(BoilerTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
+		MissionSubsystem = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
 }
 
 // Called every frame
@@ -49,7 +50,22 @@ void AEYS_Boiler::Tick(float DeltaTime)
 void AEYS_Boiler::ReduceCoalValue()
 {
 	BoilerCoalValue = FMath::Clamp(BoilerCoalValue -1.6f, 0.0f, 100.0f);
-	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
+	if (BoilerWidgetInstance)
+	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
+
+	if (BoilerCoalValue <= 20.0f)
+	{
+		if (MissionSubsystem)
+		{
+			if (!bIsBoilerMissionActive)
+			{
+				MissionSubsystem->RegisterMissionTarget(EMissionType::Boiler);
+				bIsBoilerMissionActive = true;
+			}
+			MissionSubsystem->UpdateMissionProgress(EMissionType::Boiler, FMath::RoundToInt(BoilerCoalValue));
+
+		}
+	}
 }
 void   AEYS_Boiler::Interact(AEYS_MyCharacter* myPlayer)
 {
@@ -86,6 +102,7 @@ void   AEYS_Boiler::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 void AEYS_Boiler::SetCoalAmount(float FuelAddValue)
 {
 	BoilerCoalValue =  FMath::Clamp(BoilerCoalValue + FuelAddValue, 0.0f, 100.0f);
+
 	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
 	if (BoilerCoalValue >= 99)
 	{
@@ -93,6 +110,19 @@ void AEYS_Boiler::SetCoalAmount(float FuelAddValue)
 		if (TS)
 		{
 			TS->UpdateTutorialState(ETutorialStep::FillBoiler, ETutorialStep::SpawnThirdHorrorActor);
+		}
+
+	}
+	if (bIsBoilerMissionActive)
+	{
+		if (MissionSubsystem)
+		{
+			if (BoilerCoalValue >= 40.0f)
+			{
+
+				MissionSubsystem->UpdateMissionProgress(EMissionType::Boiler, 40);
+				bIsBoilerMissionActive = false;
+			}
 		}
 	}
 

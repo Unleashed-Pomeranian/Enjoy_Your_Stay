@@ -31,6 +31,9 @@ protected:
 	UFUNCTION() void PlayHeavyAudio();
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 	USoundBase* HeavySound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Socket")
+	FName AttachedSocket = "HeavyEquipment";
+
 
 public:	
 	// Called every frame

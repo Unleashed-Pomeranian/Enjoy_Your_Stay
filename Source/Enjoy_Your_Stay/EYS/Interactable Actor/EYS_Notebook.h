@@ -33,27 +33,18 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override; 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UEYS_NotebookWidget> NotebookWidgetClass;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION() void CleaningMission();
-	UFUNCTION() void FuelingMission();
-	UFUNCTION(BlueprintCallable) void FixingMission();
-
-	UPROPERTY()int32 CleaningFinished=0;
-	UPROPERTY()int32 FuelingFinished = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)int32 FixingFinished = 0;
-	UPROPERTY()int32 CleaningTotal = 0;
-	UPROPERTY()int32 FuelingTotal = 0;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)int32 FixingTotal = 0;
 
 
-	
-	//delete
+	UFUNCTION() void CleaningMission(int32 Finished, int32 Total);
+	UFUNCTION() void FuelingMission(int32 Finished, int32 Total);
+	UFUNCTION() void FixingMission(int32 Finished, int32 Total);
+	UFUNCTION() void BoilerMission(int32 Finished, int32 Total);
+	UFUNCTION() void SnowPileMission(int32 Finished, int32 Total);
+
 
 };

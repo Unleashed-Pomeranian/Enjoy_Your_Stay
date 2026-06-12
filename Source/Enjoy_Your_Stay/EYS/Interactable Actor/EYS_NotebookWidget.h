@@ -8,6 +8,7 @@
 #include "Components/HorizontalBox.h"
 #include "Components/CheckBox.h"
 #include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
 #include "EYS_NotebookWidget.generated.h"
 
 /**
@@ -29,7 +30,12 @@ class ENJOY_YOUR_STAY_API UEYS_NotebookWidget : public UUserWidget
 	UHorizontalBox* FixingBox;
 	UPROPERTY(meta = (BindWidget))
 	UHorizontalBox* FuelingBox;
-
+	UPROPERTY(meta = (BindWidget))
+	UHorizontalBox* SnowPileBox;
+	UPROPERTY(meta = (BindWidget))
+	UHorizontalBox* BoilerBox;
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* ProgressBar_Star;
 
 	
 
@@ -40,6 +46,13 @@ class ENJOY_YOUR_STAY_API UEYS_NotebookWidget : public UUserWidget
 	UTextBlock* FixingText;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* FuelingText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SnowPileText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* BoilerText;
+
+protected:
+	void RepositionGridMissions();
 public:
 
 	virtual void NativeConstruct() override;
@@ -52,6 +65,8 @@ public:
 	UFUNCTION() void SetCleaningBox(int32 finished,int32 total);
 	UFUNCTION() void SetFixingBox(int32 finished, int32 total);
 	UFUNCTION() void SetFuelingBox(int32 finished, int32 total);
+	UFUNCTION() void SetSnowPileBox(int32 finished, int32 total);
+	UFUNCTION() void SetBoilerBox(int32 finished, int32 total);
 	UFUNCTION() void CleanMissionBox(int32 value);
 
 	

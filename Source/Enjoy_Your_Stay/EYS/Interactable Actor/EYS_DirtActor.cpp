@@ -2,7 +2,6 @@
 
 
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
-#include "EYS/Interactable Actor/EYS_Notebook.h"
 #include "TargetPoints/EYS_DirtTarget.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
@@ -11,6 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+
+#include "EYS/Game Managers/EYS_MissionSubsystem.h"
 
 AEYS_DirtActor::AEYS_DirtActor()
 {
@@ -43,19 +44,13 @@ void AEYS_DirtActor::BeginPlay()
 			opacityValue = FMath::Clamp(opacityValue, 0.0f, 3.0f);
 			StaticMesh->SetVisibility(false);
 		}
+
 	}
 	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_DirtActor::SetGuestMentalHealth, 2.0f, true);
-	if (DirtDecal)
+
+	if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 	{
-		AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
-			UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
-		if (Notebook)
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
-			Notebook->CleaningTotal += 1;
-			Notebook->CleaningMission();
-			
-		}
+		MS->RegisterMissionTarget(EMissionType::Cleaning);
 	}
 	
 }
@@ -108,16 +103,13 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 
 		if (opacityValue <= 0.2f)
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " destroyed");
-			AEYS_Notebook* Notebook = Cast<AEYS_Notebook>(
-				UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Notebook::StaticClass()));
-			if (Notebook)
+			if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HandleMoveCompleted");
-				Notebook->CleaningFinished+=1;
-				Notebook->CleaningMission();
-
+				MS->UpdateMissionProgress(EMissionType::Cleaning);
 			}
+			
+
+			
 			if (MyDirtTarget) MyDirtTarget->bIsOccupied=false;
 			if (!bIsEffectMental)
 			{

@@ -7,10 +7,10 @@
 #include "Kismet/GamePlayStatics.h"
 #include "EYS/Interactable Actor/EYS_Boiler.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
-// Sets default values
+#include "EYS/Game Managers/EYS_MissionSubsystem.h"
 AEYS_FixActor::AEYS_FixActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
 	PrimaryActorTick.bCanEverTick = true;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 		RootComponent = DefaultSceneRoot;
@@ -30,6 +30,10 @@ void AEYS_FixActor::BeginPlay()
 		if (BoilerActor)
 		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AEYS_FixActor::SetBoilerFuel, 2.0f, true);
 
+		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
+		{
+			MS->RegisterMissionTarget(EMissionType::Fixing);
+		}
 }
 
 // Called every frame
@@ -71,6 +75,10 @@ void AEYS_FixActor::SetPipeMesh()
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 		{
 			TS->UpdateTutorialState(ETutorialStep::FixBrokenPipe, ETutorialStep::WaitForCheckout);
+		}
+		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
+		{
+			MS->UpdateMissionProgress(EMissionType::Fixing);
 		}
 		Destroy();
 

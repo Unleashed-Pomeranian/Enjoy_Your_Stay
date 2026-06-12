@@ -59,6 +59,11 @@ protected:
 	UPROPERTY()
 	AEYS_FuelTank* CurrentFuelTank = nullptr;
 	UFUNCTION(BlueprintNativeEvent) void PlayActivateSound();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UEYS_MissionSubsystem* MissionSubsystem;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsFuelMissionActive=false;
 public:
 	UFUNCTION(BlueprintNativeEvent) void PlayNaturalSound(bool bIsWork);
+
 };

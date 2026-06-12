@@ -9,6 +9,8 @@
 #include "EYS/UI/EYS_GeneratorActivateWidget.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FuelTank.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Game Managers/EYS_MissionSubsystem.h"
+
 // Sets default values
 AEYS_Generator::AEYS_Generator()
 {
@@ -37,7 +39,7 @@ void AEYS_Generator::BeginPlay()
 	 PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
 	 if (PC)
 	 {
-		 //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Hellooooo");
+		
 		 GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
 		 if (GeneratorActivateWidgetInstance)
 		 {
@@ -48,7 +50,9 @@ void AEYS_Generator::BeginPlay()
 	 }
 	
 		PointLight->SetLightColor(LightColor[0]);
-
+		 MissionSubsystem = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
+		
+	
 }
 
 void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
@@ -119,7 +123,19 @@ void AEYS_Generator::ReduceFuel()
 	fuelAmount = FMath::Clamp(fuelAmount-1.0f, 0.0f, 100.0f); 
 	GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 
-
+	if (fuelAmount <= 20.0f)
+	{
+		if (MissionSubsystem)
+		{
+			if (!bIsFuelMissionActive)
+			{
+				MissionSubsystem->RegisterMissionTarget(EMissionType::Fueling);
+				bIsFuelMissionActive = true;
+			}
+			MissionSubsystem->UpdateMissionProgress(EMissionType::Fueling, FMath::RoundToInt(fuelAmount));
+			
+		}
+	}
 	if (fuelAmount <= 5.0f)
 	{
 		UKismetSystemLibrary::K2_ClearTimer(this, "ReduceFuel");
@@ -141,7 +157,18 @@ void AEYS_Generator::AddFuel()
 		CurrentFuelTank->Destroy();
 		CurrentFuelTank = nullptr;
 	}
+	if (bIsFuelMissionActive)
+	{
+		if (MissionSubsystem)
+		{
+			if (fuelAmount >= 50.0f)
+			{
 
+				MissionSubsystem->UpdateMissionProgress(EMissionType::Fueling, 50);
+				bIsFuelMissionActive = false;
+			}
+		}
+	}
 	if (fuelAmount >= 99.5)
 	{
 		UKismetSystemLibrary::K2_ClearTimer(this, "AddFuel");

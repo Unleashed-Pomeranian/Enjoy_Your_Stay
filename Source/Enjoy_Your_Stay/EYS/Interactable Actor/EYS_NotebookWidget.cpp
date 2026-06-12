@@ -1,95 +1,188 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_NotebookWidget.h"
+
 
 void UEYS_NotebookWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-  
-    CurentRow = 0;
+
+}
+void UEYS_NotebookWidget::RepositionGridMissions()
+{
+    if (!GridPanel) return;
+
+
+    GridPanel->ClearChildren();
+
+    int32 ActiveRow = 0;
+
+
+    if (CleaningBox && CleaningBox->GetVisibility() == ESlateVisibility::Visible)
+    {
+        GridPanel->AddChildToGrid(CleaningBox, ActiveRow, 0);
+        ActiveRow++;
+    }
+
+
+    if (FixingBox && FixingBox->GetVisibility() == ESlateVisibility::Visible)
+    {
+        GridPanel->AddChildToGrid(FixingBox, ActiveRow, 0);
+        ActiveRow++;
+    }
 
    
-    
-   
-    
+    if (FuelingBox && FuelingBox->GetVisibility() == ESlateVisibility::Visible)
+    {
+        GridPanel->AddChildToGrid(FuelingBox, ActiveRow, 0);
+        ActiveRow++;
+    }
+    if (BoilerBox && BoilerBox->GetVisibility() == ESlateVisibility::Visible)
+    {
+        GridPanel->AddChildToGrid(BoilerBox, ActiveRow, 0);
+        ActiveRow++;
+    }
 
-    
+
+    if (SnowPileBox && SnowPileBox->GetVisibility() == ESlateVisibility::Visible)
+    {
+        GridPanel->AddChildToGrid(SnowPileBox, ActiveRow, 0);
+        ActiveRow++;
+    }
 
 }
 
 void UEYS_NotebookWidget::SetCleaningBox(int32 finished, int32 total)
 {
-    int32 RowValue = 0;
-    if (CurentRow == 0)
-        RowValue = CurentRow;
-    else
-        RowValue = CurentRow + 1;
 
-
-    if (GridPanel && CleaningBox)
+    if (CleaningBox)
     {
-        GridPanel->AddChildToGrid(CleaningBox, RowValue, 0);
         CleaningBox->SetVisibility(ESlateVisibility::Visible);
     }
 
-    FString TextToShow = "Cleaning: " + FString::FromInt(finished) + "/" + FString::FromInt(total);
-    CleaningText->SetText(FText::FromString(TextToShow));
-    CurentRow++;
-  
+    FString TextToShow = FString::Printf(TEXT("-Cleaning Dirts. (%d/%d)"), finished, total);
+    if (CleaningText)
+    {
+        CleaningText->SetText(FText::FromString(TextToShow));
+    }
+
+    RepositionGridMissions();
 }
 
 void UEYS_NotebookWidget::SetFixingBox(int32 finished, int32 total)
 {
-    int32 RowValue = 0;
-    if (CurentRow == 0)
-        RowValue = CurentRow;
-    else
-        RowValue = CurentRow + 1;
-
-    if (GridPanel && FixingBox)
+    if (FixingBox)
     {
-        
-        GridPanel->AddChildToGrid(FixingBox, RowValue,0);
         FixingBox->SetVisibility(ESlateVisibility::Visible);
-        
     }
-    CurentRow++;
 
-    FString TextToShow = "Fixing: " + FString::FromInt(finished) + "/" + FString::FromInt(total);
-    FixingText->SetText(FText::FromString(TextToShow));
+    FString TextToShow = FString::Printf(TEXT("-Repair Pipes. (%d/%d)"), finished, total);
+    if (FixingText)
+    {
+        FixingText->SetText(FText::FromString(TextToShow));
+    }
+
+    RepositionGridMissions();
 }
 
 void UEYS_NotebookWidget::SetFuelingBox(int32 finished, int32 total)
 {
-    int32 RowValue = 0;
-    if (CurentRow == 0)
-        RowValue = CurentRow;
-    else
-        RowValue = CurentRow + 1;
-
-    if (GridPanel && FuelingBox)
+    if (FuelingBox)
     {
-        GridPanel->AddChildToGrid(FuelingBox, RowValue, 0);
         FuelingBox->SetVisibility(ESlateVisibility::Visible);
     }
-    FString TextToShow = "Fuel: " + FString::FromInt(finished) + "/" + FString::FromInt(total);
-    FuelingText->SetText(FText::FromString(TextToShow));
-    CurentRow++;
+
+
+    FString TextToShow = FString::Printf(TEXT("-Refuel Generator. (%%%d)"), finished);
+    if (FuelingText)
+    {
+        FuelingText->SetText(FText::FromString(TextToShow));
+    }
+
+    RepositionGridMissions();
 }
+void UEYS_NotebookWidget::SetBoilerBox(int32 finished, int32 total)
+{
+    if (BoilerBox)
+    {
+        BoilerBox->SetVisibility(ESlateVisibility::Visible);
+    }
+
+
+    FString TextToShow = FString::Printf(TEXT("-Refuel Boiler. (%%%d)"), finished);
+    if (BoilerText)
+    {
+        BoilerText->SetText(FText::FromString(TextToShow));
+    }
+
+    RepositionGridMissions();
+}
+
+void UEYS_NotebookWidget::SetSnowPileBox(int32 finished, int32 total)
+{
+   
+    if (SnowPileBox)
+    {
+        SnowPileBox->SetVisibility(ESlateVisibility::Visible);
+    }
+
+    FString TextToShow = FString::Printf(TEXT("-Shovel Snow Piles. (%d/%d)"), finished, total);
+    if (SnowPileText)
+    {
+        SnowPileText->SetText(FText::FromString(TextToShow));
+    }
+
+    RepositionGridMissions();
+}
+
 
 void UEYS_NotebookWidget::CleanMissionBox(int32 value)
 {
     switch (value)
     {
     case 1:
-    {
-        CleaningBox->SetVisibility(ESlateVisibility::Hidden);
+        if (CleaningBox)
+        {
+            CleaningBox->SetVisibility(ESlateVisibility::Hidden);
+      
+        }
         break;
-    }
+
+    case 2:
+        if (FuelingBox)
+        {
+            FuelingBox->SetVisibility(ESlateVisibility::Hidden);
+         
+        }
+        break;
+
+    case 3:
+        if (FixingBox)
+        {
+            FixingBox->SetVisibility(ESlateVisibility::Hidden);
+          
+        }
+        break;
+    case 4:
+        if (BoilerBox)
+        {
+            BoilerBox->SetVisibility(ESlateVisibility::Hidden);
+ 
+        }
+        break;
+    case 5:
+        if (SnowPileBox)
+        {
+            SnowPileBox->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+        break;
 
     default:
         break;
     }
+
+    RepositionGridMissions();
 }

@@ -37,7 +37,8 @@ AEYS_MyCharacter::AEYS_MyCharacter()
 	ChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor"));
 	ChildActor->SetupAttachment(FirstPersonMesh, TEXT("RightHand"));
 	ChildActorNotebook = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor Notebook"));
-	ChildActorNotebook->SetupAttachment(FirstPersonMesh, TEXT("RightHand"));
+
+	ChildActorNotebook->SetupAttachment(FirstPersonMesh, TEXT("S_Equip_Notebook"));
 
 	MyDialogueComponent = CreateDefaultSubobject<UEYS_QDialoguesListenerComponent>(TEXT("My Dialogue Component"));
 
@@ -60,7 +61,9 @@ void AEYS_MyCharacter::BeginPlay()
 	MyPC = Cast<AEYS_MyCharacterController>(GetController());
 	UKismetSystemLibrary::K2_SetTimer(this, TEXT("InteractUI"), 0.2f, true, false, 0.0f, 0.0f);
 	UserSettingsSubsystem = GetGameInstance()->GetSubsystem<UEYS_UserSettingsSubsystem>();
-
+	if (ChildActorNotebook && EquipSocketName.IsValidIndex(1))
+	{ChildActorNotebook->AttachToComponent(FirstPersonMesh,FAttachmentTransformRules::SnapToTargetIncludingScale,EquipSocketName[1] );
+	}
 }
 
 // Called every frame

@@ -7,6 +7,7 @@
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Game Managers/EYS_MissionSubsystem.h"
 // Sets default values
 AEYS_SnowPileActor::AEYS_SnowPileActor()
 {
@@ -25,7 +26,10 @@ AEYS_SnowPileActor::AEYS_SnowPileActor()
 void AEYS_SnowPileActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
+	{
+		MS->RegisterMissionTarget(EMissionType::SnowPile);
+	}
 }
 
 // Called every frame
@@ -74,7 +78,11 @@ void AEYS_SnowPileActor::Interact(AEYS_MyCharacter* myPlayer)
 			{
 				TS->UpdateTutorialState(ETutorialStep::ShovelSnowPile, ETutorialStep::WaitTheGuest);
 			}
-			
+			if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
+			{
+				MS->UpdateMissionProgress(EMissionType::SnowPile);
+			}
+
 			Destroy();
 
 		}
