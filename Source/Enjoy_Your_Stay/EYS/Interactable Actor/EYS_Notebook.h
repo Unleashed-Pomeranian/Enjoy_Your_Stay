@@ -45,6 +45,7 @@ public:
 	UFUNCTION() void FixingMission(int32 Finished, int32 Total);
 	UFUNCTION() void BoilerMission(int32 Finished, int32 Total);
 	UFUNCTION() void SnowPileMission(int32 Finished, int32 Total);
+	UFUNCTION() void SetStarWidget(float NewHotelRate);
 
 
 };

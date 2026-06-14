@@ -112,3 +112,50 @@ void UEYS_MissionSubsystem::RefreshNotebookUI(EMissionType Type)
 		break;
 	}
 }
+
+void UEYS_MissionSubsystem::ProcessCustomerCheckOut(int32 InCustomerScore)
+{
+	InCustomerScore = FMath::Clamp(InCustomerScore, 0, 100);
+
+	float GeneratedRatingImpact = 0.0f;
+
+	
+	float RatingDifference = static_cast<float>(InCustomerScore) - HotelGeneralRating;
+
+	if (RatingDifference < 0.0f)
+	{
+
+		float Alpha = FMath::Abs(RatingDifference) / 100.0f;
+		float PenaltyMultiplier = FMath::Lerp(1.2f, 2.0f, Alpha);
+
+		GeneratedRatingImpact = RatingDifference * PenaltyMultiplier;
+	}
+	else
+	{
+	
+		float Alpha = RatingDifference / 100.0f;
+		float RewardMultiplier = FMath::Lerp(1.0f, 1.8f, Alpha);
+
+		GeneratedRatingImpact = RatingDifference * RewardMultiplier;
+	}
+
+	
+	float TargetRating = HotelGeneralRating + GeneratedRatingImpact;
+	TargetRating = FMath::Clamp(TargetRating, 0.0f, 100.0f);
+
+
+	HotelGeneralRating = FMath::Lerp(HotelGeneralRating, TargetRating, CustomerEffectRate);
+	SetHotelStars();
+
+}
+
+void UEYS_MissionSubsystem::SetHotelStars()
+{
+	const float Value = HotelGeneralRating;
+	if (ActiveNotebook)
+	{
+		
+		ActiveNotebook->SetStarWidget(Value);
+	}
+}
+

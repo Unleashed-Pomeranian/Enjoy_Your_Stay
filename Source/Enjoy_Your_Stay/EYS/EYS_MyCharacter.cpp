@@ -94,38 +94,50 @@ void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		{
 			EIC->BindAction(IA_Sprint, ETriggerEvent::Started, this, &AEYS_MyCharacter::StartSprint);
 			EIC->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &AEYS_MyCharacter::StopSprint);
-			EIC->BindAction(IA_Action, ETriggerEvent::Canceled, this, &AEYS_MyCharacter::StopSprint);
 		}
 	
-		EIC->BindAction(IA_eInteract, ETriggerEvent::Started, this, &AEYS_MyCharacter::Interact);
-		EIC->BindAction(IA_Action, ETriggerEvent::Triggered, this, & AEYS_MyCharacter::Action);
-		EIC->BindAction(IA_Action, ETriggerEvent::Started, this, &AEYS_MyCharacter::ActionStart);
-		EIC->BindAction(IA_Action, ETriggerEvent::Completed, this, &AEYS_MyCharacter::ActionEnd);
-		EIC->BindAction(IA_Action, ETriggerEvent::Canceled, this, &AEYS_MyCharacter::ActionEnd);
+		if (IA_eInteract) 	EIC->BindAction(IA_eInteract, ETriggerEvent::Started, this, &AEYS_MyCharacter::Interact);
 
-		EIC->BindAction(IA_Action2, ETriggerEvent::Started, this, &AEYS_MyCharacter::Action2);
-		EIC->BindAction(IA_Action2, ETriggerEvent::Completed, this, &AEYS_MyCharacter::Action2);
-		EIC->BindAction(IA_Drop, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DropObject);
+		if (IA_Action)
+		{
+			EIC->BindAction(IA_Action, ETriggerEvent::Triggered, this, &AEYS_MyCharacter::Action);
+			EIC->BindAction(IA_Action, ETriggerEvent::Started, this, &AEYS_MyCharacter::ActionStart);
+			EIC->BindAction(IA_Action, ETriggerEvent::Completed, this, &AEYS_MyCharacter::ActionEnd);
+			EIC->BindAction(IA_Action, ETriggerEvent::Canceled, this, &AEYS_MyCharacter::ActionEnd);
+		}
+		if (IA_Action)
+		{
+			EIC->BindAction(IA_Action2, ETriggerEvent::Started, this, &AEYS_MyCharacter::Action2);
+			EIC->BindAction(IA_Action2, ETriggerEvent::Completed, this, &AEYS_MyCharacter::Action2);
+		}
+		
+		if (IA_Drop) EIC->BindAction(IA_Drop, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DropObject);
 			
-			if (IA_EquipmentWheel)
-			{
-				EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Started, this,&AEYS_MyCharacter::OpenEquipmentWidget);
-				EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseEquipmentWidget);
-			}
+		if (IA_EquipmentWheel)
+		{
+			EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Started, this,&AEYS_MyCharacter::OpenEquipmentWidget);
+			EIC->BindAction(IA_EquipmentWheel, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseEquipmentWidget);
+		}
 		
-			if (IA_Notebook)
-			{
-				EIC->BindAction(IA_Notebook, ETriggerEvent::Started, this, &AEYS_MyCharacter::OpenNotebook);
-				EIC->BindAction(IA_Notebook, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseNotebook);
-			}
-			if (IA_Mission)
-			{
-				EIC->BindAction(IA_Mission, ETriggerEvent::Started, this, &AEYS_MyCharacter::EnableMission);
-				EIC->BindAction(IA_Mission, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DisableMission);
-			}
+		if (IA_Notebook)
+		{
+			EIC->BindAction(IA_Notebook, ETriggerEvent::Started, this, &AEYS_MyCharacter::OpenNotebook);
+			EIC->BindAction(IA_Notebook, ETriggerEvent::Completed, this, &AEYS_MyCharacter::CloseNotebook);
+		}
 
-			if (IA_Pause)  EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &AEYS_MyCharacter::RequestPauseGame);
+		if (IA_Mission)
+		{
+			EIC->BindAction(IA_Mission, ETriggerEvent::Started, this, &AEYS_MyCharacter::EnableMission);
+			EIC->BindAction(IA_Mission, ETriggerEvent::Completed, this, &AEYS_MyCharacter::DisableMission);
+		}
+
+		if (IA_Pause)  EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &AEYS_MyCharacter::RequestPauseGame);
 		
+		if (IA_Sneak)
+		{
+			EIC->BindAction(IA_Sneak, ETriggerEvent::Started, this, &AEYS_MyCharacter::StartSneak);
+			EIC->BindAction(IA_Sneak, ETriggerEvent::Completed, this, &AEYS_MyCharacter::StopSneak);
+		}
 	}
 
 }
@@ -149,6 +161,7 @@ void AEYS_MyCharacter::SetRoot(int32 Value)
 		FirstPersonMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -70.0f));
 		FirstPersonMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	}
+	
 	
 	SetEquipmentMesh(Value);
 
@@ -233,6 +246,8 @@ void AEYS_MyCharacter::Look(const FInputActionValue& Value)
 
 }
 
+
+
 void AEYS_MyCharacter::StartJump(const FInputActionValue& Value)
 {
 	Jump();
@@ -242,6 +257,19 @@ void AEYS_MyCharacter::StartJump(const FInputActionValue& Value)
 void AEYS_MyCharacter::StopJump(const FInputActionValue& Value)
 {
 	
+}
+void AEYS_MyCharacter::StartSneak(const FInputActionValue& Value)
+{
+	bIsSneaking = true;
+	
+	GetCharacterMovement()->MaxWalkSpeed = 150.0f;
+}
+
+void AEYS_MyCharacter::StopSneak(const FInputActionValue& Value)
+{
+	bIsSneaking = false;
+
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
 void AEYS_MyCharacter::StartSprint(const FInputActionValue& Value)
@@ -305,6 +333,7 @@ void AEYS_MyCharacter::OpenNotebook(const FInputActionValue& Value)
 {
 	
 	ChildActorNotebook->SetVisibility(true);
+	LastPoseNum = PoseNum;
 	SetRoot(1);
 }
 void AEYS_MyCharacter::CloseNotebook(const FInputActionValue& Value)

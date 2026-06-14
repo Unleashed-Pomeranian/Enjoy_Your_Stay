@@ -2,6 +2,7 @@
 
 
 #include "EYS/EYS_MyCharacterController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
@@ -161,7 +162,17 @@ void AEYS_MyCharacterController::MobilizeCharacter(bool bLookInput, bool BIsInpu
 	SetIgnoreMoveInput(bLookInput);
 	if (BIsInputModeUI)
 	{
-		SetInputMode(FInputModeGameAndUI());
+		if (OwnerCharacter)
+		{
+
+			UCharacterMovementComponent* CharacterMoveComp = Cast<UCharacterMovementComponent>(OwnerCharacter->GetMovementComponent());
+			if (CharacterMoveComp)
+			{
+				CharacterMoveComp->StopMovementImmediately();
+				CharacterMoveComp->DisableMovement();
+				CharacterMoveComp->GravityScale = 0.0f;
+			}
+		}
 	}
 	else
 	{

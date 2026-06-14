@@ -39,6 +39,7 @@ void AEYS_Notebook::BeginPlay()
 	if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 	{
 		MS->RegisterNotebook(this);
+		MS->SetHotelStars();
 	}
 	
 	
@@ -149,6 +150,16 @@ void AEYS_Notebook::SnowPileMission(int32 Finished, int32 Total)
 		{
 			NotebookWidgetInstance->CleanMissionBox(5);
 		}
+	}
+}
+
+void AEYS_Notebook::SetStarWidget(float NewHotelRate)
+{
+	float RatePercent = NewHotelRate / 100;
+
+	if (NotebookWidgetInstance)
+	{
+		NotebookWidgetInstance->SetStarBarPercent(RatePercent);
 	}
 }
 

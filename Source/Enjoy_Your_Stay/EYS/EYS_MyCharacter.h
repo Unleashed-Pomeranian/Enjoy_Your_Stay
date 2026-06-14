@@ -58,6 +58,8 @@ protected:
 	
 	AActor* GetInteractActor(float Distance);
 	bool bIsSprinting = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Varible", meta = (AllowPrivateAccess = "true"))
+	bool bIsSneaking = false;
 	bool bCanSprinting = true;
 	float Stamina=100.0f;
 	float StaminaRecoveryValue = 0.2f;
@@ -73,6 +75,9 @@ protected:
 	UInputAction* IA_Jump;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Sprint;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* IA_Sneak;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_eInteract;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
@@ -91,7 +96,7 @@ protected:
 	UInputAction* IA_Mission;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* IA_Pause;
-	
+
 
 
 protected:
@@ -105,6 +110,8 @@ protected:
 
 	UFUNCTION() void Move(const FInputActionValue& Value);
 	UFUNCTION() void Look(const FInputActionValue& Value);
+	UFUNCTION() void StartSneak(const FInputActionValue& Value);
+	UFUNCTION() void StopSneak(const FInputActionValue& Value);
 	UFUNCTION() void StartJump(const FInputActionValue& Value);
 	UFUNCTION() void StopJump(const FInputActionValue& Value);
 	UFUNCTION() void StartSprint(const FInputActionValue& Value);

@@ -56,5 +56,28 @@ private:
 	TMap<EMissionType, FMissionProgress> MissionRegistry;
 
 	void RefreshNotebookUI(EMissionType Type);
+
+
+
+	/*------------Hotel Reyting*/
+public:
+	// 🔥 YENİ: Müşteri otelden ayrılırken tetikleyeceğimiz efsane fonksiyon gulum!
+	UFUNCTION(BlueprintCallable, Category = "EYS | Hotel Rating")
+	void ProcessCustomerCheckOut(int32 InCustomerScore);
+
+	UFUNCTION(BlueprintPure, Category = "EYS | Hotel Rating")
+	float GetHotelRating() const { return HotelGeneralRating; }
+
+
+	UFUNCTION(BlueprintCallable, Category = "EYS | Hotel Rating")
+	void SetHotelStars();
+
+protected:
+	
+	UPROPERTY(VisibleAnywhere, Category = "EYS | Hotel Rating")
+	float HotelGeneralRating = 50.0f;
+
+	UPROPERTY(EditAnywhere, Category = "EYS | Hotel Rating")
+	float CustomerEffectRate = 0.05f;
 };
 	

@@ -16,6 +16,7 @@
 #include "EYS/NPC/EYS_GuestCar.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Tray.h"
 #include "EYS_Chair.h"
+#include "EYS/Game Managers/EYS_MissionSubsystem.h"
 
 // Sets default values
 AEYS_GuestCharacter::AEYS_GuestCharacter()
@@ -40,7 +41,7 @@ void AEYS_GuestCharacter::BeginPlay()
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 	CurrentStatus = EGuestStatus::Arriving;
 	bIsDriving = false;
-
+	MentalSlateValue = 100.0f;
 
 }
 
@@ -95,6 +96,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	{
 		if (AssignedCar)
 		{
+			TriggerHotelCheckOut();
 			AssignedCar->DriveBack();
 			Destroy();
 			bCanInteract = true;
@@ -145,6 +147,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	{
 		if (AssignedCar)
 		{
+			TriggerHotelCheckOut();
 			AssignedCar->DriveBack();
 			Destroy();
 		}
@@ -405,6 +408,7 @@ void AEYS_GuestCharacter::CheckFood(AEYS_MyCharacter* myPlayer)
 		}
 		else 
 		{
+			MentalSlateValue = FMath::Clamp(MentalSlateValue - 10.0f, 0.0f, 100.0f);
 			DialogueComponent->UpdateDialog(4);
 			CurrentStatus = EGuestStatus::WrongOrder;
 		}
@@ -433,14 +437,14 @@ void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 
 	if (OrderScore >= 2)
 	{
-		MentalSlateValue += 20.0f;
+		MentalSlateValue = FMath::Clamp(MentalSlateValue + 20.0f, 0.0f, 100.0f);
 		if (PC) PC->SetMoneyWidget(200);
 		TS->UpdateTutorialState(ETutorialStep::GiveTrayToGuest, ETutorialStep::GiveRightFood);
 	}
 	else if (OrderScore == 1)
 	{
-		MentalSlateValue -= 10.0f;
-		if (PC) PC->SetMoneyWidget(200);
+		MentalSlateValue = FMath::Clamp(MentalSlateValue - 5.0f, 0.0f, 100.0f);
+		if (PC) PC->SetMoneyWidget(100);
 		TS->UpdateTutorialState(ETutorialStep::GiveTrayToGuest, ETutorialStep::GiveWrongFood);
 	}
 
@@ -537,6 +541,8 @@ void AEYS_GuestCharacter::FinishDining()
 	MoveTo(RoomLocation, 50);
 }
 
+
+
 void AEYS_GuestCharacter::FGuestAbandon()
 {
 	switch (CurrentStatus)
@@ -544,6 +550,12 @@ void AEYS_GuestCharacter::FGuestAbandon()
 
 	case EGuestStatus::WaitingForCheckIn:
 	{
+		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
+		{
+			float CurrentHotelRating = MS->GetHotelRating();
+			MentalSlateValue = FMath::Clamp(CurrentHotelRating - 40.0f, 0.0f, 100.0f);
+		}
+		
 		bCanInteract = false;
 		FVector CarLoc = AssignedCar->GetActorLocation();
 		MoveTo(CarLoc, 50.0f);
@@ -552,6 +564,12 @@ void AEYS_GuestCharacter::FGuestAbandon()
 	}
 	case EGuestStatus::DirtyRoom:
 	{
+		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
+		{
+			float CurrentHotelRating = MS->GetHotelRating();
+			MentalSlateValue = FMath::Clamp(CurrentHotelRating - 50.0f, 0.0f, 100.0f);
+		}
+	
 		bCanInteract = false;
 		FVector CarLoc = AssignedCar->GetActorLocation();
 		MoveTo(CarLoc, 50.0f);
@@ -560,6 +578,7 @@ void AEYS_GuestCharacter::FGuestAbandon()
 	}
 	case EGuestStatus::WaitingForOrder:
 	{
+		MentalSlateValue -= 15.0f;
 		bCanInteract = false;
 		MoveTo(RoomLocation, 50.0f);
 		CurrentStatus = EGuestStatus::GoingToRoom;
@@ -567,6 +586,7 @@ void AEYS_GuestCharacter::FGuestAbandon()
 	}
 	case EGuestStatus::WaitingForFood:
 	{
+		MentalSlateValue -= 15.0f;
 		bCanInteract = false;
 		MoveTo(RoomLocation, 50.0f);
 		CurrentStatus = EGuestStatus::GoingToRoom;
@@ -616,7 +636,18 @@ void AEYS_GuestCharacter::SetGuestMesh(USkeletalMesh* GuestSkin)
 		ThirdPersonMesh->SetAnimClass(AnimBP);
 	}
 }
+void AEYS_GuestCharacter::TriggerHotelCheckOut()
+{
 
+	UEYS_MissionSubsystem* MissionSub = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
+
+	if (MissionSub)
+	{
+
+		MissionSub->ProcessCustomerCheckOut(MentalSlateValue);
+
+	}
+}
 void AEYS_GuestCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	

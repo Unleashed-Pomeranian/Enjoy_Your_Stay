@@ -105,7 +105,7 @@ protected:
 	UFUNCTION() void FGuestAbandon();
 	UFUNCTION() void OnDialogueFinished();
 	UFUNCTION() void FinishDining();
-
+	UFUNCTION()	void TriggerHotelCheckOut();
 public:	
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);
 	UFUNCTION() void CheckOut(AEYS_MyCharacter* myPlayer);

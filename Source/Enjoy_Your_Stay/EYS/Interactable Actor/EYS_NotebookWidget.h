@@ -69,5 +69,5 @@ public:
 	UFUNCTION() void SetBoilerBox(int32 finished, int32 total);
 	UFUNCTION() void CleanMissionBox(int32 value);
 
-	
+	UFUNCTION() void SetStarBarPercent(const float NewValue);
 };

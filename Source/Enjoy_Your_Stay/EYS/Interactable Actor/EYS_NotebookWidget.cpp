@@ -186,3 +186,11 @@ void UEYS_NotebookWidget::CleanMissionBox(int32 value)
 
     RepositionGridMissions();
 }
+
+void UEYS_NotebookWidget::SetStarBarPercent(const float NewValue)
+{
+    if (ProgressBar_Star)
+    {
+        ProgressBar_Star->SetPercent(NewValue);
+    }
+}
