@@ -63,6 +63,7 @@ public:
 	UFUNCTION() void SetHourWidget(float TimeofDay);
 	UFUNCTION() void CloseInteractionWidget();
 	UFUNCTION(BlueprintCallable) void MobilizeCharacter(bool bLookInput,bool BIsInputModeUI, bool ShowCursor);
+	UFUNCTION(BlueprintCallable) void StopPlayer();
 	UFUNCTION() void SetCharacterPositon(FVector ActorLocation,float LocationX,float LocationY,FRotator Rotation);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 Money;
 

@@ -8,6 +8,7 @@
 
 
 class AEYS_DirtActor;
+class AEYS_BabaYaga;
 UCLASS()
 class ENJOY_YOUR_STAY_API AEYS_MissionPostProcessVolume : public APostProcessVolume
 {
@@ -24,4 +25,14 @@ public:
 	UFUNCTION(BlueprintCallable) void HideMissions();
 	UFUNCTION(BlueprintCallable) void SetMissionPPEnabled(bool bEnablePPV);
 
+	void TriggerTimeDilationEvent();
+
+	
+	void CleanUpMissionActor();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mission | Spawn")
+	TSubclassOf<AEYS_BabaYaga> BabaYagaClass;
+
+	UPROPERTY()
+	AEYS_BabaYaga* SpawnedMissionBabaYaga;
 };

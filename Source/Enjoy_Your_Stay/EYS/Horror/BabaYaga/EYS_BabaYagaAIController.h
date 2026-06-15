@@ -24,7 +24,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void OnPossess(APawn* InPawn) override;
 	// 🧠 Algı Motoru ve Duyuları gulum
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EYS | BabaYaga")
 	UAIPerceptionComponent* BabaYagaPerceptionComp;
@@ -40,15 +40,24 @@ protected:
 	void OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus);
 
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+
+	UPROPERTY()
+	class AEYS_BabaYaga* MyBabaYagaPawn;
 	
 private:
 	// ⏳ 5 saniyelik gözden kaybetme sayacı
 	FTimerHandle LoseTargetTimerHandle;
+
+	// 🚨 YERELDE KALIP SAPITAN DEVRİYE SAYACINI BURAYA SABİTLEDİK KE!
+	FTimerHandle PatrolTimerHandle;
 
 	UPROPERTY()
 	AActor* TargetPlayer = nullptr;
 
 	// Takibi tamamen bırakıp eski asil düzenine dönme tetiği
 	void StopChasing();
+
+public:
+	FORCEINLINE void SetTargetPlayer(AActor* NewTarget) { TargetPlayer = NewTarget; }
 	
 };

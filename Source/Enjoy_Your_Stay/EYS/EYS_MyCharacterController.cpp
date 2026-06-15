@@ -56,7 +56,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			if (TS) 
 			{ 
 				TS->MyCharacterUIIns = MyCharacterUIInstance; 
-				TS->SetTutorialStep(ETutorialStep::WaitTheGuest);
+				TS->SetTutorialStep(ETutorialStep::GoToGuestRoom);
 			}
 
 			MyCharacterUIInstance->AddToViewport();
@@ -162,25 +162,34 @@ void AEYS_MyCharacterController::MobilizeCharacter(bool bLookInput, bool BIsInpu
 	SetIgnoreMoveInput(bLookInput);
 	if (BIsInputModeUI)
 	{
-		if (OwnerCharacter)
-		{
-
-			UCharacterMovementComponent* CharacterMoveComp = Cast<UCharacterMovementComponent>(OwnerCharacter->GetMovementComponent());
-			if (CharacterMoveComp)
-			{
-				CharacterMoveComp->StopMovementImmediately();
-				CharacterMoveComp->DisableMovement();
-				CharacterMoveComp->GravityScale = 0.0f;
-			}
-		}
+	SetInputMode(FInputModeGameAndUI());
+			
 	}
 	else
 	{
 		SetInputMode(FInputModeGameOnly());
+
 	}
 
 	bShowMouseCursor = ShowCursor;
 	
+
+}
+
+void AEYS_MyCharacterController::StopPlayer()
+{
+	if (OwnerCharacter)
+	{
+
+		UCharacterMovementComponent* CharacterMoveComp = Cast<UCharacterMovementComponent>(OwnerCharacter->GetMovementComponent());
+		if (CharacterMoveComp)
+		{
+			SetInputMode(FInputModeGameAndUI());
+			CharacterMoveComp->StopMovementImmediately();
+			CharacterMoveComp->DisableMovement();
+			CharacterMoveComp->GravityScale = 0.0f;
+		}
+	}
 
 }
 

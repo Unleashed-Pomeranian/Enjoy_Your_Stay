@@ -350,6 +350,7 @@ void AEYS_MyCharacter::EnableMission(const FInputActionValue& Value)
 		MissionPPV->bEnabled = true;
 		//FVector newPPVLocation = GetActorLocation();
 		MissionPPV->SetMissionPPEnabled(true);
+		MissionPPV->TriggerTimeDilationEvent();
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.25f); // %25 hız
 	}
 }
@@ -361,6 +362,7 @@ void AEYS_MyCharacter::DisableMission(const FInputActionValue& Value)
 		MissionPPV->bEnabled = false;
 		
 		MissionPPV->SetMissionPPEnabled(false);
+		MissionPPV->CleanUpMissionActor();
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f); // %25 hız
 	}
 }

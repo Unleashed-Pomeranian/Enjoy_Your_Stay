@@ -48,39 +48,69 @@ void AEYS_BabaYagaAIController::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AEYS_BabaYagaAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	if (InPawn)
+	{
+		
+		MyBabaYagaPawn = Cast<AEYS_BabaYaga>(InPawn);
+	}
+}
+
 void AEYS_BabaYagaAIController::OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (!Actor || !Actor->ActorHasTag("Player")) return;
+	// Koruma kalkanları: Aktör yoksa, oyuncu değilse veya canavar referansımız boştaysa dur ke!
+	if (!Actor || !Actor->ActorHasTag("Player") || !MyBabaYagaPawn) return;
 
-	AEYS_BabaYaga& BabaYagaCharacter = *Cast<AEYS_BabaYaga>(GetPawn());
-
-	// 👁️ GÖRÜŞ ALGISI: Baba Yaga bizi bizzat gördüyse ke gulum!
+	// 👁️ 1. GÖRÜŞ ALGISI: Baba Yaga bizi bizzat gördüyse ke gulum!
 	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 	{
 		if (Stimulus.WasSuccessfullySensed())
 		{
+			// Eğer devriye bekleme sayacı dönüyorsa onu şak diye patlat ki kudurup koşsun gulum ke!
+			GetWorld()->GetTimerManager().ClearTimer(PatrolTimerHandle);
 			GetWorld()->GetTimerManager().ClearTimer(LoseTargetTimerHandle);
+
 			TargetPlayer = Actor;
 
-			// Baba Yaga çığlık atarak (veya hırlayarak) koşma hızına geçer gulum!
-			BabaYagaCharacter.SetMovementState(EBabaYagaState::Chasing);
+			// 🔥 SİNSİ SES ZIRHI BURADA VURUYOR GULUM:
+			// Eğer canavar ZATEN kovalama modunda DEĞİLSE, yani ilk kez bizi gördüyse sesi ÇAL ke!
+			// Eğer zaten kovalıyorsa, bu bloğu pas geçeceği için ses üst üste binip sapıtmayacak gulum!
+			if (MyBabaYagaPawn->GetMovementState() != EBabaYagaState::Chasing)
+			{
+				MyBabaYagaPawn->PlayBabaYagaSound(2); // Çığlığı/hırlamayı sadece 1 kere patlat ke!
+			}
+
+			// Durumu güncelle ve hedefe mermi gibi fırla gulum
+			MyBabaYagaPawn->SetMovementState(EBabaYagaState::Chasing);
 			MoveToActor(TargetPlayer, 70.0f);
 		}
 		else // Sinsi bir odaya girdik ve kapıyı kapattık, görüş koptu ke!
 		{
-			// 🔥 5 SANİYELİK HAFIZA SAYAÇ TETİĞİ BURADA VURUR GULUM:
+			// 5 saniyelik takip hafıza tetiği gulum ke
 			GetWorld()->GetTimerManager().SetTimer(LoseTargetTimerHandle, this, &AEYS_BabaYagaAIController::StopChasing, 5.0f, false);
 		}
 	}
 
-	// 👂 SES ALGISI: Koştuk veya sinsi yürümeyi unuttuk, patırtı koptu ke!
+	// 👂 2. SES ALGISI: Koştuk veya sinsi yürümeyi unuttuk, patırtı koptu ke!
 	else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
 	{
 		// Eğer canavar o an bizi GÖRMÜYORSA ama sesimizi duyduysa gulum:
-		if (Stimulus.WasSuccessfullySensed())
+		if (Stimulus.WasSuccessfullySensed() && !TargetPlayer)
 		{
+			GetWorld()->GetTimerManager().ClearTimer(PatrolTimerHandle);
+
+			// 🔥 SES ALGISI İÇİN DE AYNI SİNSİ KORUMA GULUM:
+			// Canavar sesi ilk duyduğunda ve kovalama modunda değilse ses çalsın ke!
+			if (MyBabaYagaPawn->GetMovementState() != EBabaYagaState::Chasing)
+			{
+				MyBabaYagaPawn->PlayBabaYagaSound(2);
+			}
+
 			// Sesin patladığı o sinsi koordinata doğru anında kudurup koşsun ke!
-			BabaYagaCharacter.SetMovementState(EBabaYagaState::Chasing);
+			MyBabaYagaPawn->SetMovementState(EBabaYagaState::Chasing);
 			MoveToLocation(Stimulus.StimulusLocation, 70.0f);
 		}
 	}
@@ -92,7 +122,7 @@ void AEYS_BabaYagaAIController::StopChasing()
 
 	if (AEYS_BabaYaga* BabaYagaCharacter = Cast<AEYS_BabaYaga>(GetPawn()))
 	{
-		// Sakin devriye hızına geri dön ve etrafta gezin gulum
+		
 		BabaYagaCharacter->SetMovementState(EBabaYagaState::Patrolling);
 		BabaYagaCharacter->StartPatrol();
 	}
@@ -102,78 +132,71 @@ void AEYS_BabaYagaAIController::OnMoveCompleted(FAIRequestID RequestID, const FP
 {
 	Super::OnMoveCompleted(RequestID, Result);
 
-	// Canavar hedefe pürüzsüzce ulaştıysa ve kovaladığı oyuncu varsa gulum:
+	if (!MyBabaYagaPawn) return; // Güvenlik zırhı ke!
+
+	// 👤 1. DURUM: OYUNCUYU YAKALADIK, FATURA KESİM ANI KE!
 	if (Result.IsSuccess() && TargetPlayer)
 	{
 		AEYS_MyCharacter* PlayerCharacter = Cast<AEYS_MyCharacter>(TargetPlayer);
-		AActor* BabaYagaActor = GetPawn();
 
-		if (PlayerCharacter && BabaYagaActor)
+		if (PlayerCharacter)
 		{
-			
 			AEYS_MyCharacterController* MyPC = Cast<AEYS_MyCharacterController>(PlayerCharacter->GetController());
 
 			if (MyPC)
 			{
-				// 1. Önce karakterin hareketini ve her türlü bakış inputunu şak diye dondur ke!
+				MyBabaYagaPawn->SetMovementState(EBabaYagaState::Catch);
 				MyPC->MobilizeCharacter(true, true, false);
-				
-				// ==========================================
-				// 🎯 KUTSAL TAM KARŞISINA ALMA MATEMATİĞİ KE:
-				// ==========================================
-
-				// Baba Yaga'nın tam ön cephesinin (Forward Vector) nereye baktığını bul gulum
-				FVector BabaYagaForward = BabaYagaActor->GetActorForwardVector();
-
-				// Oyuncuyu tam Baba Yaga'nın önüne, göz hizası koordinatına çekiyoruz ke!
-				// Baba Yaga'nın durduğu yerden kendi önüne doğru tam 80 birim (0.8 metre) bir hedef nokta belirliyoruz gulum
-				FVector TargetPlayerLocation = BabaYagaActor->GetActorLocation() + (BabaYagaForward * 80.0f);
-
-				// Z eksenini (Yükseklik) oyuncunun kendi boy hizasında koru ki canavarın içine veya yerin dibine batmasın ke!
+				MyPC->StopPlayer();
+				// Dünyanın en stabil lokasyon ve rotasyon eşitlemesi ke gulum:
+				FVector BabaYagaForward = MyBabaYagaPawn->GetActorForwardVector();
+				FVector TargetPlayerLocation = MyBabaYagaPawn->GetActorLocation() + (BabaYagaForward * 80.0f);
 				TargetPlayerLocation.Z = PlayerCharacter->GetActorLocation().Z;
 
-				// 📐 TAM YÜZ YÜZE BAKMA ROTASYONU (Face-to-Face)
-				// Oyuncunun kamerası ve gövdesi tam olarak canavarın gözünün içine kilitlensin gulum:
-				FVector BabaYagaFaceLoc = BabaYagaActor->GetActorLocation();
-				BabaYagaFaceLoc.Z += 60.0f; // Canavarın yüz hizası offseti ke
+				FVector BabaYagaFaceLoc = MyBabaYagaPawn->GetActorLocation();
+				BabaYagaFaceLoc.Z += 200.0f;
 
 				FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TargetPlayerLocation, BabaYagaFaceLoc);
 
-		
 				MyPC->SetCharacterPositon(TargetPlayerLocation, 0.0f, 0.0f, TargetRotation);
-				float FinalZ = BabaYagaActor->GetActorLocation().Z - 50.0f;
+
+				// Senin o asil "Z'yi Sonradan Ezme" zırhın tam burada devreye giriyor gulum ke:
+				float FinalZ = MyBabaYagaPawn->GetActorLocation().Z - 50.0f;
 				FVector LockedLocation = FVector(PlayerCharacter->GetActorLocation().X, PlayerCharacter->GetActorLocation().Y, FinalZ);
 
 				PlayerCharacter->SetActorLocation(LockedLocation);
-				PlayerCharacter->AttachToActor(BabaYagaActor, FAttachmentTransformRules::KeepWorldTransform);
-			
+				PlayerCharacter->AttachToActor(MyBabaYagaPawn, FAttachmentTransformRules::KeepWorldTransform);
 			}
 
-			// 2. 🔍 Haritadaki o özel Post Process Volume aktörünü çağır ke gulum:
 			AActor* FoundPPVolume = UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MyPostProcessVolume::StaticClass());
 			if (FoundPPVolume)
 			{
-				AEYS_MyPostProcessVolume* MyPP = Cast<AEYS_MyPostProcessVolume>(FoundPPVolume);
-				if (MyPP)
+				if (AEYS_MyPostProcessVolume* MyPP = Cast<AEYS_MyPostProcessVolume>(FoundPPVolume))
 				{
-					// Ekranı sinüs dalgasıyla dalga dalga karartıp yırtmaya başla ke!
 					MyPP->PlayJumpscareGlitch();
+					MyBabaYagaPawn->PlayBabaYagaSound(3);
 				}
 			}
 
-			// Takibi sıfırla ke gulum, fatura kesildi!
 			TargetPlayer = nullptr;
 		}
 	}
+	// 🚶‍♂️ 2. DURUM: DEVRİYEDE HEDEFE VARILDI KE!
 	else
 	{
-		// Devriyedeyse normal rutine devam ke gulum
-		if (AEYS_BabaYaga* BabaYagaCharacter = Cast<AEYS_BabaYaga>(GetPawn()))
+		if (Result.IsSuccess() && MyBabaYagaPawn->GetMovementState() == EBabaYagaState::Patrolling)
 		{
-			BabaYagaCharacter->StartPatrol();
+			// Eğer arkada dönen sinsi bir devriye sayacı varsa önce onu temizle ke gulum, üst üste binmesinler!
+			GetWorld()->GetTimerManager().ClearTimer(PatrolTimerHandle);
 
-			FTimerHandle PatrolTimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(PatrolTimerHandle, BabaYagaCharacter, &AEYS_BabaYaga::StartPatrol, FMath::RandRange(4.0f, 8.0f), false);
+			// Canavarı noktaya vardığı o salise orada sabitle gulum, amele gibi titremesin!
+			StopMovement();
+
+			// Noktaya varma sesini (Sound 1) SADECE VE SADECE ŞİMDI 1 KERE ÇAL KE!
+			MyBabaYagaPawn->PlayBabaYagaSound(1);
+
+			// Sınıf seviyesindeki o güvenli sayaç tıkır tıkır kuruluyor gulum:
+			GetWorld()->GetTimerManager().SetTimer(PatrolTimerHandle, MyBabaYagaPawn, &AEYS_BabaYaga::StartPatrol, FMath::RandRange(3.0f, 5.0f), false);
 		}
 	}
 }

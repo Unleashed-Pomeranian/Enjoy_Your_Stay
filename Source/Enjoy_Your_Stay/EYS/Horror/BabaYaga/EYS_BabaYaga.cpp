@@ -4,6 +4,7 @@
 #include "EYS/Horror/BabaYaga/EYS_BabaYaga.h"
 #include "EYS/Horror/BabaYaga/EYS_BabaYagaAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/AudioComponent.h"
 #include "NavigationSystem.h"
 
 AEYS_BabaYaga::AEYS_BabaYaga()
@@ -11,8 +12,11 @@ AEYS_BabaYaga::AEYS_BabaYaga()
 	PrimaryActorTick.bCanEverTick = false;
 
 	// Baba Yaga'nın varsayılan olarak bu asil controller ile doğmasını sağlıyoruz gulum
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("WashingAudioComponent"));
+	AudioComponent->SetupAttachment(RootComponent);
 	AIControllerClass = AEYS_BabaYagaAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 }
 
 void AEYS_BabaYaga::BeginPlay()
@@ -30,6 +34,8 @@ void AEYS_BabaYaga::BeginPlay()
 		this,
 		&AEYS_BabaYaga::StartPatrol
 	);
+
+	PlayBabaYagaSound(0);
 }
 
 void AEYS_BabaYaga::SetMovementState(EBabaYagaState NewState)
@@ -56,13 +62,30 @@ void AEYS_BabaYaga::StartPatrol()
 	if (MyCont && NavSys)
 	{
 		FNavLocation RandomPt;
-		// Canavarın durduğu noktanın 15 metre çapında rastgele bir NavMesh koordinatı bul gulum
+		
 		if (NavSys->GetRandomReachablePointInRadius(GetActorLocation(), 3000.0f, RandomPt))
 		{
 			MyCont->MoveToLocation(RandomPt.Location, 50.0f);
 
-			// Gittiği noktada sinsi sinsi 4-8 saniye bekleyip sonra yeni ava çıksın ke gulum
-			
+		}
+	}
+}
+
+void AEYS_BabaYaga::PlayBabaYagaSound(int32 Index)
+{
+	if (AudioComponent)
+	{
+
+		if (AudioComponent->IsPlaying())
+		{
+			AudioComponent->Stop();
+		}
+
+
+		if (BabaYagaSounds.IsValidIndex(Index) && BabaYagaSounds[Index])
+		{
+			AudioComponent->SetSound(BabaYagaSounds[Index]);
+			AudioComponent->Play();
 		}
 	}
 }
