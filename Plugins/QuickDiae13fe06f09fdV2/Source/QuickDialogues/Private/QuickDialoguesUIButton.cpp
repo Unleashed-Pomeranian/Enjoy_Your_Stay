@@ -20,7 +20,7 @@ void UQuickDialoguesUIButton::SetupButton(const FText& InText, int32 InIndex)
 void UQuickDialoguesUIButton::NativeConstruct()
 {
 	Super::NativeConstruct();
-	ButtonOverlay->SetBrush(FSlateBrush());
+	
 	// This check might be redundant cause of meta = BindWidget of these UProperties but better safe than sorry
 	if (!IsValid(ButtonText) || !IsValid(ButtonOverlay))
 	{
