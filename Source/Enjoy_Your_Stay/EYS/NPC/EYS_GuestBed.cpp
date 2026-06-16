@@ -25,7 +25,7 @@ AEYS_GuestBed::AEYS_GuestBed()
 void AEYS_GuestBed::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetSheetStatus(true);
 }
 void AEYS_GuestBed::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
