@@ -2,6 +2,8 @@
 
 
 #include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 void UEYS_UpgradeSubsystem::ApplyGeneratorUpgrade(int32 UpgradeIndex)
 {
@@ -46,7 +48,7 @@ void UEYS_UpgradeSubsystem::ApplyBoilerUpgrade(int32 UpgradeIndex)
 
 	case 2:
 	{
-		BoilerFuelConsumptionMultiplier *= 0.9f;
+		BoilerFuelConsumptionMultiplier *= 0.85f;
 		PipeFailureIntervalMultiplier *= 1.1f;
 		BoilerUpgradeLevel = 3;
 		break;
@@ -70,7 +72,7 @@ void UEYS_UpgradeSubsystem::ApplyGuestUpgrade(int32 UpgradeIndex)
 
 	case 1:
 	{
-		NPCMentalResistanceMultiplier *= 0.9f;
+		NPCMentalResistanceMultiplier *= 0.8f;
 		GuestUpgradeLevel = 2;
 		break;
 
@@ -78,7 +80,7 @@ void UEYS_UpgradeSubsystem::ApplyGuestUpgrade(int32 UpgradeIndex)
 
 	case 2:
 	{
-		CustomerMoneyMultiplier *= 1.1f;
+		CustomerMoneyMultiplier *= 1.15f;
 		GuestUpgradeLevel = 3;
 		break;
 
@@ -100,11 +102,15 @@ void UEYS_UpgradeSubsystem::ApplySingleUpgrade(int32 UpgradeIndex)
 	{
 		StaminaConsumptionMultiplier *= 0.85f;
 		bMyCharacterUpgradePurchased = true;
+		if (AEYS_MyCharacter* MyChar = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+		{
+			MyChar->UpdateSprintStaminaMultiplier(StaminaConsumptionMultiplier);
+		}
 		break;
 	}
 	case 1:
 	{
-		EquipmentUseTimeMultiplier *= 0.80f;
+		EquipmentUseTimeMultiplier *= 1.2f;
 		bEquipmentUpgradePurchased = true;
 		break;
 	}

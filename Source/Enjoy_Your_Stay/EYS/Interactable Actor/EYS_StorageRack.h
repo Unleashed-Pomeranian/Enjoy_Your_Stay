@@ -37,7 +37,5 @@ protected:
 	TArray<USceneComponent*> StorageSlots;
 
 
-public:	
-	
 
 };

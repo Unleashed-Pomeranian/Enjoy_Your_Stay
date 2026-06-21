@@ -13,8 +13,7 @@
 AEYS_InteractableActor_WP::AEYS_InteractableActor_WP()
 {
  	
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	RootComponent = DefaultSceneRoot;
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -30,12 +29,7 @@ void AEYS_InteractableActor_WP::BeginPlay()
 	
 }
 
-// Called every frame
-void AEYS_InteractableActor_WP::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 void  AEYS_InteractableActor_WP::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	if (bIsFocused)

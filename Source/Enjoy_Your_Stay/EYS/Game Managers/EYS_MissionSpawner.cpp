@@ -6,6 +6,7 @@
 #include "EYS/Interactable Actor/EYS_FixActor.h"
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/Interactable Actor/TargetPoints/EYS_DirtTarget.h"
 #include "EYS/Interactable Actor/EYS_SnowPileActor.h"
@@ -13,7 +14,7 @@
 AEYS_MissionSpawner::AEYS_MissionSpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 
 }
@@ -53,7 +54,14 @@ void AEYS_MissionSpawner::SpawnFixActorTimer()
 {
 	SpawnFixActor();
 	SetStepOfTutorial();
-	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	float RandomDelay = FMath::RandRange(60.0f, 120.0f);
+	float CurrentMultiplier = 1.0f;
+
+		if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+		{
+			CurrentMultiplier = UpgradeSys->GetPipeFailureIntervalMultiplier();
+		}
+		RandomDelay *= CurrentMultiplier;
 	GetWorld()->GetTimerManager().SetTimer(FixTimerHandle, this, &AEYS_MissionSpawner::SpawnFixActorTimer, RandomDelay, false);
 
 }
@@ -69,6 +77,7 @@ void AEYS_MissionSpawner::SpawnFixActor()
 	}
 	const int32 RandomIndex = FMath::RandRange(0, FoundPipes.Num() - 1);
 	SinglePipeRef = FoundPipes[RandomIndex];
+
 	
 	if (FixActor)
 		GetWorld()->SpawnActor<AActor>(FixActor, SinglePipeRef->GetActorTransform());
@@ -82,7 +91,13 @@ void AEYS_MissionSpawner::SpawnDirtActorTimer()
 {
 
 	SpawnMissionActor(ESurfaceType::Floor, ERoomID::None,true);
-	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	float CurrentMultiplier = 1.0f;
+	float RandomDelay = FMath::RandRange(60.0f, 120.0f);
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		CurrentMultiplier = UpgradeSys->GetDirtAccumulationMultiplier();
+	}
+	RandomDelay *= CurrentMultiplier;
 	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_MissionSpawner::SpawnDirtActorTimer, RandomDelay, false);
 
 }
@@ -92,14 +107,20 @@ void AEYS_MissionSpawner::SpawnDirtActorTimer()
 void AEYS_MissionSpawner::SpawnWallDirtActorTimer()
 {
 	SpawnMissionActor(ESurfaceType::Wall, ERoomID::None,true);
-	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	float CurrentMultiplier = 1.0f;
+	float RandomDelay = FMath::RandRange(60.0f, 120.0f);
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		CurrentMultiplier = UpgradeSys->GetDirtAccumulationMultiplier();
+	}
+	RandomDelay *= CurrentMultiplier;
 	GetWorld()->GetTimerManager().SetTimer(WallDirtTimerHandle, this, &AEYS_MissionSpawner::SpawnWallDirtActorTimer, RandomDelay, false);
 }
 
 void AEYS_MissionSpawner::SpawnSnowPileActorTimer()
 {
 	SpawnMissionActor(ESurfaceType::Exterior, ERoomID::None,true);
-	float RandomDelay = FMath::RandRange(15.0f, 120.0f);
+	float RandomDelay = FMath::RandRange(60.0f, 120.0f);
 	GetWorld()->GetTimerManager().SetTimer(SnowPileTimerHandle, this, &AEYS_MissionSpawner::SpawnSnowPileActorTimer, RandomDelay, false);
 }
 

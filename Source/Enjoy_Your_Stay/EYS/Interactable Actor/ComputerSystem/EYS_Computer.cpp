@@ -13,7 +13,7 @@
 AEYS_Computer::AEYS_Computer()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
@@ -27,12 +27,7 @@ void AEYS_Computer::BeginPlay()
 	
 }
 
-// Called every frame
-void AEYS_Computer::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void  AEYS_Computer::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {

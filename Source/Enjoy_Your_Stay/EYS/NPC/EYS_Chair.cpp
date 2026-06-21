@@ -5,7 +5,7 @@
 
 AEYS_Chair::AEYS_Chair()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	ChairRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Chair Root"));
 	ChairRoot->SetupAttachment(RootComponent);
 	TableRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Table Root"));

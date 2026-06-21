@@ -62,14 +62,7 @@ void AEYS_MySunMoonDaySequenceActor::CheckTimeForTutorial()
 	}
 }
 
-void AEYS_MySunMoonDaySequenceActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::SanitizeFloat(GetTimeOfDay()));
-	
-}
+
 
 
 

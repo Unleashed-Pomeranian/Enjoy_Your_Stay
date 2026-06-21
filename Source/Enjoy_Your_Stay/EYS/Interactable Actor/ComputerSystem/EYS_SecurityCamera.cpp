@@ -7,7 +7,7 @@
 AEYS_SecurityCamera::AEYS_SecurityCamera()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	SceneCaptureComponent2D = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Scene Capture Component 2D"));
@@ -34,10 +34,4 @@ void AEYS_SecurityCamera::SetCameraLocation(int32 value)
 
 }
 
-// Called every frame
-void AEYS_SecurityCamera::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 

@@ -11,7 +11,7 @@
 AEYS_KeyHolder::AEYS_KeyHolder()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 void AEYS_KeyHolder::UpdateKeyDisplay(ERoomID TargetRoom,bool bNewVisibility)
@@ -53,12 +53,7 @@ void AEYS_KeyHolder::BeginPlay()
 }
 
 
-// Called every frame
-void AEYS_KeyHolder::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 void AEYS_KeyHolder::Interact(AEYS_MyCharacter* myPlayer)
 {
 

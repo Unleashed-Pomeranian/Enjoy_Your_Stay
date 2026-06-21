@@ -36,8 +36,7 @@ protected:
 	class AEYS_KeyHolder* KeyHolder;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	int32 RoomNum;

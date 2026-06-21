@@ -18,11 +18,13 @@
 #include "EYS/Game Managers/EYS_MissionPostProcessVolume.h"
 #include "EYS/Key/EYS_Key.h"
 #include "EYS/Game Managers/EYS_UserSettingsSubsystem.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
+
 // Sets default values
 AEYS_MyCharacter::AEYS_MyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("First Person Mesh"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->SetupAttachment(GetCapsuleComponent());
@@ -64,14 +66,12 @@ void AEYS_MyCharacter::BeginPlay()
 	if (ChildActorNotebook && EquipSocketName.IsValidIndex(1))
 	{ChildActorNotebook->AttachToComponent(FirstPersonMesh,FAttachmentTransformRules::SnapToTargetIncludingScale,EquipSocketName[1] );
 	}
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		SprintStaminaMultiplier = UpgradeSys->GetStaminaConsumptionMultiplier();
+	}
 }
 
-// Called every frame
-void AEYS_MyCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 // Called to bind functionality to input
 void AEYS_MyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -199,8 +199,11 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 		
 		if (bIsSprinting && bCanSprinting)
 		{
-
-			Stamina = FMath::Clamp(Stamina - 0.2f, 0.0f, 100.0f);
+		
+			
+			
+			float StaminaDropRate = 0.2f * SprintStaminaMultiplier;
+			Stamina = FMath::Clamp(Stamina - StaminaDropRate, 0.0f, 100.0f);
 			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
 			MyPC->OnStaminaChanged.Broadcast(Stamina, bCanSprinting);
 
@@ -343,27 +346,19 @@ void AEYS_MyCharacter::CloseNotebook(const FInputActionValue& Value)
 }
 void AEYS_MyCharacter::EnableMission(const FInputActionValue& Value)
 {
-	MissionPPV = Cast<AEYS_MissionPostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionPostProcessVolume::StaticClass()));
+	if(!MissionPPV) MissionPPV = Cast<AEYS_MissionPostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionPostProcessVolume::StaticClass()));
 	
 	if (MissionPPV)
 	{
-		MissionPPV->bEnabled = true;
-		//FVector newPPVLocation = GetActorLocation();
 		MissionPPV->SetMissionPPEnabled(true);
-		MissionPPV->TriggerTimeDilationEvent();
-		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.25f); // %25 hız
 	}
 }
 
 void AEYS_MyCharacter::DisableMission(const FInputActionValue& Value)
 {
 	if (MissionPPV)
-	{
-		MissionPPV->bEnabled = false;
-		
+	{	
 		MissionPPV->SetMissionPPEnabled(false);
-		MissionPPV->CleanUpMissionActor();
-		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f); // %25 hız
 	}
 }
 

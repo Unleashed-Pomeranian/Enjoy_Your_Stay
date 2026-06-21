@@ -63,7 +63,7 @@ public:
 	UFUNCTION() void SetStepOfTutorial();
 	UFUNCTION() void SpawnMissionActor(ESurfaceType TargetSurfaceType, ERoomID TargetRoomID,bool bisReduceMental);
 
-public:	
+	
 	
 
 };

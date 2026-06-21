@@ -11,7 +11,7 @@
 // Sets default values
 AEYS_Key::AEYS_Key()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	RootComponent = DefaultSceneRoot;
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
@@ -30,12 +30,8 @@ void AEYS_Key::BeginPlay()
 	KeyHolder = Cast<AEYS_KeyHolder>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_KeyHolder::StaticClass()));
 }
 
-// Called every frame
-void AEYS_Key::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
+
 
 void AEYS_Key::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {

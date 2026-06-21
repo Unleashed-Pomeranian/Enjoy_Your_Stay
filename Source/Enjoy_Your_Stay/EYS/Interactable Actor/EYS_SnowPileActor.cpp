@@ -8,11 +8,12 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 // Sets default values
 AEYS_SnowPileActor::AEYS_SnowPileActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	RootComponent = DefaultSceneRoot;
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -30,7 +31,13 @@ void AEYS_SnowPileActor::BeginPlay()
 	{
 		MS->RegisterMissionTarget(EMissionType::SnowPile);
 	}
+	if (UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+
+		PlowSpeedMultiplier = US->GetEquipmentUseTimeMultiplier();
+	}
 }
+
 
 // Called every frame
 void AEYS_SnowPileActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
@@ -61,8 +68,9 @@ void AEYS_SnowPileActor::PlaySnowAudio_Implementation()
 
 void AEYS_SnowPileActor::Interact(AEYS_MyCharacter* myPlayer)
 {
+	float FinalPlowValue = PlowValue * PlowSpeedMultiplier;
+	PileValue -= FinalPlowValue;
 
-	PileValue -= PlowValue;
 	PileValue = FMath::Max(PileValue, 0.0f);
 	FVector MeshScale = StaticMesh->GetRelativeScale3D();
 	MeshScale.Z = PileValue;

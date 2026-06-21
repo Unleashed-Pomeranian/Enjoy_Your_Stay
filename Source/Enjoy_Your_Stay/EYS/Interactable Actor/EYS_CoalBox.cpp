@@ -13,7 +13,7 @@
 AEYS_CoalBox::AEYS_CoalBox()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	RootComponent = DefaultSceneRoot;
 	StaticMesh_Box = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh_Box"));
@@ -31,12 +31,7 @@ void AEYS_CoalBox::BeginPlay()
 	
 }
 
-// Called every frame
-void AEYS_CoalBox::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void  AEYS_CoalBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {

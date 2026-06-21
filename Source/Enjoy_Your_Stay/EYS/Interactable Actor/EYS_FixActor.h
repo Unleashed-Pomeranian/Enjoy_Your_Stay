@@ -32,14 +32,15 @@ protected:
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UFUNCTION() void SetPipeMesh();
-	UPROPERTY(BlueprintReadOnly) float FixValue = 0.0f;
+	UPROPERTY(BlueprintReadOnly) float FixRate = 0.0f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)  float FixingValue = 0.7f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* SinglePipeRef;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) AEYS_Boiler* BoilerActor;
-	
+	UPROPERTY(BlueprintReadOnly)
+	float FixingSpeedMultiplier = 1.0f;
 	UFUNCTION() void SetBoilerFuel();
 	UFUNCTION(BlueprintNativeEvent) void PlayFixAudio();
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+
 
 };

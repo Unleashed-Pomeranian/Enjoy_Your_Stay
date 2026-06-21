@@ -14,7 +14,7 @@
 AEYS_Fridge_Slot::AEYS_Fridge_Slot()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMesh"));
@@ -77,12 +77,7 @@ void AEYS_Fridge_Slot::FDeleteSlot(bool bSpawnActor)
 	}
 }
 
-// Called every frame
-void AEYS_Fridge_Slot::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void   AEYS_Fridge_Slot::Interact(AEYS_MyCharacter* myPlayer)
 {

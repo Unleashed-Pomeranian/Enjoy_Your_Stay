@@ -8,6 +8,7 @@
 #include "EYS/NPC/EYS_GuestCar.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/NPC/EYS_VehicleSplinePath.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 // Sets default values
 AEYS_GuestSpawner::AEYS_GuestSpawner()
 {
@@ -66,7 +67,13 @@ void AEYS_GuestSpawner::SpawnGuest()
 void AEYS_GuestSpawner::SpawnGuestTimer()
 {
 	SpawnGuest();
+	float CurrentMultiplier = 1.0f;
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		CurrentMultiplier = UpgradeSys->GetCustomerArrivalRateMultiplier();
+	}
 	float RandomDelay = FMath::RandRange(120.0f, 180.0f);
+	RandomDelay *= CurrentMultiplier;
 	GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 
 }
@@ -82,7 +89,13 @@ void AEYS_GuestSpawner::SetEmptyRoom()
 
 	if (!GetWorld()->GetTimerManager().IsTimerActive(GuestTimerHandle))
 	{
+		float CurrentMultiplier = 1.0f;
+		if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+		{
+			CurrentMultiplier = UpgradeSys->GetCustomerArrivalRateMultiplier();
+		}
 		float RandomDelay = FMath::RandRange(120.0f, 180.0f);
+		RandomDelay *= CurrentMultiplier;
 		GetWorld()->GetTimerManager().SetTimer(GuestTimerHandle, this, &AEYS_GuestSpawner::SpawnGuestTimer, RandomDelay, false);
 	}
 }

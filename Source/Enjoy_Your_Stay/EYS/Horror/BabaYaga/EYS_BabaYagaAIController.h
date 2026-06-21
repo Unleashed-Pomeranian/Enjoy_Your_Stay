@@ -35,7 +35,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EYS | BabaYaga")
 	UAISenseConfig_Hearing* HearingConfig;
 
-	// 🔔 Duyulardan biri tetiklendiğinde patlayacak kutsal fonksiyon ke!
 	UFUNCTION()
 	void OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus);
 
@@ -45,19 +44,27 @@ protected:
 	class AEYS_BabaYaga* MyBabaYagaPawn;
 	
 private:
-	// ⏳ 5 saniyelik gözden kaybetme sayacı
-	FTimerHandle LoseTargetTimerHandle;
 
-	// 🚨 YERELDE KALIP SAPITAN DEVRİYE SAYACINI BURAYA SABİTLEDİK KE!
+	FTimerHandle LoseTargetTimerHandle;
 	FTimerHandle PatrolTimerHandle;
 
 	UPROPERTY()
 	AActor* TargetPlayer = nullptr;
 
-	// Takibi tamamen bırakıp eski asil düzenine dönme tetiği
 	void StopChasing();
 
 public:
 	FORCEINLINE void SetTargetPlayer(AActor* NewTarget) { TargetPlayer = NewTarget; }
 	
+
+	/*------Stuck Control---------*/
+protected:
+	FTimerHandle StuckCheckTimerHandle;
+	FVector LastCheckedLocation;
+	int32 StuckCounter; 
+
+
+	void CheckIfStuck();
+	void StartStuckCheck();
+	void StopStuckCheck();
 };

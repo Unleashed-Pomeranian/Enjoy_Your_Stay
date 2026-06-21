@@ -44,9 +44,7 @@ protected:
 
 	UPROPERTY() int32 CoalAmount = 0.0f;
 	UPROPERTY() bool bisTakeCoal=false;
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	
 
 

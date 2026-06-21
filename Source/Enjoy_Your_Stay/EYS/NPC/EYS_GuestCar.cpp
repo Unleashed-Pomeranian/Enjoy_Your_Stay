@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 AEYS_GuestCar::AEYS_GuestCar()
 {
+	PrimaryActorTick.bCanEverTick = false;
 	if (GetMesh())
 	{
 		GetMesh()->SetSimulatePhysics(true);

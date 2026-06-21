@@ -1,4 +1,4 @@
- // Fill out your copyright notice in the Description page of Project Settings.
+﻿ // Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/EYS_MyCharacterController.h"
@@ -14,6 +14,7 @@
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/UI/EYS_MyCharacter_UI.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Game Managers/EYS_EconomySubsystem.h"
 
 AEYS_MyCharacterController::AEYS_MyCharacterController()
 {
@@ -23,7 +24,10 @@ AEYS_MyCharacterController::AEYS_MyCharacterController()
 void AEYS_MyCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
-	Money = 2000;
+	if (UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>())
+	{
+		ES->SetPlayerController(this);
+	}
 	if (ULocalPlayer* LP = GetLocalPlayer())
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsys =
@@ -51,24 +55,26 @@ void AEYS_MyCharacterController::BeginPlay()
 		if (MyCharacterUIInstance)
 		{
 			MyCharacterUIInstance->PC =this;
-			MyCharacterUIInstance->SetMoneyText(Money);
+			
+			if (UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>())
+			{
+				int32 MyMoney = ES->GetCurrentMoney(); // Subsystem'deki orijinal adıyla çektik ke!
+				MyCharacterUIInstance->SetMoneyText(MyMoney);
+			}
+		
+
+
 			UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 			if (TS) 
 			{ 
 				TS->MyCharacterUIIns = MyCharacterUIInstance; 
-				TS->SetTutorialStep(ETutorialStep::None);
+				TS->SetTutorialStep(ETutorialStep::WaitTheGuest);
 			}
 
 			MyCharacterUIInstance->AddToViewport();
 		}
 	}
-
-
 	OwnerCharacter = Cast<AEYS_MyCharacter>(GetPawn());
-
-
-
-
 }
 
 void AEYS_MyCharacterController::SetupInputComponent()
@@ -114,7 +120,6 @@ void AEYS_MyCharacterController::CloseEquipmentWidget()
 
 void AEYS_MyCharacterController::SetMoneyWidget(int32 AddValue)
 {
-	Money += AddValue;
 	if (MyCharacterUIInstance)
 	{
 		MyCharacterUIInstance->SetChangedMoney(AddValue);

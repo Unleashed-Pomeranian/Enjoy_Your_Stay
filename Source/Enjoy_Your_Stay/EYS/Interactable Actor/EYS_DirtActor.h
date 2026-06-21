@@ -43,8 +43,9 @@ protected:
 	UFUNCTION(BlueprintNativeEvent) void PlayCleaningAudio();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (AllowPrivateAccess = "true"))
 	float MentalReduceValue = 0.5f;
-
 	FTimerHandle DirtTimerHandle;
+	UPROPERTY(BlueprintReadOnly)
+	float CleaningSpeedMultiplier = 1.0f;
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

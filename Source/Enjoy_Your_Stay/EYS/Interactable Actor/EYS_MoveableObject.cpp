@@ -13,7 +13,7 @@
 // Sets default values
 AEYS_MoveableObject::AEYS_MoveableObject()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Root"));
 	RootComponent = SceneRoot;
 

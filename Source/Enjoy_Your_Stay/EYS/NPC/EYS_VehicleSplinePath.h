@@ -28,8 +28,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	//FVector GetTangentClosestToWorld(const FVector& worldlock);
 	//FVector GetLocationClosestToWorld(const FVector& worldlock);
 	float GetBreakDistance(const FVector& worldlock);

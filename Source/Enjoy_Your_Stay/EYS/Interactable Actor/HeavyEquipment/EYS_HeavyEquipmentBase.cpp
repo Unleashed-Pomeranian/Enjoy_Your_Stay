@@ -11,7 +11,7 @@ class AEYS_MyCharacterController;
 AEYS_HeavyEquipmentBase::AEYS_HeavyEquipmentBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh_Box"));
 	RootComponent = StaticMesh;
 	StaticMesh->SetCustomDepthStencilValue(5);
@@ -22,13 +22,6 @@ void AEYS_HeavyEquipmentBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void AEYS_HeavyEquipmentBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void   AEYS_HeavyEquipmentBase::Interact(AEYS_MyCharacter* myPlayer)

@@ -49,6 +49,7 @@ enum class ESurfaceType : uint8 {
 	Floor   UMETA(DisplayName = "Floor"),
 	Wall    UMETA(DisplayName = "Wall"),
 	Exterior UMETA(DisplayName = "Exterior"),
+	Horror   UMETA(DisplayName = "Horror"),
 };
 UENUM(BlueprintType)
 enum class ERoomID : uint8

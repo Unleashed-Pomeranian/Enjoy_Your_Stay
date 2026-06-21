@@ -18,15 +18,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int32 Money=10000;
-
+	class AEYS_MyCharacterController* MyPC;
 
 public:
 
 	UFUNCTION()
-	void AddMoney(int32 amount);
+	void UpdateMoney(int32 amount);
 	UFUNCTION()
-	bool SpendMoney(int32 amount);
-	UFUNCTION()
-	int CurrentMoney();
+	bool CheckMoney(int32 amount);
+	UFUNCTION(BlueprintCallable)
+	int GetCurrentMoney();
 
+	FORCEINLINE void SetPlayerController(AEYS_MyCharacterController* InPC) { MyPC = InPC; }
 };

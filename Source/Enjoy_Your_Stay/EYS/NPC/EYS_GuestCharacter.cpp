@@ -18,11 +18,14 @@
 #include "EYS_Chair.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
 
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
+#include "EYS/Game Managers/EYS_EconomySubsystem.h"
+
 // Sets default values
 AEYS_GuestCharacter::AEYS_GuestCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Third Person Mesh"));
 	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
 	DialogueComponent = CreateDefaultSubobject<UEYS_QDialoguesSpeakerComponent>(TEXT("DialogueComponent"));
@@ -408,7 +411,7 @@ void AEYS_GuestCharacter::CheckFood(AEYS_MyCharacter* myPlayer)
 		}
 		else 
 		{
-			MentalSlateValue = FMath::Clamp(MentalSlateValue - 10.0f, 0.0f, 100.0f);
+			SetMentalHealth(-10.0f);
 			DialogueComponent->UpdateDialog(4);
 			CurrentStatus = EGuestStatus::WrongOrder;
 		}
@@ -427,24 +430,21 @@ void AEYS_GuestCharacter::CheckFood(AEYS_MyCharacter* myPlayer)
 }
 void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TakeFood");
-	if (!myPlayer || !GuestTray) return;
-	
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Infood");
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
+	if (!myPlayer || !GuestTray) return;
+
 	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 
 	if (OrderScore >= 2)
 	{
-		MentalSlateValue = FMath::Clamp(MentalSlateValue + 20.0f, 0.0f, 100.0f);
-		if (PC) PC->SetMoneyWidget(200);
+		SetMentalHealth(+20.0f);
+		FSpendMoney(200);
 		TS->UpdateTutorialState(ETutorialStep::GiveTrayToGuest, ETutorialStep::GiveRightFood);
 	}
 	else if (OrderScore == 1)
 	{
-		MentalSlateValue = FMath::Clamp(MentalSlateValue - 5.0f, 0.0f, 100.0f);
-		if (PC) PC->SetMoneyWidget(100);
+		SetMentalHealth(-5.0f);
+		FSpendMoney(100);
 		TS->UpdateTutorialState(ETutorialStep::GiveTrayToGuest, ETutorialStep::GiveWrongFood);
 	}
 
@@ -553,7 +553,12 @@ void AEYS_GuestCharacter::FGuestAbandon()
 		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 		{
 			float CurrentHotelRating = MS->GetHotelRating();
-			MentalSlateValue = FMath::Clamp(CurrentHotelRating - 40.0f, 0.0f, 100.0f);
+			float TargetMentalGoal = FMath::Clamp(CurrentHotelRating - 50.0f, 0.0f, 100.0f);
+			float DamageValue = TargetMentalGoal - MentalSlateValue;
+			if (DamageValue < 0.0f)
+			{
+				SetMentalHealth(DamageValue);
+			}
 		}
 		
 		bCanInteract = false;
@@ -567,7 +572,12 @@ void AEYS_GuestCharacter::FGuestAbandon()
 		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 		{
 			float CurrentHotelRating = MS->GetHotelRating();
-			MentalSlateValue = FMath::Clamp(CurrentHotelRating - 50.0f, 0.0f, 100.0f);
+			float TargetMentalGoal = FMath::Clamp(CurrentHotelRating - 50.0f, 0.0f, 100.0f);
+			float DamageValue = TargetMentalGoal - MentalSlateValue;
+			if (DamageValue < 0.0f)
+			{
+				SetMentalHealth(DamageValue);
+			}
 		}
 	
 		bCanInteract = false;
@@ -578,7 +588,7 @@ void AEYS_GuestCharacter::FGuestAbandon()
 	}
 	case EGuestStatus::WaitingForOrder:
 	{
-		MentalSlateValue -= 15.0f;
+		SetMentalHealth(-15.0f);
 		bCanInteract = false;
 		MoveTo(RoomLocation, 50.0f);
 		CurrentStatus = EGuestStatus::GoingToRoom;
@@ -586,7 +596,7 @@ void AEYS_GuestCharacter::FGuestAbandon()
 	}
 	case EGuestStatus::WaitingForFood:
 	{
-		MentalSlateValue -= 15.0f;
+		SetMentalHealth(-15.0f);
 		bCanInteract = false;
 		MoveTo(RoomLocation, 50.0f);
 		CurrentStatus = EGuestStatus::GoingToRoom;
@@ -617,8 +627,7 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 	myPlayer->bIsHaveKey = true;
 	myPlayer->MyRoomID = GuestRoomID;
 	myPlayer->SetRoot(7);
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	if (PC) PC->SetMoneyWidget(500);
+	FSpendMoney(500);
 	
 	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 	{
@@ -636,6 +645,7 @@ void AEYS_GuestCharacter::SetGuestMesh(USkeletalMesh* GuestSkin)
 		ThirdPersonMesh->SetAnimClass(AnimBP);
 	}
 }
+
 void AEYS_GuestCharacter::TriggerHotelCheckOut()
 {
 
@@ -648,6 +658,7 @@ void AEYS_GuestCharacter::TriggerHotelCheckOut()
 
 	}
 }
+
 void AEYS_GuestCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	
@@ -655,4 +666,44 @@ void AEYS_GuestCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
 
 	Super::EndPlay(EndPlayReason);
+}
+void AEYS_GuestCharacter::SetMentalHealth(const float Value)
+{
+	float CurrentMultiplier = 1.0f;
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		CurrentMultiplier = UpgradeSys->GetNPCMentalResistanceMultiplier();
+
+	}
+	float FinalCalculated = Value;
+	if (Value < 0.0f)
+	{
+		
+		FinalCalculated = Value * CurrentMultiplier;
+	}
+	else
+	{
+
+		if (CurrentMultiplier > 0.0f)
+		{
+			FinalCalculated = Value / CurrentMultiplier;
+		}
+	}
+	FinalCalculated = FMath::RoundToFloat(FinalCalculated);
+	MentalSlateValue = FMath::Clamp(MentalSlateValue + FinalCalculated, 0.0f, 100.0f);
+}
+
+void AEYS_GuestCharacter::FSpendMoney(const int32 Value)
+{
+	float IncomeMultiplier = 1.0f;
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		IncomeMultiplier = UpgradeSys->GetCustomerMoneyMultiplier();
+
+	}
+	int32 FinalMoney = FMath::RoundToInt32(static_cast<float>(Value) * IncomeMultiplier);
+	if (UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>())
+	{
+		ES->UpdateMoney(FinalMoney);
+	}
 }

@@ -57,8 +57,5 @@ protected:
 	TMap<EFoodType, FFoodData> FoodDataMap;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AEYS_FoodBag> CurrentFoodBag;
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };

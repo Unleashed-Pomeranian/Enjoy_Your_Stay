@@ -30,9 +30,4 @@ public:
 	
 	void CleanUpMissionActor();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mission | Spawn")
-	TSubclassOf<AEYS_BabaYaga> BabaYagaClass;
-
-	UPROPERTY()
-	AEYS_BabaYaga* SpawnedMissionBabaYaga;
 };

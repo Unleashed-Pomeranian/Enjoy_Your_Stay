@@ -50,7 +50,7 @@ public:
 	AEYS_MissionPostProcessVolume* MissionPPV = nullptr;
 public:
 	AEYS_MyCharacter();
-    virtual void Tick(float DeltaTime) override;
+
 	
 protected:
 	virtual void BeginPlay() override;
@@ -61,8 +61,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Varible", meta = (AllowPrivateAccess = "true"))
 	bool bIsSneaking = false;
 	bool bCanSprinting = true;
-	float Stamina=100.0f;
-	float StaminaRecoveryValue = 0.2f;
+	
 	class UEYS_UserSettingsSubsystem* UserSettingsSubsystem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible",meta = (AllowPrivateAccess = "true"))
 	TArray<FName> EquipSocketName;
@@ -174,4 +173,14 @@ public:
 
 	UFUNCTION() void SetEquipmentMesh(int32 MeshValue);
 	UFUNCTION() void DetachHeavyEquipment();
+
+	/*------Stamina--------*/
+	protected:
+		
+		UPROPERTY(BlueprintReadOnly, Category = "EYS | Stamina")
+		float SprintStaminaMultiplier = 1.0f;
+		float Stamina = 100.0f;
+		float StaminaRecoveryValue = 0.35f;
+public:
+	FORCEINLINE void UpdateSprintStaminaMultiplier(float NewMultiplier) { SprintStaminaMultiplier = NewMultiplier; }
 };

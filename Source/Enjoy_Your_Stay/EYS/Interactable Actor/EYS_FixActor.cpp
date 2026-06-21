@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_FixActor.h"
@@ -8,10 +8,11 @@
 #include "EYS/Interactable Actor/EYS_Boiler.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 AEYS_FixActor::AEYS_FixActor()
 {
 
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 		RootComponent = DefaultSceneRoot;
 		StaticMesh= CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
@@ -34,14 +35,13 @@ void AEYS_FixActor::BeginPlay()
 		{
 			MS->RegisterMissionTarget(EMissionType::Fixing);
 		}
+		if (UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+		{
+			// Kendi yazdığın o asil hız çarpanı fonksiyonu ke (Örn: Seviye 1'de 1.0f, Seviye 2'de 1.5f, Seviye 3'de 2.0f döner)
+			FixingSpeedMultiplier = US->GetEquipmentUseTimeMultiplier();
+		}
 }
 
-// Called every frame
-void AEYS_FixActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void AEYS_FixActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
@@ -66,10 +66,11 @@ void AEYS_FixActor::Interact(AEYS_MyCharacter* myPlayer)
 
 void AEYS_FixActor::SetPipeMesh()
 {
-	FixValue = FMath::Clamp(FixValue+0.7,0.0f,100.0f);
+	float FinalFixingValue = FixingValue * FixingSpeedMultiplier;
+	FixRate = FMath::Clamp(FixRate + FinalFixingValue,0.0f,100.0f);
 	PlayFixAudio();
 
-	if (FixValue >= 100.f)
+	if (FixRate >= 100.f)
 	{
 		GetWorld()->SpawnActor<AActor>(SinglePipeRef, GetActorTransform());
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
@@ -83,15 +84,15 @@ void AEYS_FixActor::SetPipeMesh()
 		Destroy();
 
 	}
-	else if (FixValue > 75.f)
+	else if (FixRate > 75.f)
 	{
 		StaticMesh->SetStaticMesh(PipeMeshes[2]);
 	}
-	else if (FixValue > 50.f)
+	else if (FixRate > 50.f)
 	{
 		StaticMesh->SetStaticMesh(PipeMeshes[1]);
 	}
-	else if (FixValue > 25.f)
+	else if (FixRate > 25.f)
 	{
 		StaticMesh->SetStaticMesh(PipeMeshes[0]);
 	}

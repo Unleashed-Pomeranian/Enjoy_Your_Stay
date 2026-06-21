@@ -3,11 +3,12 @@
 
 #include "EYS/UI/Order Widgets/EYS_Supermarket_UI.h"
 #include "Kismet/GamePlayStatics.h"
-#include "EYS/EYS_MyCharacterController.h"
+
 #include "EYS/EYS_OrderSpawner.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/UI/Order Widgets/EYS_ProductButton_UI.h"
 #include "EYS/UI/Order Widgets/EYS_CartRow_UI.h"
+#include "EYS/Game Managers/EYS_EconomySubsystem.h"
 
 void UEYS_Supermarket_UI::NativeConstruct()
 {
@@ -97,16 +98,15 @@ void UEYS_Supermarket_UI::OnCheckoutClicked()
 {
 	if (ShoppingCart.Num() == 0) return;
 
-	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(GetOwningPlayer());
-	if (!PC) return;
+	UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>();
+	if (!ES) return;
 
-	if (PC->Money < TotalCartPrice)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Yetersiz Bakiye! Alışveriş Yapılamadı."));
-		return;
-	}
-
-	PC->SetMoneyWidget(-TotalCartPrice);
+		if (!ES->CheckMoney(TotalCartPrice))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Yetersiz Bakiye! Alışveriş Yapılamadı."));
+			return;
+		}
+		ES->UpdateMoney(-TotalCartPrice);
 
 	AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass()));
 	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();

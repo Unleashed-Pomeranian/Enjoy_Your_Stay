@@ -35,8 +35,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
 	UEYS_ComputerLoading_UI* ComputerLoadingWidgetInstance;
 	
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 
 };

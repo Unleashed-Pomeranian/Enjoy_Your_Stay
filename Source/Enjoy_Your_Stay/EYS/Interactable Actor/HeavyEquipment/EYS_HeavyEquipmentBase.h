@@ -36,8 +36,7 @@ protected:
 
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	UFUNCTION(BlueprintCallable) virtual void DetachActor();
 	UFUNCTION() void AttachActor(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void DetachFromPlayer();

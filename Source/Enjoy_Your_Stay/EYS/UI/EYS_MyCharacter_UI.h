@@ -53,7 +53,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent) void SetSubtitle(const FText& Subtitle,float Duration);
 	UFUNCTION(BlueprintNativeEvent) void SetMissionText(const FText& MissionText);
 	UFUNCTION(BlueprintNativeEvent) void SetChangedMoney(const int32 ChangedValue);
-	UFUNCTION(BlueprintCallable) void SetMoneyText(int32 AddValue);
+	UFUNCTION(BlueprintCallable) void PlayMoneyTextAnim(int32 AddValue);
+	UFUNCTION(BlueprintCallable) void SetMoneyText(int32 NewMoney);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Controller")
 	AEYS_MyCharacterController* PC;

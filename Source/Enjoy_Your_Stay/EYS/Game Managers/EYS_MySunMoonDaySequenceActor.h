@@ -32,7 +32,6 @@ protected:
 	UEYS_WorldSubsystem* Director = nullptr;
 	
 public:
-	virtual void Tick(float DeltaTime) override;
 	UFUNCTION() void FDayTimer();
 	UFUNCTION() void SetDayHour(float TimeValue);
 	UFUNCTION() void CheckTimeForTutorial();

@@ -10,7 +10,7 @@
 AEYS_Phone::AEYS_Phone()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Root"));
 	RootComponent = SceneRoot;
 
@@ -35,13 +35,7 @@ void AEYS_Phone::BeginPlay()
 	PhoneFirstTransform = StaticMesh2->GetRelativeTransform();
 }
 
-// Called every frame
-void AEYS_Phone::Tick(float DeltaTime)
-{
 
-	Super::Tick(DeltaTime);
-
-}
 
 void AEYS_Phone::Interact(AEYS_MyCharacter* myPlayer)
 {

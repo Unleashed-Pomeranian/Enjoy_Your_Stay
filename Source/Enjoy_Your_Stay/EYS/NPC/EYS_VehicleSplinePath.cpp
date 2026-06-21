@@ -6,6 +6,7 @@
 // Sets default values
 AEYS_VehicleSplinePath::AEYS_VehicleSplinePath()
 {
+	PrimaryActorTick.bCanEverTick = false;
 	PathSpline = CreateDefaultSubobject<USplineComponent>(TEXT("PathSpline"));
 	SetRootComponent(PathSpline);
 }
@@ -67,10 +68,4 @@ float AEYS_VehicleSplinePath::GetBreakDistance(const FVector& worldlock)
 
 
 
-// Called every frame
-void AEYS_VehicleSplinePath::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 

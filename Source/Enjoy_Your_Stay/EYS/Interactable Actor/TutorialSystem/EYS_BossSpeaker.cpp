@@ -9,8 +9,7 @@
 AEYS_BossSpeaker::AEYS_BossSpeaker()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	SpeakerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpeakerMesh"));
@@ -29,12 +28,7 @@ void AEYS_BossSpeaker::BeginPlay()
 	
 }
 
-// Called every frame
-void AEYS_BossSpeaker::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void AEYS_BossSpeaker::PlayBossMessage(USoundBase* MessageSound)
 {

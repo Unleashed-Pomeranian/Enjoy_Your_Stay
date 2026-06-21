@@ -26,8 +26,7 @@ protected:
 	TArray<FTransform> CamTransforms;
 	
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	UFUNCTION() void SetCameraLocation(int32 value);
 	int32 CamNum=0;
 };

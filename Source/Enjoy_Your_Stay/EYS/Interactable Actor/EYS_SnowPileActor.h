@@ -32,7 +32,8 @@ protected:
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	float PileValue = 1.0f;
 	float PlowValue = 0.004f;
-
+	UPROPERTY(BlueprintReadOnly)
+	float PlowSpeedMultiplier = 1.0f;
 	UFUNCTION(BlueprintNativeEvent) void PlaySnowAudio();
 public:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) class AEYS_DirtTarget* MySnowTarget;

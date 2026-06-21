@@ -55,13 +55,20 @@ void UEYS_MyCharacter_UI::SetStaminaBar(float StaminaValue,bool bIsRecovery)
     }
 }
 
-void UEYS_MyCharacter_UI::SetMoneyText(int32 AddValue)
+void UEYS_MyCharacter_UI::PlayMoneyTextAnim(int32 AddValue)
 {
     CurrentMoney += AddValue;
     FString CM = FString(TEXT("₽")) + FString::FromInt(CurrentMoney);
 
    Money_Text->SetText(FText::FromString(CM));
   
+}
+
+void UEYS_MyCharacter_UI::SetMoneyText(int32 NewMoney)
+{
+    CurrentMoney = NewMoney;
+    FString CM = FString(TEXT("₽")) + FString::FromInt(CurrentMoney);
+    Money_Text->SetText(FText::FromString(CM));
 }
 
 void UEYS_MyCharacter_UI::SetChangedMoney_Implementation(const int32 ChangedValue)

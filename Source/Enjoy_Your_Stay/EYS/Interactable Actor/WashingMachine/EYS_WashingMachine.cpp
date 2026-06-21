@@ -19,7 +19,7 @@
 AEYS_WashingMachine::AEYS_WashingMachine()
 {
   
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 
@@ -49,7 +49,7 @@ void AEYS_WashingMachine::BeginPlay()
 	Super::BeginPlay();
 	if (ButtonChildComponent)
 	{
-		// Bileşenin içindeki gerçek doğan aktörü çekiyoruz
+	
 		AActor* SpawnedActor = ButtonChildComponent->GetChildActor();
 		
 		if (SpawnedActor)

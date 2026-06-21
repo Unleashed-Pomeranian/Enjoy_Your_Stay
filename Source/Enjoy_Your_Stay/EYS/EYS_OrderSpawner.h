@@ -27,8 +27,7 @@ protected:
 	TArray<UClass*> Orders;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	UFUNCTION() void SetOrderClass(UClass* SpawnClass);
 	UFUNCTION() void SpawnOrder();
 };

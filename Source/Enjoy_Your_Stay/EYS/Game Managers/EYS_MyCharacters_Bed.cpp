@@ -12,7 +12,7 @@
 AEYS_MyCharacters_Bed::AEYS_MyCharacters_Bed()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Defaul Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	StaticMesh= CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
@@ -27,14 +27,6 @@ void AEYS_MyCharacters_Bed::BeginPlay()
 	
 }
 
-
-
-// Called every frame
-void AEYS_MyCharacters_Bed::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-}
 
 void   AEYS_MyCharacters_Bed::Interact(AEYS_MyCharacter* myPlayer)
 {

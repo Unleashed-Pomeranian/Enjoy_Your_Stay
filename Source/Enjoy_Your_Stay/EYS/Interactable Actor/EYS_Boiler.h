@@ -42,6 +42,10 @@ protected:
 	bool bIsBoilerMissionActive = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	float BoilerCoalValue=100.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
+	float BoilerConsumptionValue = 1.6f;
+	UPROPERTY(BlueprintReadOnly, Category = "Varible")
+	float BoilerConsumptionRate = 1.0f;
 	bool bAnimFlip=true;
 	UPROPERTY()
 	UEYS_Boiler_UI* BoilerWidgetInstance;
@@ -50,9 +54,8 @@ protected:
 	class UEYS_MissionSubsystem* MissionSubsystem;
 	
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	UFUNCTION(BlueprintCallable) void SetCoalAmount(float FuelAddValue);
 	UFUNCTION(BlueprintCallable) void ReduceCoalValue();
-
+	FORCEINLINE float GetBoilerFuel() const{return BoilerCoalValue;}
 };

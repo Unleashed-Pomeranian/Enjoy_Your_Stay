@@ -11,8 +11,7 @@ AEYS_BabaYaga::AEYS_BabaYaga()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	// Baba Yaga'nın varsayılan olarak bu asil controller ile doğmasını sağlıyoruz gulum
-	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("WashingAudioComponent"));
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
 	AudioComponent->SetupAttachment(RootComponent);
 	AIControllerClass = AEYS_BabaYagaAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;

@@ -106,10 +106,13 @@ protected:
 	UFUNCTION() void OnDialogueFinished();
 	UFUNCTION() void FinishDining();
 	UFUNCTION()	void TriggerHotelCheckOut();
+	UFUNCTION()	void FSpendMoney(const int32 Value);
+
 public:	
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);
 	UFUNCTION() void CheckOut(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void SetGuestMesh(USkeletalMesh* GuestSkin);
+	UFUNCTION()	void SetMentalHealth(const float Value);
 	UPROPERTY() AEYS_GuestCar* AssignedCar;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
 	EGuestStatus CurrentStatus;

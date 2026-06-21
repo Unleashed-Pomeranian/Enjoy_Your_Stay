@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_DirtActor.h"
@@ -12,11 +12,12 @@
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 
 AEYS_DirtActor::AEYS_DirtActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	RootComponent = DefaultSceneRoot;
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -52,7 +53,11 @@ void AEYS_DirtActor::BeginPlay()
 	{
 		MS->RegisterMissionTarget(EMissionType::Cleaning);
 	}
-	
+	if (UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		// Kendi yazdığın o asil hız çarpanı fonksiyonu ke (Örn: Seviye 1'de 1.0f, Seviye 2'de 1.5f, Seviye 3'de 2.0f döner)
+		CleaningSpeedMultiplier = US->GetEquipmentUseTimeMultiplier();
+	}
 }
 void AEYS_DirtActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
@@ -93,8 +98,8 @@ void AEYS_DirtActor::PlayCleaningAudio_Implementation()
 
 void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer) 
 {
-	
-	opacityValue -= cleaningValue;
+	float FinalCleaningValue = cleaningValue * CleaningSpeedMultiplier;
+	opacityValue -= FinalCleaningValue;
 	DynMath->SetScalarParameterValue("Opacity", opacityValue);
 	PlayCleaningAudio();
 	if (opacityValue <= 2.1f)

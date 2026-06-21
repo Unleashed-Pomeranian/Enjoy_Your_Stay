@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_Boiler.h"
@@ -7,13 +7,14 @@
 #include "Blueprint/UserWidget.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
-
+#include "EYS/Game Managers/EYS_HorrorSubsystem.h"
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
 
 // Sets default values
 AEYS_Boiler::AEYS_Boiler()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
@@ -39,17 +40,29 @@ void AEYS_Boiler::BeginPlay()
 		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
 		GetWorld()->GetTimerManager().SetTimer(BoilerTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
 		MissionSubsystem = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
+
+		
+			if (UEYS_HorrorSubsystem* HorrorSys = GetWorld()->GetSubsystem<UEYS_HorrorSubsystem>())
+			{
+		
+				HorrorSys->SetBoilerReference(this);
+			}
+
 }
 
-// Called every frame
-void AEYS_Boiler::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 void AEYS_Boiler::ReduceCoalValue()
 {
-	BoilerCoalValue = FMath::Clamp(BoilerCoalValue -1.6f, 0.0f, 100.0f);
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		// Kutsal Getter fonksiyonuyla güncel çarpanı saniyesinde çekiyoruz ke:
+		float CurrentConsumptionMultiplier = UpgradeSys->GetBoilerFuelConsumptionMultiplier();
+
+		BoilerConsumptionRate = CurrentConsumptionMultiplier;
+	}
+
+	float FinalCalculatedConsumption = BoilerConsumptionValue * BoilerConsumptionRate;
+	BoilerCoalValue = FMath::Clamp(BoilerCoalValue- FinalCalculatedConsumption, 0.0f, 100.0f);
 	if (BoilerWidgetInstance)
 	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
 

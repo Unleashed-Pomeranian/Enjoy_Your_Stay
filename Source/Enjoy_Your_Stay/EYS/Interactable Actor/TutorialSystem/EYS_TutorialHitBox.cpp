@@ -11,7 +11,7 @@
 AEYS_TutorialHitBox::AEYS_TutorialHitBox()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene Root"));
 	RootComponent = DefaultSceneRoot;
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
