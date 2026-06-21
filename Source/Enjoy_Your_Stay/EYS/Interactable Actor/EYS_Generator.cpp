@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_Generator.h"
@@ -10,7 +10,9 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FuelTank.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
-
+#include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
+#include "Components/AudioComponent.h"
+#include "EYS_WorldSubsystem.h"
 // Sets default values
 AEYS_Generator::AEYS_Generator()
 {
@@ -28,37 +30,69 @@ AEYS_Generator::AEYS_Generator()
 	PointLight->SetupAttachment(DefaultSceneRoot);
 	Fuelingpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Fueling Point"));
 	Fuelingpoint->SetupAttachment(DefaultSceneRoot);
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
+	AudioComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void AEYS_Generator::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-	 PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
-	 if (PC)
-	 {
-		
-		 GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
-		 if (GeneratorActivateWidgetInstance)
-		 {
-			 WidgetMesh->SetWidget(GeneratorActivateWidgetInstance);
-			 GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
-			 GeneratorActivateWidgetInstance->GeneratorRef = this;
-		 }
-	 }
-	
-		PointLight->SetLightColor(LightColor[0]);
-		 MissionSubsystem = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
-		
-	
+
+	if (AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
+	{
+		PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
+		if (PC)
+		{
+			GeneratorActivateWidgetInstance = CreateWidget<UEYS_GeneratorActivateWidget>(PC, GeneratorActivateWidgetClass);
+			if (GeneratorActivateWidgetInstance)
+			{
+				WidgetMesh->SetWidget(GeneratorActivateWidgetInstance);
+				GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+				GeneratorActivateWidgetInstance->GeneratorRef = this;
+			}
+		}
+	}
+
+
+	if(GetGameInstance()) MissionSubsystem = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
+	if (GetWorld()) WorldSubsystem = GetWorld()->GetSubsystem<UEYS_WorldSubsystem>();
+
+
+	if (bIsWorking && fuelAmount > 0.1f)
+	{
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReduceFuel, this, &AEYS_Generator::ReduceFuel, 5.0f, true);
+		SetLightColor(2);
+		PlayNaturalSound(bIsWorking);
+	}
+	else
+	{
+		SetLightColor(0);
+
+		bIsWorking = false;
+
+	}
+
+	if (GetWorld() && WorldSubsystem)
+	{
+		FTimerHandle LightInitHandle;
+
+		GetWorld()->GetTimerManager().SetTimer(LightInitHandle, [this]()
+		{
+				if (WorldSubsystem)
+				{
+					WorldSubsystem->ToggleAllOtelLights(bIsWorking);
+				}
+			}, 0.5f, false);
+	}
 }
 
 void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	PC->SetInteractionWidget("[E] Open");
 }
+
+
 void AEYS_Generator::Interact(AEYS_MyCharacter* myPlayer)
 {
 	return;
@@ -67,40 +101,50 @@ void AEYS_Generator::Interact(AEYS_MyCharacter* myPlayer)
 void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	
+	if (!myPlayer) return;
+
 	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FuelTank::StaticClass()))
 	{
 		CurrentFuelTank = Cast<AEYS_FuelTank>(myPlayer->HeldEquipment);
-		CurrentFuelTank->AttachToGenerator(Fuelingpoint);
-		UKismetSystemLibrary::K2_SetTimer(this, "AddFuel", 0.16f, true, false, 0, 0);
+		if (CurrentFuelTank)
+		{
+			CurrentFuelTank->AttachToGenerator(Fuelingpoint);
+
+		
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_AddFuel, this, &AEYS_Generator::AddFuel, 0.16f, true);
+		}
 	}
 	else
 	{
-		if ((CurrentFuelTank))
+		if (CurrentFuelTank)
 		{
 			CurrentFuelTank->AttachActor(myPlayer);
-			UKismetSystemLibrary::K2_ClearTimer(this, "AddFuel");
+
+			GetWorld()->GetTimerManager().ClearTimer(TimerHandle_AddFuel);
 			CurrentFuelTank = nullptr;
 		}
 		else
 		{
-			if (!bIsWorking && fuelAmount > 10)
+			if (!bIsWorking && fuelAmount > 10.0f)
 			{
-
-				if (!(GeneratorActivateWidgetInstance->bIsWorking))
+				if (GeneratorActivateWidgetInstance && !(GeneratorActivateWidgetInstance->bIsWorking))
 				{
-					if (!PC || !myPlayer) return;
+					if (!PC) return;
 					myPlayer->SetRoot(0);
 					PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
 					PC->SetCharacterPositon(GetActorLocation(), 30, 5, FRotator(-45, -90, 0));
 					PC->MobilizeCharacter(true, false, false);
+
 					if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 					{
 						TS->UpdateTutorialState(ETutorialStep::InteractWithGenerator, ETutorialStep::SpawnFirstHorrorActor);
 					}
 				}
 
-				//myPlayer->PlayMontage(2);
-				GeneratorActivateWidgetInstance->TimerFTimer();
+				if (GeneratorActivateWidgetInstance)
+				{
+					GeneratorActivateWidgetInstance->TimerFTimer();
+				}
 				PlayActivateSound();
 			}
 		}
@@ -110,18 +154,90 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 void AEYS_Generator::StartStopTimer()
 {
-	PC->MobilizeCharacter(false, false, false);
-	UKismetSystemLibrary::K2_SetTimer(this, "ReduceFuel", 5.0f, true, false, 0, 0);
+	if (PC)
+	{
+		PC->MobilizeCharacter(false, false, false);
+	}
+	bIsWorking = true;
+	if (WorldSubsystem) WorldSubsystem->ToggleAllOtelLights(bIsWorking);
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReduceFuel, this, &AEYS_Generator::ReduceFuel, 5.0f, true);
+	PlayNaturalSound(bIsWorking);
 }
 
-//ReduceFuel
+bool AEYS_Generator::BrokeGenerator()
+{
+	
+	if (!bIsWorking || fuelAmount <= 5.0f) return false;
+
+	float GeneratorFailureMultiplier = 1.0f;
+	float DiceRoll = FMath::FRandRange(0.0f, 100.0f);
+
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		GeneratorFailureMultiplier = UpgradeSys->GetGeneratorFailureIntervalMultiplier();
+	}
+
+	float RawDiceRoll = DiceRoll;
+	DiceRoll *= GeneratorFailureMultiplier;
+	BreakdownChance = FMath::Clamp(BreakdownChance + 0.1f, 0.0f, 10.0f);
+	if (GEngine)
+	{
+		FString DiceMessage = FString::Printf(
+			TEXT("🎲 Jeneratör Zarı -> Ham Zar: %.2f | Upgrade Çarpanı: %.2f | İşlenmiş Nihai Zar: %.2f [Sınır: %.2f]"),
+			RawDiceRoll,
+			GeneratorFailureMultiplier,
+			DiceRoll,
+			BreakdownChance
+		);
+		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Cyan, DiceMessage);
+	}
+
+	if (DiceRoll <= BreakdownChance)
+	{
+		bIsWorking = false; 
+		BreakdownChance = 0.5f;
+		if (WorldSubsystem) WorldSubsystem->ToggleAllOtelLights(bIsWorking);
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
+
+		
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Red, TEXT("!!! JENERATÖR ARIZA YAPTI VE DURDU !!!"));
+		}
+
+	
+		SetLightColor(0);
+		PlayNaturalSound(bIsWorking); 
+
+		return true; 
+	}
+
+	return false; 
+}
+
+
 void AEYS_Generator::ReduceFuel()
 {
 
-	
+	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
+	{
+		GeneratorConsumptionMultiplier = UpgradeSys->GetBoilerFuelConsumptionMultiplier();
+	}
 
-	fuelAmount = FMath::Clamp(fuelAmount-1.0f, 0.0f, 100.0f); 
-	GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+	float FinalCalculatedConsumption = GeneratorConsumptionValue * GeneratorConsumptionMultiplier;
+	fuelAmount = FMath::Clamp(fuelAmount - FinalCalculatedConsumption, 0.0f, 100.0f);
+
+	if (GeneratorActivateWidgetInstance)
+	{
+		GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+	}
+
+	// 🎲 ZAR ATMA OPERASYONU KE! Her yakıt düştüğünde arıza riskini zar atarak sorguluyoruz gulum!
+	if (BrokeGenerator())
+	{
+		return; 
+	}
 
 	if (fuelAmount <= 20.0f)
 	{
@@ -133,45 +249,51 @@ void AEYS_Generator::ReduceFuel()
 				bIsFuelMissionActive = true;
 			}
 			MissionSubsystem->UpdateMissionProgress(EMissionType::Fueling, FMath::RoundToInt(fuelAmount));
-			
 		}
 	}
-	if (fuelAmount <= 5.0f)
+
+	if (fuelAmount <= 1.0f)
 	{
-		UKismetSystemLibrary::K2_ClearTimer(this, "ReduceFuel");
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
 		bIsWorking = false;
-		PointLight->SetLightColor(LightColor[0]);
+		SetLightColor(0);
 		PlayNaturalSound(bIsWorking);
+		if (WorldSubsystem) WorldSubsystem->ToggleAllOtelLights(bIsWorking);
 	}
 
 }
 
 void AEYS_Generator::AddFuel()
 {
-	CurrentFuelTank->FuelValue =  FMath::Clamp(CurrentFuelTank->FuelValue - 2.0f, 0.0f, 100.0f);
-	fuelAmount = FMath::Clamp(fuelAmount +2.0f, 0.0f, 100.0f);
-	GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+	if (!CurrentFuelTank) return;
+
+	CurrentFuelTank->FuelValue = FMath::Clamp(CurrentFuelTank->FuelValue - 2.0f, 0.0f, 100.0f);
+	fuelAmount = FMath::Clamp(fuelAmount + 2.0f, 0.0f, 100.0f);
+
+	if (GeneratorActivateWidgetInstance)
+	{
+		GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
+	}
+
 	if (CurrentFuelTank->FuelValue <= 0.5f)
 	{
-		UKismetSystemLibrary::K2_ClearTimer(this, "AddFuel");
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_AddFuel);
 		CurrentFuelTank->Destroy();
 		CurrentFuelTank = nullptr;
 	}
-	if (bIsFuelMissionActive)
-	{
-		if (MissionSubsystem)
-		{
-			if (fuelAmount >= 50.0f)
-			{
 
-				MissionSubsystem->UpdateMissionProgress(EMissionType::Fueling, 50);
-				bIsFuelMissionActive = false;
-			}
+	if (bIsFuelMissionActive && MissionSubsystem)
+	{
+		if (fuelAmount >= 50.0f)
+		{
+			MissionSubsystem->UpdateMissionProgress(EMissionType::Fueling, 50);
+			bIsFuelMissionActive = false;
 		}
 	}
-	if (fuelAmount >= 99.5)
+
+	if (fuelAmount >= 99.5f)
 	{
-		UKismetSystemLibrary::K2_ClearTimer(this, "AddFuel");
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_AddFuel);
 	}
 	
 }
@@ -185,32 +307,13 @@ void AEYS_Generator::PlayNaturalSound_Implementation(bool bIsWork)
 }
 
 
-void AEYS_Generator::testlight_Implementation()
-{
-}
-
 void AEYS_Generator::SetLightColor(int32 ColorValue)
 {
-	switch (ColorValue)
-	{
-	case 0:
-	{
-		PointLight->SetLightColor(LightColor[0]);
-		break;
-	}
-	case 1:
-	{
-		PointLight->SetLightColor(LightColor[1]);
-		break;
-	}
-	case 3:
-	{
-		PointLight->SetLightColor(LightColor[2]);
-		break;
-	}
-	default:
-		break;
-	}
+	if (!PointLight || !LightColor.IsValidIndex(ColorValue)) return;
+
+
+	PointLight->SetLightColor(LightColor[ColorValue]);
+	
 }
 
 

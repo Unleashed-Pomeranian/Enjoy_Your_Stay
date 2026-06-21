@@ -55,13 +55,13 @@ void AEYS_Boiler::ReduceCoalValue()
 {
 	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
 	{
-		// Kutsal Getter fonksiyonuyla güncel çarpanı saniyesinde çekiyoruz ke:
+		
 		float CurrentConsumptionMultiplier = UpgradeSys->GetBoilerFuelConsumptionMultiplier();
 
-		BoilerConsumptionRate = CurrentConsumptionMultiplier;
+		BoilerConsumptionMultiplier = CurrentConsumptionMultiplier;
 	}
 
-	float FinalCalculatedConsumption = BoilerConsumptionValue * BoilerConsumptionRate;
+	float FinalCalculatedConsumption = BoilerConsumptionValue * BoilerConsumptionMultiplier;
 	BoilerCoalValue = FMath::Clamp(BoilerCoalValue- FinalCalculatedConsumption, 0.0f, 100.0f);
 	if (BoilerWidgetInstance)
 	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);

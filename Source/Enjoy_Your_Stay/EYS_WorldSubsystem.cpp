@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS_WorldSubsystem.h"
@@ -9,6 +9,7 @@
 #include "EYS/NPC/EYS_VehicleSplinePath.h"
 #include "EYS/NPC/EYS_Chair.h"
 #include "EYS/Game Managers/EYS_MissionSpawner.h"
+#include "EYS/Interactable Actor/EYS_LightBase.h"
 #include "EngineUtils.h"
 
 AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_GuestCharacter> NPCClass, const FTransform& SpawnTransform, USkeletalMesh* GuestSkel)
@@ -167,6 +168,7 @@ EFoodType UEYS_WorldSubsystem::GetRandomType(EItemType WantedItemType)
 	return AvailableTypes[FMath::RandRange(0, AvailableTypes.Num() - 1)];
 
 }
+
 AEYS_Chair* UEYS_WorldSubsystem::GetAvailableChair()
 {
 	TArray<AEYS_Chair*> AvailableChairs;
@@ -223,6 +225,37 @@ void UEYS_WorldSubsystem::SpawnCheckOutDirt(ERoomID TargetRoom)
 		}
 	
 }
+void UEYS_WorldSubsystem::RegisterSingleLight(AEYS_LightBase* NewLight)
+{
+	if (IsValid(NewLight))
+	{
+		AllOtelLights.AddUnique(NewLight); 
+
+	}
+}
+
+void UEYS_WorldSubsystem::ToggleAllOtelLights(bool bActivate)
+{
+	if (GEngine)
+	{
+		FString DebugMsg = FString::Printf(TEXT("💡 ToggleAllOtelLights Çağrıldı! Array'deki Toplam Işık Sayısı: %d"), AllOtelLights.Num());
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, DebugMsg);
+	}
+
+	for (int32 i = AllOtelLights.Num() - 1; i >= 0; --i)
+	{
+	
+		if (!AllOtelLights[i])
+		{
+			AllOtelLights.RemoveAtSwap(i);
+			continue;
+		}
+
+	
+		AllOtelLights[i]->ToggleLight(bActivate);
+	}
+}
+
 /*if (!bIsAnyGuestCorrupted)
 	{
 		for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)

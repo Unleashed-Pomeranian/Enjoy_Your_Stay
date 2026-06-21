@@ -29,15 +29,14 @@ class ENJOY_YOUR_STAY_API AEYS_Generator : public AActor, public IEYS_InteractIn
 	UWidgetComponent* WidgetMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UPointLightComponent* PointLight;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UAudioComponent* AudioComponent;
 
 	
 public:	
 	// Sets default values for this actor's properties
 	AEYS_Generator();
-	float fuelAmount = 0.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) bool bIsWorking = false;
-	UFUNCTION(BlueprintNativeEvent) void testlight();
 	UFUNCTION() void StartStopTimer();
 	UFUNCTION() void SetLightColor(int32 ColorValue);
 
@@ -47,6 +46,7 @@ protected:
 	virtual void Interact(AEYS_MyCharacter* myPlayer) override;
 	void eInteract_Implementation(AEYS_MyCharacter* myPlayer) override;
 	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
+	UFUNCTION() bool BrokeGenerator();
 	UFUNCTION() void ReduceFuel();
 	UFUNCTION() void AddFuel();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player Controller")
@@ -59,10 +59,28 @@ protected:
 	UPROPERTY()
 	AEYS_FuelTank* CurrentFuelTank = nullptr;
 	UFUNCTION(BlueprintNativeEvent) void PlayActivateSound();
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsFuelMissionActive=false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
+	float fuelAmount = 0.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
+	float GeneratorConsumptionValue = 1.0f;
+	UPROPERTY(BlueprintReadOnly, Category = "Varible")
+	float GeneratorConsumptionMultiplier = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS | Generator")
+	float BreakdownChance = 0.5f;
+	bool bAnimFlip = true;
+	//Timers
+	FTimerHandle TimerHandle_ReduceFuel;
+	FTimerHandle TimerHandle_AddFuel;
+	//Subsystems
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEYS_MissionSubsystem* MissionSubsystem;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsFuelMissionActive=false;
+	class  UEYS_WorldSubsystem* WorldSubsystem;
+
 public:
 	UFUNCTION(BlueprintNativeEvent) void PlayNaturalSound(bool bIsWork);
 

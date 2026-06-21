@@ -10,19 +10,20 @@ void UEYS_UpgradeSubsystem::ApplyGeneratorUpgrade(int32 UpgradeIndex)
 	switch (UpgradeIndex)
 	{
 	case 0:
-		GeneratorFuelConsumptionMultiplier *= 0.85f;
+
+		GeneratorFailureIntervalMultiplier *= 1.1f;
 		GeneratorUpgradeLevel = 1;
 		break;
 
 	case 1:
-		GeneratorFailureIntervalMultiplier *= 0.90f;
+		GeneratorFuelConsumptionMultiplier *= 0.85f;
 		GeneratorUpgradeLevel = 2;
 		break;
 
 	case 2:
 	{
 		GeneratorFuelConsumptionMultiplier *= 0.85f;
-		GeneratorFailureIntervalMultiplier *= 0.90f;
+		GeneratorFailureIntervalMultiplier *= 1.15f;
 		GeneratorUpgradeLevel = 3;
 		break;
 	}
@@ -37,7 +38,7 @@ void UEYS_UpgradeSubsystem::ApplyBoilerUpgrade(int32 UpgradeIndex)
 	switch (UpgradeIndex)
 	{
 	case 0:
-		BoilerFuelConsumptionMultiplier *= 0.95f;
+		BoilerFuelConsumptionMultiplier *= 0.9f;
 		BoilerUpgradeLevel = 1;
 		break;
 

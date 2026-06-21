@@ -45,7 +45,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	float BoilerConsumptionValue = 1.6f;
 	UPROPERTY(BlueprintReadOnly, Category = "Varible")
-	float BoilerConsumptionRate = 1.0f;
+	float BoilerConsumptionMultiplier = 1.0f;
 	bool bAnimFlip=true;
 	UPROPERTY()
 	UEYS_Boiler_UI* BoilerWidgetInstance;

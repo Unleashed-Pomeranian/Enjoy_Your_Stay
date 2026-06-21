@@ -684,7 +684,7 @@ void AEYS_GuestCharacter::SetMentalHealth(const float Value)
 	else
 	{
 
-		if (CurrentMultiplier > 0.0f)
+		if (CurrentMultiplier > 0.001f)
 		{
 			FinalCalculated = Value / CurrentMultiplier;
 		}

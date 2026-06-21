@@ -61,11 +61,8 @@ void UEYS_GeneratorActivateWidget::FStartTimer()
 	if (Score == 3)
 	{
 		
-		GeneratorRef->bIsWorking = true;
+
 		GeneratorRef->StartStopTimer();
-		GeneratorRef->testlight();
-		GeneratorRef->PlayNaturalSound(true);
-		
 		Score_Text->SetText(FText::FromString(FString::FromInt(0)));
 
 		UKismetSystemLibrary::K2_ClearTimer(this, "StartGenerator");

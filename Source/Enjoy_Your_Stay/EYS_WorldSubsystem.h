@@ -7,7 +7,7 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Types.h"
 #include "EYS_WorldSubsystem.generated.h"
 
-
+class AEYS_LightBase;
 class AEYS_GuestCharacter;
 class AEYS_GuestCar;
 class AEYS_VehicleSplinePath;
@@ -34,7 +34,7 @@ public:
 
 	UPROPERTY() class AEYS_MissionSpawner* TargetMissionSpawner;
 private:
-	// ?stersen aktif NPC listesi
+	
 	UPROPERTY()
 	TArray<TObjectPtr<AEYS_GuestCharacter>> ActiveNPCs;
 
@@ -47,4 +47,17 @@ public:
 	UDataTable* FoodDatabase = nullptr;
 	UFUNCTION() EFoodType GetRandomType(EItemType WantedItemType);
 
+
+
+	/*--------Light Codes-------------*/
+public:
+	UFUNCTION(BlueprintCallable, Category = "EYS | Light")
+	void RegisterSingleLight(AEYS_LightBase* NewLight);
+
+	UFUNCTION(BlueprintCallable, Category = "EYS | Light")
+	void ToggleAllOtelLights(bool bActivate);
+
+private:
+	UPROPERTY()
+	TArray<TObjectPtr<AEYS_LightBase>> AllOtelLights;
 };
