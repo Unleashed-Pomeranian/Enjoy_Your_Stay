@@ -20,6 +20,7 @@ public:
 	UEYS_HorrorSubsystem();
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Deinitialize() override;
 
 	
@@ -27,6 +28,8 @@ public:
 
 
 	void OnMissionDisabled();
+	UFUNCTION(BlueprintCallable, Category = "EYS | Horror ")
+	void ActivateHorrorSystem(bool bIsActivate);
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS | Horror")
@@ -44,7 +47,7 @@ private:
 
 	float CurrentSpawnChance;
 	bool bIsMissionActive;
-
+	bool bIsSysemActive=false;
 
 	void CheckHorrorRoll();
 	void SpawnBabaYaga();

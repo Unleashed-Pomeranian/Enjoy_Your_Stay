@@ -34,6 +34,7 @@ protected:
 public:
 	UFUNCTION() void FDayTimer();
 	UFUNCTION() void SetDayHour(float TimeValue);
+	UFUNCTION() void StartNewDay();
 	UFUNCTION() void CheckTimeForTutorial();
 	UPROPERTY() int32 DayNum=1;
 };

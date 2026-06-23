@@ -10,7 +10,7 @@
 #include "EYS/Interactable Actor/EYS_Boiler.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
 #include "EYS/Interactable Actor/TargetPoints/EYS_DirtTarget.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 UEYS_HorrorSubsystem::UEYS_HorrorSubsystem()
 {
@@ -25,13 +25,20 @@ UEYS_HorrorSubsystem::UEYS_HorrorSubsystem()
 void UEYS_HorrorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	UWorld* World = GetWorld();
-	if (World)
-	{
 	
-		World->GetTimerManager().SetTimer(DataFetchTimerHandle, this, &UEYS_HorrorSubsystem::FetchAndProcessMainHotelData, 3.0f, true);
-	}
 
+}
+void UEYS_HorrorSubsystem::OnWorldBeginPlay(UWorld& InWorld)
+{
+	Super::OnWorldBeginPlay(InWorld);
+
+	UGameInstance* GI = InWorld.GetGameInstance();
+	if (!GI) return;
+
+	UEYS_TutorialSubsystem* TS = GI->GetSubsystem<UEYS_TutorialSubsystem>();
+	if (!TS) return;
+
+	ActivateHorrorSystem(TS->bIsTutorialFinished);
 }
 
 void UEYS_HorrorSubsystem::Deinitialize()
@@ -44,22 +51,39 @@ void UEYS_HorrorSubsystem::Deinitialize()
 	}
 	Super::Deinitialize();
 }
+void UEYS_HorrorSubsystem::ActivateHorrorSystem(bool bIsActivate)
+{
+	UWorld* World = GetWorld();
+	if (!World) return;
+	
+	bIsSysemActive = bIsActivate;
 
+	if (bIsActivate)
+	{
+		if (!World->GetTimerManager().IsTimerActive(DataFetchTimerHandle))
+		{
+			World->GetTimerManager().SetTimer(DataFetchTimerHandle, this, &UEYS_HorrorSubsystem::FetchAndProcessMainHotelData, 3.0f, true);
+		}
+	}
+	else
+	{
+		World->GetTimerManager().ClearTimer(DataFetchTimerHandle);
+	}
+
+}
 
 void UEYS_HorrorSubsystem::OnMissionEnabled()
 {
+	
 	UWorld* World = GetWorld();
 	UGameplayStatics::SetGlobalTimeDilation(World, 0.25f);
-
+	
 	if (SpawnedMissionBabaYaga) return;
 
 	bIsMissionActive = true;
 
+	if (!bIsSysemActive) return;
 	CurrentSpawnChance = FMath::Clamp(CurrentSpawnChance + 15.0f, 0.0f, 100.0f);
-
-
-
-
 	if (!GetWorld()->GetTimerManager().IsTimerActive(HorrorTickTimerHandle))
 	{
 		GetWorld()->GetTimerManager().SetTimer(HorrorTickTimerHandle, this, &UEYS_HorrorSubsystem::CheckHorrorRoll, 1.0f, true);
@@ -164,6 +188,8 @@ void UEYS_HorrorSubsystem::OnMissionDisabled()
 	
 	}
 }
+
+
 
 
 void UEYS_HorrorSubsystem::FetchAndProcessMainHotelData()

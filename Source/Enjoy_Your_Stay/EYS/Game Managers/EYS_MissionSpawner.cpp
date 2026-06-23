@@ -24,13 +24,36 @@ void AEYS_MissionSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	TutorialSubsystemRef = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
-	if (TutorialSubsystemRef||TutorialSubsystemRef->bIsTutorialFinished)
+	if (!TutorialSubsystemRef) return;
+	if (TutorialSubsystemRef->bIsTutorialFinished || TutorialSubsystemRef->CurrentPhase == ETutorialPhase::ThirdPhase)
+	{
+		SpawnDirtActorTimer();
+		SpawnWallDirtActorTimer();
+		SpawnSnowPileActorTimer();
+		StartFixActorSpawening();
+	}
+	else if (TutorialSubsystemRef->CurrentPhase == ETutorialPhase::SecondPhase)
+	{
+		SpawnDirtActorTimer();
+		SpawnWallDirtActorTimer();
+		SpawnSnowPileActorTimer();
+		StartFixActorSpawening();
+	}
+	else if (TutorialSubsystemRef->CurrentPhase == ETutorialPhase::FirstPhase)
+	{
+		SpawnDirtActorTimer();
+		SpawnWallDirtActorTimer();
+		SpawnSnowPileActorTimer();
+		TutorialSubsystemRef->OnSecondPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::StartFixActorSpawening);
+	}
+	else
 	{
 		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnDirtActorTimer);
 		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnWallDirtActorTimer);
 		TutorialSubsystemRef->OnFirstPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::SpawnSnowPileActorTimer);
 		TutorialSubsystemRef->OnSecondPhaseEnd.AddDynamic(this, &AEYS_MissionSpawner::StartFixActorSpawening);
 	}
+
 
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), DirtTargetPoint, FoundActors);

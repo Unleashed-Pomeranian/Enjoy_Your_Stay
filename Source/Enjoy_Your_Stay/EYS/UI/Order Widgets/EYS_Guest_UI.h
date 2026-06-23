@@ -10,6 +10,7 @@
 #include "EYS_Guest_UI.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOrderDialogEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOrderRejected);
 
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_Guest_UI : public UUserWidget
@@ -41,4 +42,5 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOrderDialogEnd OrderDialogEnd;
+	FOrderRejected  OrderRejected;
 };

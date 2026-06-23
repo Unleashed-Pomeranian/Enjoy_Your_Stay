@@ -75,7 +75,7 @@ void AEYS_FixActor::SetPipeMesh()
 		GetWorld()->SpawnActor<AActor>(SinglePipeRef, GetActorTransform());
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 		{
-			TS->UpdateTutorialState(ETutorialStep::FixBrokenPipe, ETutorialStep::WaitForCheckout);
+			TS->UpdateTutorialState(ETutorialStep::FixBrokenPipe, ETutorialStep::GoToBedSecond);
 		}
 		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 		{

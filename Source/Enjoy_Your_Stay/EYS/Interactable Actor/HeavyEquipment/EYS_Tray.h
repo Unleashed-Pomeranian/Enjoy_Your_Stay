@@ -17,7 +17,7 @@ class ENJOY_YOUR_STAY_API AEYS_Tray : public AEYS_HeavyEquipmentBase
 	
 
 protected:
-	virtual void BeginPlay() override;
+	
 
 	virtual void DetachActor() override;
 
@@ -44,5 +44,6 @@ public:
 	EItemType GetItemTypeInSlot(int32 SlotIndex) const;
 	UFUNCTION() int32 CheckItemTypes(TArray<EFoodType> GuestOrders);
 	UFUNCTION() void CleanSlots();
-
+	UFUNCTION() void RemoveTray();
+	UFUNCTION() void AttachTray();
 };

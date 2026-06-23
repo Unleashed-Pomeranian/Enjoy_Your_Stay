@@ -59,7 +59,7 @@ void AEYS_GuestBed::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 			{
 				if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 				{
-					TS->UpdateTutorialState(ETutorialStep::PutCleanSheet, ETutorialStep::WaitForUpdate);
+					TS->UpdateTutorialState(ETutorialStep::PutCleanSheet, ETutorialStep::GoToBedThird);
 				}
 			}
 		}

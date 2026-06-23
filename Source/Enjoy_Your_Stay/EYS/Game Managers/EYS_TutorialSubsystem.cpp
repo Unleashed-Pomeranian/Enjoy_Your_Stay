@@ -6,6 +6,7 @@
 #include "EYS/Interactable Actor/TutorialSystem/EYS_BossSpeaker.h"
 #include "EYS/Interactable Actor/TutorialSystem/EYS_TutorialHitBox.h"
 #include "EYS/Game Managers/EYS_MySunMoonDaySequenceActor.h"
+#include "EYS/Game Managers/EYS_HorrorSubsystem.h"
 
 
 void UEYS_TutorialSubsystem::UpdateTutorialState(ETutorialStep RequiredStep, ETutorialStep NextStep)
@@ -70,21 +71,56 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 
 		if (CurrentStep == ETutorialStep::WaitTheGuest)
 		{
-			OnFirstPhaseEnd.Broadcast();
+			CurrentPhase = ETutorialPhase::FirstPhase;
+			CheckTutorialPhase();
 		}
 	
 		if(CurrentStep == ETutorialStep::GiveRightFood|| CurrentStep == ETutorialStep::GiveWrongFood)
 		{
 			CurrentStep = ETutorialStep::WaitForPipe;
-			OnSecondPhaseEnd.Broadcast();
+			CurrentPhase = ETutorialPhase::SecondPhase;
+			CheckTutorialPhase();
 		}
+		if (CurrentStep == ETutorialStep::WaitForUpdate)
+		{
+			CurrentPhase = ETutorialPhase::ThirdPhase;
+			CheckTutorialPhase();
 
+		}
+		if (CurrentStep == ETutorialStep::EndTutorial)
+		{
+			FinishTutorial();
+
+		}
 	}
+	
 	else
 	{
 		return;
 	}
 }
+
+void UEYS_TutorialSubsystem::CheckTutorialPhase()
+{
+	switch (CurrentPhase)
+	{
+	case ETutorialPhase::NoPhase:
+
+		break;
+	case ETutorialPhase::FirstPhase:
+		OnFirstPhaseEnd.Broadcast();
+		break;
+	case ETutorialPhase::SecondPhase:
+		OnSecondPhaseEnd.Broadcast();
+		break;
+		
+	case ETutorialPhase::ThirdPhase:
+		OnThirdPhaseEnd.Broadcast();
+		break;
+	default:
+		break;
+	}
+} 
 
 void UEYS_TutorialSubsystem::RegisterNewOrder(TSubclassOf<AActor> OrderedItemClass)
 {
@@ -125,4 +161,16 @@ void UEYS_TutorialSubsystem::RegisterCheckoutDirt()
 	{
 		UpdateTutorialState(ETutorialStep::CleanCheckOutDirts, ETutorialStep::TakeDirtySheet);
 	}
+}
+void UEYS_TutorialSubsystem::FinishTutorial()
+{
+	bIsTutorialFinished = true;
+
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	UEYS_HorrorSubsystem* HorrorSubsystem = World->GetSubsystem<UEYS_HorrorSubsystem>();
+	if (!HorrorSubsystem) return;
+
+	HorrorSubsystem->ActivateHorrorSystem(true);
 }

@@ -34,6 +34,9 @@ void UEYS_Day_UI::StarNewDay()
     if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
     {
         TS->UpdateTutorialState(ETutorialStep::EndDay, ETutorialStep::TakeFoodBox);
+        TS->UpdateTutorialState(ETutorialStep::GoToBedSecond, ETutorialStep::WaitForCheckout);
+        TS->UpdateTutorialState(ETutorialStep::GoToBedThird, ETutorialStep::WaitForUpdate);
+
     }
 }
 

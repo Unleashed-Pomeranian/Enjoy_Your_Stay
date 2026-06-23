@@ -37,7 +37,8 @@ void UEYS_Guest_UI::TakeOrder()
 
 void UEYS_Guest_UI::RejectOrder()
 {
-
+	OrderRejected.Broadcast();
+	RemoveFromParent();
 }
 
 void UEYS_Guest_UI::SetGuestText(FString foodType, FString drinktype)
