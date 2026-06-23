@@ -46,6 +46,7 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UDataTable* FoodDatabase = nullptr;
 	UFUNCTION() EFoodType GetRandomType(EItemType WantedItemType);
+	UFUNCTION() int32 GetFoodPrice(EFoodType WantedItemType);
 
 
 

@@ -24,20 +24,32 @@ void AEYS_GuestSpawner::BeginPlay()
 	EmptyRooms = 4;
 
 
-
 	UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
 	if (!Director) return; 
 
-	
 		Director->LobyLocation = LobyLoc;
 		Director->DiningHallLocation = DiningHallLoc;
-
 		Director->AllParkingEntries = ParkingEntries;
 
-	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
-	{
-		TS->OnFirstPhaseEnd.AddDynamic(this, &AEYS_GuestSpawner::StartGuestSpawning);
-	}
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			if (TS->bIsTutorialFinished || TS->CurrentPhase == ETutorialPhase::ThirdPhase)
+			{
+				SpawnGuestTimer();
+			}
+
+			else if (TS->CurrentPhase == ETutorialPhase::FirstPhase|| TS->CurrentPhase == ETutorialPhase::SecondPhase)
+			{
+				TS->OnThirdPhaseEnd.AddDynamic(this, &AEYS_GuestSpawner::SpawnGuestTimer);
+			}
+	
+			else
+			{
+				TS->OnFirstPhaseEnd.AddDynamic(this, &AEYS_GuestSpawner::SpawnGuest);
+				TS->OnThirdPhaseEnd.AddDynamic(this, &AEYS_GuestSpawner::SpawnGuestTimer);
+			}
+		}
+
 
 }
 

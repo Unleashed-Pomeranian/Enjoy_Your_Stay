@@ -17,11 +17,10 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 	 SetTimeOfDay(10.0f);
 	 SetTimePerCycle(1.0f);
 	GetWorld()->GetTimerManager().SetTimer(DayTimerHandle, this, &AEYS_MySunMoonDaySequenceActor::FDayTimer, 10.0f, true);
-	Play();
 	if (TS)
 	{
 		TS->DayManager = this;
-		if (TS->bIsTutorialFinished)
+		if (TS->bIsTutorialFinished|| TS->CurrentPhase==ETutorialPhase::ThirdPhase)
 		{
 			Play();
 		}
@@ -49,6 +48,25 @@ CheckTimeForTutorial();
 void AEYS_MySunMoonDaySequenceActor::SetDayHour(float TimeValue)
 {
 	SetTimeOfDay(TimeValue);
+	if (!Director) return;
+	Director->Hour = GetTimeOfDay();
+	Director->CheckOutPlayer(DayNum, GetTimeOfDay());
+}
+
+void AEYS_MySunMoonDaySequenceActor::StartNewDay()
+{
+	DayNum++;
+	SetTimeOfDay(10.0f);
+	FDayTimer();
+
+	if (TS)
+	{
+		if (TS->bIsTutorialFinished || TS->CurrentPhase == ETutorialPhase::ThirdPhase)
+		{
+			Play();
+		}
+
+	}
 }
 
 void AEYS_MySunMoonDaySequenceActor::CheckTimeForTutorial()

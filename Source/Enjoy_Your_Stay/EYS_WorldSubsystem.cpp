@@ -41,9 +41,9 @@ AEYS_GuestCharacter* UEYS_WorldSubsystem::RequestSpawnNPC(TSubclassOf<AEYS_Guest
 	if (Spawned)
 	{
 		Spawned->SetGuestMesh(GuestSkel);
-		Spawned->MoveTo(LobyLocation, 10);
 		Spawned->DiningHallLocation = DiningHallLocation;
 		Spawned->LobyLocation = LobyLocation;
+		Spawned->MoveTo(LobyLocation, 10);
 	}
 
 	if (AEYS_MySunMoonDaySequenceActor* DayActor = Cast<AEYS_MySunMoonDaySequenceActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MySunMoonDaySequenceActor::StaticClass())))
@@ -167,6 +167,31 @@ EFoodType UEYS_WorldSubsystem::GetRandomType(EItemType WantedItemType)
 	}
 	return AvailableTypes[FMath::RandRange(0, AvailableTypes.Num() - 1)];
 
+}
+
+int32 UEYS_WorldSubsystem::GetFoodPrice(EFoodType WantedItemType)
+{
+	if (!FoodDatabase)
+	{
+		return 0;
+	}
+
+	
+	TArray<FFoodDatabase*> Rows;
+	FoodDatabase->GetAllRows<FFoodDatabase>(TEXT("Food Database Context"), Rows);
+
+	for (const FFoodDatabase* Row : Rows)
+	{
+		if (!Row) continue;
+
+	
+		if (Row->FoodType == WantedItemType)
+		{
+
+			return Row->FoodPrice;
+		}
+	}
+	return 0;
 }
 
 AEYS_Chair* UEYS_WorldSubsystem::GetAvailableChair()

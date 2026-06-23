@@ -17,7 +17,7 @@ class ENJOY_YOUR_STAY_API UEYS_EconomySubsystem : public UGameInstanceSubsystem
 protected:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int32 Money=10000;
+	int32 Money= 5500;
 	class AEYS_MyCharacterController* MyPC;
 
 public:

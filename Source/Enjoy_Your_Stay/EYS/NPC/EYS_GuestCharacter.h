@@ -96,7 +96,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	UEYS_QDialoguesSpeakerComponent* DialogueComponent;
 	
-	UFUNCTION(BlueprintNativeEvent) void PlayNPCAudio();
+	UFUNCTION(BlueprintNativeEvent) void PlayNPCAudio(int32 SoundIndex);
 	UFUNCTION() void OrderFood(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void CheckFood(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void TakeFood(AEYS_MyCharacter* myPlayer);
@@ -107,6 +107,7 @@ protected:
 	UFUNCTION() void FinishDining();
 	UFUNCTION()	void TriggerHotelCheckOut();
 	UFUNCTION()	void FSpendMoney(const int32 Value);
+	UFUNCTION()	void OnOrderRejected();
 
 public:	
 	UFUNCTION(BlueprintCallable) virtual void MoveTo(FVector Target,float AccceptanceRadius);

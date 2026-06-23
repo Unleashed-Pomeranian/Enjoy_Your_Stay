@@ -32,6 +32,12 @@ class ENJOY_YOUR_STAY_API AEYS_GuestCar : public AWheeledVehiclePawn
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* SpawnPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components | Lights", meta = (AllowPrivateAccess = "true"))
+	class USpotLightComponent* LeftSpotLight = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components | Lights", meta = (AllowPrivateAccess = "true"))
+	class USpotLightComponent* RightSpotLight = nullptr;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -42,6 +48,11 @@ protected:
 	
 	bool bIsParking=false;
 	bool bIsLeaving = false;
+	UPROPERTY()
+	UMaterialInstanceDynamic* DynamicElement3Mat = nullptr;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* DynamicElement4Mat = nullptr;
 
 	FTimerHandle CarTimerHandle;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
@@ -62,6 +73,7 @@ public:
 	AEYS_VehicleSplinePath* GlobalLeavingPath;
 
 	UFUNCTION() void DriveBack();
-
+	UFUNCTION(BlueprintCallable) void SetCarLight(bool bIsActivate);
+	UFUNCTION(BlueprintCallable) void SetCarPhysicsActive(bool bIsActive);
 
 };

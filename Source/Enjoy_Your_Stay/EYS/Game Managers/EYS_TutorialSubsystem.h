@@ -57,6 +57,7 @@ enum class ETutorialStep: uint8
 	GoToHammer UMETA(DisplayName = "Go to Hammer"),
 	TakeHammer UMETA(DisplayName = "Take Hammer"),
 	FixBrokenPipe UMETA(DisplayName = "Fix Broken Pipe"),
+	GoToBedSecond  UMETA(DisplayName = "Go To Bed Second"),
 	WaitForCheckout UMETA(DisplayName = "Wait for Checkout"),
 	CheckoutGuest UMETA(DisplayName = "Checkout Guest"),
 	PutKey UMETA(DisplayName = "Put Key"),
@@ -72,12 +73,22 @@ enum class ETutorialStep: uint8
 	WaitForWashEnd UMETA(DisplayName = "WaitForWashEnd"),
 	TakeCleanSheet UMETA(DisplayName = "TakeCleanSheet"),
 	PutCleanSheet UMETA(DisplayName = "PutCleanSheet"),
+	GoToBedThird  UMETA(DisplayName = "Go To Bed Third"),
 	WaitForUpdate UMETA(DisplayName = "Wait for Update"),
 	GoToComputer  UMETA(DisplayName = "Go to Computer"),
 	OpenComputer UMETA(DisplayName = "Open Computer"),
 	MakeAnyUpgrade   UMETA(DisplayName = "Make Any Update"),
 	CloseComputer     UMETA(DisplayName = "Close Computer"),
 	EndTutorial       UMETA(DisplayName = "Close Computer"),
+
+};
+UENUM(BlueprintType)
+enum class ETutorialPhase : uint8
+{
+	NoPhase          UMETA(DisplayName = "No Phase"),
+	FirstPhase       UMETA(DisplayName = "First Phase"),
+	SecondPhase      UMETA(DisplayName = "Second Phase"),
+	ThirdPhase        UMETA(DisplayName = "Third Phase"),
 };
 USTRUCT(BlueprintType)
 struct FTutorialMissionData:public FTableRowBase
@@ -112,6 +123,7 @@ class AEYS_MySunMoonDaySequenceActor;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFirstPhaseEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSecondPhaseEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnThirdPhaseEnd);
 UCLASS()
 class ENJOY_YOUR_STAY_API UEYS_TutorialSubsystem : public UGameInstanceSubsystem
 {
@@ -122,13 +134,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Tutorial")
 	ETutorialStep CurrentStep = ETutorialStep::None;
 	UPROPERTY(BlueprintReadWrite, Category = "Tutorial")
+	ETutorialPhase CurrentPhase = ETutorialPhase::NoPhase;
+	UPROPERTY(BlueprintReadWrite, Category = "Tutorial")
 	bool bIsTutorialFinished = false;
 
 	UFUNCTION(BlueprintCallable, Category = "Tutorial")
 	void UpdateTutorialState(ETutorialStep RequiredStep, ETutorialStep NextStep);
 	UFUNCTION(BlueprintCallable, Category = "Tutorial")
 	void SetTutorialStep(ETutorialStep NewStep);
-
+	void CheckTutorialPhase();
+	void FinishTutorial();
 
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tutorial Data")
@@ -176,4 +191,7 @@ public:
 	FOnFirstPhaseEnd OnFirstPhaseEnd;
 	UPROPERTY(BlueprintAssignable, Category = "Tutorial")
 	FOnSecondPhaseEnd OnSecondPhaseEnd;
+
+	UPROPERTY(BlueprintAssignable, Category = "Tutorial")
+	FOnThirdPhaseEnd OnThirdPhaseEnd;
 };

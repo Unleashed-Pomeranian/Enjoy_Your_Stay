@@ -4,6 +4,8 @@
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_Tray.h"
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBag.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/EYS_MyCharacter.h"
+#include "Kismet/GamePlayStatics.h"
 
 AEYS_Tray::AEYS_Tray()
 {
@@ -111,6 +113,16 @@ void AEYS_Tray::CleanSlots()
 	Super::DetachActor();
 	
 }
+void AEYS_Tray::RemoveTray()
+{
+	DetachFromPlayer();
+}
+void AEYS_Tray::AttachTray()
+{
+	AEYS_MyCharacter* myPlayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (!myPlayer) return;
+	AttachActor(myPlayer);
+}
 void AEYS_Tray::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	Super::eInteract_Implementation(myPlayer);
@@ -124,10 +136,7 @@ void AEYS_Tray::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 
 }
-void AEYS_Tray::BeginPlay()
-{
-	Super::BeginPlay();
-}
+
 
 void AEYS_Tray::DetachActor()
 {

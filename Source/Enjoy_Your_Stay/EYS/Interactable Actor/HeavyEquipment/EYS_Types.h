@@ -41,6 +41,8 @@ struct FFoodDatabase : public FTableRowBase
 	EItemType ItemType= EItemType::None;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EFoodType FoodType= EFoodType::None;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 FoodPrice = 100;
 
 };
 

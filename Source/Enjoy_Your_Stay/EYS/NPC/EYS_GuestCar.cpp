@@ -9,6 +9,7 @@
 #include "EYS_GuestCharacter.h"
 #include "EYS/Game Managers/EYS_GuestSpawner.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SpotLightComponent.h"
 AEYS_GuestCar::AEYS_GuestCar()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -23,6 +24,12 @@ AEYS_GuestCar::AEYS_GuestCar()
 	CharacterSkeletalMesh->SetupAttachment(GetMesh());
 	SpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
 	SpawnPoint->SetupAttachment(GetMesh());
+	LeftSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Left Spot Light"));
+	LeftSpotLight->SetupAttachment(GetMesh()); // Arabanın ana iskeletine bağla ke!
+
+	
+	RightSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Right Spot Light"));
+	RightSpotLight->SetupAttachment(GetMesh());
 
 }
 
@@ -31,6 +38,24 @@ void AEYS_GuestCar::BeginPlay()
 	Super::BeginPlay();
 	WheeledMovement = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
 	SetGuestMesh();
+
+	if (CarBody)
+	{
+
+		UMaterialInterface* BaseMat3 = CarBody->GetMaterial(3);
+		if (BaseMat3)
+		{
+			DynamicElement3Mat = CarBody->CreateDynamicMaterialInstance(3, BaseMat3);
+		}
+
+		
+		UMaterialInterface* BaseMat4 = CarBody->GetMaterial(4);
+		if (BaseMat4)
+		{
+			DynamicElement4Mat = CarBody->CreateDynamicMaterialInstance(4, BaseMat4);
+		}
+	}
+	SetCarLight(true);
 }
 void AEYS_GuestCar::InitializeCar(AEYS_VehicleSplinePath* Path)
 {
@@ -198,14 +223,18 @@ void AEYS_GuestCar::SetGuestSpawn()
 		{
 			AssignedNPC->AssignedCar = this;
 		}
+		
 	}
-
+	SetCarPhysicsActive(false);
+	SetCarLight(false);
 	CurrentState = EGuestCarState::Waiting;
 }
 
 void AEYS_GuestCar::DriveBack()
 {
 	CharacterSkeletalMesh->SetVisibility(true);
+	SetCarPhysicsActive(true);
+	SetCarLight(true);
 	if (WheeledMovement)
 	{
 		CurrentState = EGuestCarState::Exiting;
@@ -218,9 +247,75 @@ void AEYS_GuestCar::DriveBack()
 		WheeledMovement->SetThrottleInput(0.45f);
 	}
 
+	
 	if (AssignedPath) AssignedPath->bIsOccupied = false;
 	if (ExitPath) GlobalLeavingPath = ExitPath->NextPath;
 	GetWorld()->GetTimerManager().SetTimer(CarTimerHandle, this, &AEYS_GuestCar::MoveCar, 0.02f, true);
 	
+}
+
+void AEYS_GuestCar::SetCarLight(bool bIsActivate)
+{
+	float TargetEmissive = bIsActivate ? 20.0f : 0.2f;
+
+	if (DynamicElement3Mat)
+	{
+		DynamicElement3Mat->SetScalarParameterValue(TEXT("Emissive"), TargetEmissive);
+	}
+
+	if (DynamicElement4Mat)
+	{
+		DynamicElement4Mat->SetScalarParameterValue(TEXT("Emissive"), TargetEmissive);
+	}
+	if (LeftSpotLight )
+	{
+		LeftSpotLight->SetVisibility(bIsActivate);
+	}
+
+	if (RightSpotLight )
+	{
+		RightSpotLight->SetVisibility(bIsActivate);
+	}
+}
+
+void AEYS_GuestCar::SetCarPhysicsActive(bool bIsActive)
+{
+	if (bIsActive)
+	{
+		if (GetMesh())
+		{
+			GetMesh()->WakeAllRigidBodies();
+		}
+
+		if (WheeledMovement)
+		{
+		
+			WheeledMovement->Activate(true);
+			WheeledMovement->SetComponentTickEnabled(true);
+
+			WheeledMovement->SetBrakeInput(0.0f);
+			WheeledMovement->SetHandbrakeInput(false);
+		}
+	}
+	else
+	{
+		if (WheeledMovement)
+		{
+			WheeledMovement->SetThrottleInput(0.0f);
+			WheeledMovement->SetBrakeInput(1.0f);
+			WheeledMovement->SetHandbrakeInput(true);
+
+		
+			WheeledMovement->SetComponentTickEnabled(false);
+		
+		}
+
+		if (GetMesh())
+		{
+			GetMesh()->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+			GetMesh()->SetAllPhysicsAngularVelocityInRadians(FVector::ZeroVector);
+			GetMesh()->PutRigidBodyToSleep();
+		}
+	}
 }
 

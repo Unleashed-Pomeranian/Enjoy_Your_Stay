@@ -46,6 +46,7 @@ void   AEYS_MyCharacters_Bed::InteractUI_Implementation(AEYS_MyCharacter* myPlay
 
 void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
+	if (!DayCycleActor) return;
 	if (DayCycleActor->GetTimeOfDay() >= 21.9f)
 	{
 		AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
@@ -61,13 +62,12 @@ void   AEYS_MyCharacters_Bed::eInteract_Implementation(AEYS_MyCharacter* myPlaye
 		}
 		if (DayWidgetInstance)
 		{
-			DayCycleActor->DayNum++;
+			
 			DayWidgetInstance->SetDayText(DayCycleActor->DayNum);
 			DayWidgetInstance->SetFocus();
 			DayWidgetInstance->AddToViewport();
-			DayCycleActor->SetTimeOfDay(10.0f);
-			DayCycleActor->FDayTimer();
-			DayCycleActor->Play();
+			DayCycleActor->StartNewDay();
+		
 			PC->bShowMouseCursor = true;
 			PC->SetInputMode(FInputModeUIOnly());
 			DayWidgetInstance->myPC = PC;
