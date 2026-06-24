@@ -229,7 +229,7 @@ void UEYS_HorrorSubsystem::FetchAndProcessMainHotelData()
 	float DangerDiceRoll = FMath::FRandRange(0.0f, 100.0f);
 
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Purple, FString::Printf(TEXT("📊 ANA RADAR -> Yakıt Baskısı: %.2f | Reyting Baskısı: %.2f | Toplam Şans: %%%.2f | Atılan Zar: %.2f"), FuelUrgencyWeight, HotelRatingWeight, MainSpawnChance, DangerDiceRoll));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Purple, FString::Printf(TEXT("Yakıt Baskısı: %.2f | Reyting Baskısı: %.2f | Toplam Şans: %%%.2f | Atılan Zar: %.2f"), FuelUrgencyWeight, HotelRatingWeight, MainSpawnChance, DangerDiceRoll));
 
 	if (DangerDiceRoll <= MainSpawnChance)
 	{

@@ -44,7 +44,7 @@ void AEYS_GuestCharacter::BeginPlay()
 	CurrentStatus = EGuestStatus::Arriving;
 	bIsDriving = false;
 	MentalSlateValue = 100.0f;
-
+	
 }
 
 
@@ -81,9 +81,11 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 			}	
 		
 		}
-		PlayNPCAudio(1);
+		DialogueComponent->UpdateDialog(0);
+		PlayNPCAudio(0);
 	    	CurrentStatus = EGuestStatus::WaitingForCheckIn;
 			bCanInteract = true;
+			
 			break;
 	}
 	case EGuestStatus::DirtyRoom:
@@ -133,7 +135,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 				GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, HallAbandonTime, false);
 			}
 		}
-		PlayNPCAudio(2);
+		PlayNPCAudio(1);
 		bCanInteract = true;
 		break;
 	}
@@ -148,8 +150,9 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 		{
 			TS->UpdateTutorialState(ETutorialStep::WaitForCheckout, ETutorialStep::CheckoutGuest);
 		}
+		bIsHaveRoom = false;
 		DialogueComponent->UpdateDialog(5);
-		PlayNPCAudio(1);
+		PlayNPCAudio(0);
 		CurrentStatus = EGuestStatus::ReadyToCheckOut;
 		bCanInteract = true;
 		break;
@@ -184,7 +187,10 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 	{
 	
 		GuestStartDialogue(myPlayer);
-		myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
+		if (!myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().IsAlreadyBound(this, &AEYS_GuestCharacter::OnDialogueFinished))
+		{
+			myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
+		}
 		GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
 		MyCharacter = myPlayer;
 		break;
@@ -227,6 +233,10 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 		
 	case EGuestStatus::ReadyToCheckOut:
 	{
+		if (DialogueComponent)
+		{
+			DialogueComponent->UpdateDialog(5);
+		}
 		GuestStartDialogue(myPlayer);
 		break;
 	}
@@ -323,7 +333,7 @@ void AEYS_GuestCharacter::OnDialogueFinished()
 
 		case EGuestStatus::TakeFood:
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "DialogEnd");
+			
 			CurrentStatus = EGuestStatus::GoToSit;
 			TakeFood(MyCharacter);
 			
@@ -526,7 +536,7 @@ void AEYS_GuestCharacter::TakeFood(AEYS_MyCharacter* myPlayer)
 
 			MoveTo(SitLocation, 100.0f);
 			CurrentStatus = EGuestStatus::GoToSit;
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Infood");
+			
 		}
 		else
 		{
@@ -671,7 +681,10 @@ void AEYS_GuestCharacter::GuestStartDialogue(AEYS_MyCharacter* myPlayer)
 
 	SetActorRotation(LookAtRot);
 
-	myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
+	if (!myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().IsAlreadyBound(this, &AEYS_GuestCharacter::OnDialogueFinished))
+	{
+		myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
+	}
 	DialogueComponent->StartDialogue(myPlayer);
 	
 	
@@ -681,6 +694,7 @@ void AEYS_GuestCharacter::CheckOut(AEYS_MyCharacter* myPlayer)
 {
 	if (!myPlayer) return;
 	myPlayer->bIsHaveKey = true;
+	
 	myPlayer->MyRoomID = GuestRoomID;
 	myPlayer->SetRoot(7);
 	float Alpha = MentalSlateValue / 100.0f;

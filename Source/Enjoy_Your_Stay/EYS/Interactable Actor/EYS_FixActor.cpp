@@ -29,7 +29,7 @@ void AEYS_FixActor::BeginPlay()
 	
 		BoilerActor = Cast<AEYS_Boiler>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_Boiler::StaticClass()));
 		if (BoilerActor)
-		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AEYS_FixActor::SetBoilerFuel, 2.0f, true);
+		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AEYS_FixActor::SetBoilerFuel, 10.0f, true);
 
 		if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 		{
@@ -37,7 +37,7 @@ void AEYS_FixActor::BeginPlay()
 		}
 		if (UEYS_UpgradeSubsystem* US = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
 		{
-			// Kendi yazdığın o asil hız çarpanı fonksiyonu ke (Örn: Seviye 1'de 1.0f, Seviye 2'de 1.5f, Seviye 3'de 2.0f döner)
+			
 			FixingSpeedMultiplier = US->GetEquipmentUseTimeMultiplier();
 		}
 }
@@ -101,7 +101,7 @@ void AEYS_FixActor::SetPipeMesh()
 void AEYS_FixActor::SetBoilerFuel()
 {
 	if (!(BoilerActor==nullptr))
-	BoilerActor->SetCoalAmount(-1.0f);
+	BoilerActor->SetCoalAmount(-0.5f);
 }
 
 void AEYS_FixActor::PlayFixAudio_Implementation()

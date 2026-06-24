@@ -30,7 +30,7 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 	EnumFullName.Split(TEXT("::"), nullptr, &RowNameString);
 	FName RowName = FName(*RowNameString);
 
-	// 2. Tabloda o satırı (Row) bul
+	
 	static const FString ContextString(TEXT("Tutorial Mission Context"));
 	FTutorialMissionData* FoundRow = MissionDataTable->FindRow<FTutorialMissionData>(RowName, ContextString);
 
@@ -122,24 +122,25 @@ void UEYS_TutorialSubsystem::CheckTutorialPhase()
 	}
 } 
 
-void UEYS_TutorialSubsystem::RegisterNewOrder(TSubclassOf<AActor> OrderedItemClass)
+void UEYS_TutorialSubsystem::RegisterNewOrder(const TArray<TSubclassOf<AActor>>& OrderedItemClasses)
 {
-	
+
 	if (CurrentStep != ETutorialStep::OrderSupplies) return;
 
-	
-	if (RequiredOrderItems.Contains(OrderedItemClass))
+
+	for (TSubclassOf<AActor> ProductClass : OrderedItemClasses)
 	{
-		
-		CurrentlyOrderedItems.AddUnique(OrderedItemClass);
+		if (!ProductClass) continue;
 
-		if (CurrentlyOrderedItems.Num() >= RequiredOrderItems.Num())
-		{
 
-			
-			UpdateTutorialState(ETutorialStep::OrderSupplies, ETutorialStep::GoToBed);
-			CurrentlyOrderedItems.Empty();
-		}
+		RequiredOrderItems.Remove(ProductClass);
+	}
+
+	if (RequiredOrderItems.Num() <= 0)
+	{
+	
+		UpdateTutorialState(ETutorialStep::OrderSupplies, ETutorialStep::GoToBed);
+
 	}
 }
 
@@ -148,7 +149,7 @@ void UEYS_TutorialSubsystem::RegisterFilledSlot(EFoodType FilledType)
 	if(CurrentStep != ETutorialStep::PlaceFoodBox) return;
 
 	FilledFridgeSlots.AddUnique(FilledType);
-	if (FilledFridgeSlots.Num() >= 4)
+	if (FilledFridgeSlots.Num() >= 8)
 	{
 		UpdateTutorialState(ETutorialStep::PlaceFoodBox, ETutorialStep::FindSponge);
 	}

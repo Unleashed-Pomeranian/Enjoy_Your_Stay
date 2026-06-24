@@ -64,7 +64,7 @@ void AEYS_BabaYagaAIController::OnTargetPerceived(AActor* Actor, FAIStimulus Sti
 
 	if (!Actor || !Actor->ActorHasTag("Player") || !MyBabaYagaPawn) return;
 
-	// 👁️ 1. GÖRÜŞ ALGISI: Baba Yaga bizi bizzat gördüyse ke gulum!
+
 	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 	{
 		if (Stimulus.WasSuccessfullySensed())

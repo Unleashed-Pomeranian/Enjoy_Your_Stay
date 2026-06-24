@@ -35,7 +35,6 @@ void AEYS_LightBase::BeginPlay()
 	}
 
 
-	ToggleLight(bHasPower);
 	if (GetWorld())
 	{
 		if (UEYS_WorldSubsystem* WSub = GetWorld()->GetSubsystem<UEYS_WorldSubsystem>())

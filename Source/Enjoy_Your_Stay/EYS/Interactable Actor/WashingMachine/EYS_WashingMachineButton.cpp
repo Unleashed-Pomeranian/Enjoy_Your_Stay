@@ -56,7 +56,7 @@ void AEYS_WashingMachineButton::UpdateButtonRotation()
 	{
 		ButtonCurrentRotation = 360.0f;
 		GetWorldTimerManager().ClearTimer(ButtonRotationTimerHandle);
-		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Green, TEXT("Şalter 360 dereceye ulaştı, zamanlayıcı durduruldu"));
+
 	}
 	
 
@@ -65,7 +65,7 @@ void AEYS_WashingMachineButton::UpdateButtonRotation()
 	{
 		StaticMesh->SetRelativeRotation(FRotator(ButtonCurrentRotation, 0.0f, 0.0f));
 
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Şalter Döndü: %0.0f Derece"), ButtonCurrentRotation));
+		
 
 	}
 }

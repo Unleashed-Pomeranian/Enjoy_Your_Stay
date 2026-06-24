@@ -63,14 +63,14 @@ void AEYS_Fridge_Slot::FDeleteSlot(bool bSpawnActor)
 			{
 				SpawnedFoodBag->AttachFoodBag();
 			}
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Cantake");
+	
 		}
 		
 		
 	}
 	 if (InstanceIndex <= -1)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "bCanIsqdsdnteract");
+	
 		SlotFoodType = EFoodType::None;
 		InstancedStaticMesh->SetStaticMesh(nullptr);
 		CurrentFoodBag = nullptr;
@@ -158,25 +158,25 @@ void   AEYS_Fridge_Slot::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 {
 	if (myPlayer->HeldEquipment != nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "HeldEquipment");
+	
 		AEYS_Tray* Tray = Cast<AEYS_Tray>(myPlayer->HeldEquipment);
 
 		if (Tray)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Tray");
+		
 			if (InstanceIndex >= 0 && SlotFoodType != EFoodType::None)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "SetItemSlot");
+			
 				if (Tray->IsSlotEmpty(0))
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "IsSlotEmpty(0)");
+					
 					Tray->SetItemToSlot(0, CurrentFoodBag, SlotFoodType);
 					FDeleteSlot(false);
 					return; 
 				}
 				else if (Tray->IsSlotEmpty(1))
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "IsSlotEmpty(1)");
+					
 					Tray->SetItemToSlot(1, CurrentFoodBag, SlotFoodType);
 					FDeleteSlot(false);
 					return; 
@@ -209,7 +209,7 @@ void   AEYS_Fridge_Slot::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 										InstancedStaticMesh->SetStaticMesh(FoundData->FoodMesh);
 								}
 							}
-							GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "AddItemToSlot");
+						
 							FAddSlot();
 							Tray->SetItemToSlot(i, nullptr, EFoodType::None); 
 							 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EYS/Interactable Actor/EYS_SnowPileActor.h"
@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
+#include "EYS/NPC/EYS_GuestCharacter.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
 #include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
@@ -27,6 +28,10 @@ AEYS_SnowPileActor::AEYS_SnowPileActor()
 void AEYS_SnowPileActor::BeginPlay()
 {
 	Super::BeginPlay();
+	if (BoxCollision)
+	{
+		BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AEYS_SnowPileActor::OnSnowOverlap);
+	}
 	if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 	{
 		MS->RegisterMissionTarget(EMissionType::SnowPile);
@@ -36,6 +41,13 @@ void AEYS_SnowPileActor::BeginPlay()
 
 		PlowSpeedMultiplier = US->GetEquipmentUseTimeMultiplier();
 	}
+	const int32 Index = FMath::RandRange(0, SnowMeshes.Num() - 1);
+	if(SnowMeshes[Index])
+	{
+		StaticMesh->SetStaticMesh(SnowMeshes[Index]);
+	}
+
+	SecondPlowValue = PlowValue * 2.0f;
 }
 
 
@@ -48,10 +60,10 @@ void AEYS_SnowPileActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, b
 }
 void AEYS_SnowPileActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " in");
+
 	if (Value == 5&& myPlayer)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, " in2");
+		
 		Interact(myPlayer);
 	}
 	else
@@ -59,6 +71,27 @@ void AEYS_SnowPileActor::aInteract_Implementation(AEYS_MyCharacter* myPlayer, in
 		return;
 	}
 }
+
+void AEYS_SnowPileActor::OnSnowOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+	
+		AEYS_GuestCharacter* GuestChar = Cast<AEYS_GuestCharacter>(OtherActor);
+		if (GuestChar)
+		{
+
+			if (PileValue <= 0.002f) return;
+
+		
+			GuestChar->SetMentalHealth(SnowMentalDamage);
+
+			
+			//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan,FString::Printf(TEXT("Misafir (%s) kar yiginina daldı! Mentali %f azaldi"), *GuestChar->GetName(), SnowMentalDamage));
+		}
+	}
+}
+	
 
 void AEYS_SnowPileActor::PlaySnowAudio_Implementation()
 {
@@ -74,12 +107,13 @@ void AEYS_SnowPileActor::Interact(AEYS_MyCharacter* myPlayer)
 	PileValue = FMath::Max(PileValue, 0.0f);
 	FVector MeshScale = StaticMesh->GetRelativeScale3D();
 	MeshScale.Z = PileValue;
+
 	StaticMesh->SetRelativeScale3D(MeshScale);
 	if (PileValue <= 0.7f)
 	{
-		PlowValue = 0.006f;
+		PlowValue = SecondPlowValue;
 
-		if (PileValue <= 0.002f)
+		if (PileValue <= 0.008f)
 		{
 			if (MySnowTarget) MySnowTarget->bIsOccupied = false;
 			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())

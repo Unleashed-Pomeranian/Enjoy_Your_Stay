@@ -25,7 +25,7 @@ AEYS_GuestCar::AEYS_GuestCar()
 	SpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
 	SpawnPoint->SetupAttachment(GetMesh());
 	LeftSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Left Spot Light"));
-	LeftSpotLight->SetupAttachment(GetMesh()); // Arabanın ana iskeletine bağla ke!
+	LeftSpotLight->SetupAttachment(GetMesh());
 
 	
 	RightSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Right Spot Light"));
@@ -126,7 +126,6 @@ void AEYS_GuestCar::MoveCar()
 	
 		FVector CarLoc = GetActorLocation();
 		float DistanceToTarget = PathToUse->GetBreakDistance(CarLoc);
-		UE_LOG(LogTemp, Warning, TEXT("DistanceToTarget: %f"), DistanceToTarget);
 		if (DistanceToTarget < 250.0f)
 		{
 			
@@ -239,7 +238,6 @@ void AEYS_GuestCar::DriveBack()
 	{
 		CurrentState = EGuestCarState::Exiting;
 		bIsParking = false;
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "driveback");
 		WheeledMovement->SetUseAutomaticGears(false);
 		WheeledMovement->SetBrakeInput(0.0f);
 		WheeledMovement->SetHandbrakeInput(false);

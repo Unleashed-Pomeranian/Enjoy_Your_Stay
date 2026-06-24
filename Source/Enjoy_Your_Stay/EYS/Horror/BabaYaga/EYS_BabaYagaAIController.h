@@ -25,7 +25,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
-	// 🧠 Algı Motoru ve Duyuları gulum
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EYS | BabaYaga")
 	UAIPerceptionComponent* BabaYagaPerceptionComp;
 

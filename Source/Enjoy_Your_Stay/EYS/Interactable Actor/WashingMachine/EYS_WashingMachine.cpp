@@ -239,7 +239,7 @@ void AEYS_WashingMachine::ToggleLid()
 	{
 		SkeletalMesh->PlayAnimation(AnimAssets[0], false);
 		bIsLidOpen = true;
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Makine Kapağı Açıldı."));
+		
 
 		PlayWashingAudio(0);
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
@@ -297,7 +297,7 @@ void AEYS_WashingMachine::StartWashing()
 void AEYS_WashingMachine::OnWashingComplete()
 {
 	bIsWashing = false;
-	GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Green, TEXT("Yıkama BİTTİ! Slotlar kontrol ediliyor..."));
+	
 
 
 	for (USceneComponent* Slot : SheetSlots)

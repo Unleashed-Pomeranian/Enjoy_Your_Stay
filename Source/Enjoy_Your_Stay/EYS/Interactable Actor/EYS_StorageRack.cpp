@@ -86,7 +86,7 @@ void AEYS_StorageRack::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 		PlayerEquipment->PlaceOnRack(myPlayer, FoundEmptySlot);
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Eşya karakterden söküldü ve rafa yerleştirildi."));
+		
 	}
 }
 

@@ -25,7 +25,7 @@ AEYS_GuestBed::AEYS_GuestBed()
 void AEYS_GuestBed::BeginPlay()
 {
 	Super::BeginPlay();
-	SetSheetStatus(true);
+	SetSheetStatus(bIsBedDirty);
 }
 void AEYS_GuestBed::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
@@ -67,7 +67,7 @@ void AEYS_GuestBed::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 		else if (bIsHasSheet && !myPlayer->HeldEquipment)
 		{
 			SetSheetMesh(true);
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, "Simdi Girdi!");
+		
 
 		}
 	
@@ -99,7 +99,7 @@ void AEYS_GuestBed::SetSheetMesh(bool bIstakingSheet)
 	{
 		if (!SheetClass)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Second");
+		
 			return;
 		}
 
@@ -113,7 +113,7 @@ void AEYS_GuestBed::SetSheetMesh(bool bIstakingSheet)
 			SpawnedSheet->SetDirtStatus(bIsBedDirty);
 			SheetMesh->SetVisibility(false);
 			bIsHasSheet = false;
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Third");
+		
 			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
 			{
 				TS->UpdateTutorialState(ETutorialStep::TakeDirtySheet, ETutorialStep::GoToLaundryRoom);

@@ -49,10 +49,10 @@ void UEYS_UserSettingsSubsystem::UpdateSoundVolume(USoundClass* TargetClass, flo
 {
     if (AudioConfig && AudioConfig->MainSoundMix && TargetClass)
     {
-        // 1. Değeri Mix içinde değiştir
+        // Değeri Mix içinde değiştir
         UGameplayStatics::SetSoundMixClassOverride(GetWorld(), AudioConfig->MainSoundMix, TargetClass, Volume, 1.0f, 0.0f, true);
 
-        // 2. Değişikliği anında hoparlöre gönder
+        // Değişikliği anında hoparlöre gönderir
         UGameplayStatics::PushSoundMixModifier(GetWorld(), AudioConfig->MainSoundMix);
     }
 }

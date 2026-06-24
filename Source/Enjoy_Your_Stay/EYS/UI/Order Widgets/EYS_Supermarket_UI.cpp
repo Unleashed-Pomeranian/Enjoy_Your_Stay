@@ -19,12 +19,12 @@ void UEYS_Supermarket_UI::NativeConstruct()
 		Button_Checkout->OnClicked.AddDynamic(this, &UEYS_Supermarket_UI::OnCheckoutClicked);
 	}
 
-	// Başlangıçta sepeti temizliyoruz gulum
+
 	ShoppingCart.Empty();
 	TotalCartPrice = 0;
 	UpdateCartUI();
 
-	// Ürün butonlarını otomatik oluşturup dükkan raflarına diziyoruz
+
 	PopulateMarketProducts();
 }
 
@@ -109,7 +109,6 @@ void UEYS_Supermarket_UI::OnCheckoutClicked()
 		ES->UpdateMoney(-TotalCartPrice);
 
 	AEYS_OrderSpawner* OrderSpawner = Cast<AEYS_OrderSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_OrderSpawner::StaticClass()));
-	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 
 	for (const FSupermarketProduct& Item : ShoppingCart)
 	{
@@ -120,16 +119,33 @@ void UEYS_Supermarket_UI::OnCheckoutClicked()
 				OrderSpawner->SetOrderClass(Item.EquipmentClass);
 			}
 
-			if (TS)
+			
+
+		}
+	}
+
+
+	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+	if (!TS) return;
+	if (TS->CurrentStep == ETutorialStep::OrderSupplies)
+	{
+		TArray<TSubclassOf<AActor>> BasketClasses;
+		for (const FSupermarketProduct& Item : ShoppingCart)
+		{
+			if (Item.EquipmentClass)
 			{
-				TS->RegisterNewOrder(Item.EquipmentClass);
+				BasketClasses.Add(Item.EquipmentClass);
+				
 			}
+		}
+		if (TS && BasketClasses.Num() > 0)
+		{
+			TS->RegisterNewOrder(BasketClasses);
 		}
 	}
 
 	ShoppingCart.Empty();
 	TotalCartPrice = 0;
 	UpdateCartUI();
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Siparişler başarıyla alındı!"));
+	
 }

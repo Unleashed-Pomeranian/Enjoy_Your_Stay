@@ -22,7 +22,7 @@ class ENJOY_YOUR_STAY_API AEYS_FixActor : public AActor,public IEYS_InteractInte
 	FTimerHandle MyTimerHandle;
     
 public:	
-	// Sets default values for this actor's properties
+
 	AEYS_FixActor();
 
 protected:
@@ -33,7 +33,9 @@ protected:
 	void aInteract_Implementation(AEYS_MyCharacter* myPlayer, int32 Value) override;
 	UFUNCTION() void SetPipeMesh();
 	UPROPERTY(BlueprintReadOnly) float FixRate = 0.0f;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)  float FixingValue = 0.7f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Varible", meta = (AllowPrivateAccess = "true"))
+	float FixingValue = 0.7f;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite) UClass* SinglePipeRef;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) AEYS_Boiler* BoilerActor;
 	UPROPERTY(BlueprintReadOnly)

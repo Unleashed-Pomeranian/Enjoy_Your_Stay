@@ -12,7 +12,7 @@
 // Sets default values
 AEYS_GuestSpawner::AEYS_GuestSpawner()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
 	PrimaryActorTick.bCanEverTick = true;
 	
 }
@@ -98,7 +98,13 @@ void AEYS_GuestSpawner::StartGuestSpawning()
 void AEYS_GuestSpawner::SetEmptyRoom()
 {
 	EmptyRooms++;
-
+	if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+	{
+		if (!(TS->bIsTutorialFinished) || TS->CurrentPhase != ETutorialPhase::ThirdPhase)
+		{
+			return;
+		}
+	}
 	if (!GetWorld()->GetTimerManager().IsTimerActive(GuestTimerHandle))
 	{
 		float CurrentMultiplier = 1.0f;

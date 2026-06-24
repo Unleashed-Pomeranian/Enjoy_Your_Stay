@@ -41,6 +41,6 @@ public:
 	UFUNCTION() void AttachActor(AEYS_MyCharacter* myPlayer);
 	UFUNCTION() void DetachFromPlayer();
 	UFUNCTION() void PlaceOnRack(AEYS_MyCharacter* myPlayer, USceneComponent* TargetSlot);
-	
+	UFUNCTION() void PlaceOnOrderSpawener( USceneComponent* TargetSlot);
 	
 };

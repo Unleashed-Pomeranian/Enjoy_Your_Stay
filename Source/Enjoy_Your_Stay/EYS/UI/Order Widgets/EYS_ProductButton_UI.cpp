@@ -2,7 +2,7 @@
 
 
 #include "EYS/UI/Order Widgets/EYS_ProductButton_UI.h"
-
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 void UEYS_ProductButton_UI::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -11,6 +11,7 @@ void UEYS_ProductButton_UI::NativeConstruct()
 	{
 		Button_Item->OnClicked.AddDynamic(this, &UEYS_ProductButton_UI::OnButtonClicked);
 	}
+	
 }
 
 void UEYS_ProductButton_UI::InitButton(FSupermarketProduct Data, UEYS_Supermarket_UI* MainUI)
@@ -23,6 +24,7 @@ void UEYS_ProductButton_UI::InitButton(FSupermarketProduct Data, UEYS_Supermarke
 		Text_ProductName->SetText(FText::FromString(ProductData.ProductName));
 	}
 
+	
 
 	if (Text_ProductPrice)
 	{
@@ -34,6 +36,17 @@ void UEYS_ProductButton_UI::InitButton(FSupermarketProduct Data, UEYS_Supermarke
 	if (Image_Product && ProductData.ProductImage)
 	{
 		Image_Product->SetBrushFromTexture(ProductData.ProductImage);
+	}
+
+	if (ProductData.ProductName == "Detergent")
+	{
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			if (TS->CurrentStep == ETutorialStep::OrderSupplies || TS->CurrentStep == ETutorialStep::GoToBed)
+			{
+				SetVisibility(ESlateVisibility::Hidden);
+			}
+		}
 	}
 }
 

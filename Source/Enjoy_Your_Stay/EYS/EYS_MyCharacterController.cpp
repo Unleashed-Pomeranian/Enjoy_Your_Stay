@@ -58,7 +58,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			
 			if (UEYS_EconomySubsystem* ES = GetGameInstance()->GetSubsystem<UEYS_EconomySubsystem>())
 			{
-				int32 MyMoney = ES->GetCurrentMoney(); // Subsystem'deki orijinal adıyla çektik ke!
+				int32 MyMoney = ES->GetCurrentMoney();
 				MyCharacterUIInstance->SetMoneyText(MyMoney);
 			}
 		
@@ -68,7 +68,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			if (TS) 
 			{ 
 				TS->MyCharacterUIIns = MyCharacterUIInstance; 
-				TS->SetTutorialStep(ETutorialStep::WaitTheGuest);
+				TS->SetTutorialStep(ETutorialStep::GoToEntrance);
 			}
 
 			MyCharacterUIInstance->AddToViewport();

@@ -181,9 +181,10 @@ bool AEYS_Generator::BrokeGenerator()
 	float RawDiceRoll = DiceRoll;
 	DiceRoll *= GeneratorFailureMultiplier;
 	BreakdownChance = FMath::Clamp(BreakdownChance + 0.1f, 0.0f, 10.0f);
+	/*
 	if (GEngine)
 	{
-		FString DiceMessage = FString::Printf(
+		/**FString DiceMessage = FString::Printf(
 			TEXT("🎲 Jeneratör Zarı -> Ham Zar: %.2f | Upgrade Çarpanı: %.2f | İşlenmiş Nihai Zar: %.2f [Sınır: %.2f]"),
 			RawDiceRoll,
 			GeneratorFailureMultiplier,
@@ -191,8 +192,9 @@ bool AEYS_Generator::BrokeGenerator()
 			BreakdownChance
 		);
 		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Cyan, DiceMessage);
+		
 	}
-
+	*/
 	if (DiceRoll <= BreakdownChance)
 	{
 		bIsWorking = false; 
@@ -201,10 +203,7 @@ bool AEYS_Generator::BrokeGenerator()
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
 
 		
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Red, TEXT("!!! JENERATÖR ARIZA YAPTI VE DURDU !!!"));
-		}
+		
 
 	
 		SetLightColor(0);

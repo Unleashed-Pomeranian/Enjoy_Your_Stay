@@ -47,7 +47,7 @@ void AEYS_DirtActor::BeginPlay()
 		}
 
 	}
-	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_DirtActor::SetGuestMentalHealth, 2.0f, true);
+	GetWorld()->GetTimerManager().SetTimer(DirtTimerHandle, this, &AEYS_DirtActor::SetGuestMentalHealth, 10.0f, true);
 
 	if (UEYS_MissionSubsystem* MS = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>())
 	{
@@ -58,6 +58,8 @@ void AEYS_DirtActor::BeginPlay()
 		// Kendi yazdığın o asil hız çarpanı fonksiyonu ke (Örn: Seviye 1'de 1.0f, Seviye 2'de 1.5f, Seviye 3'de 2.0f döner)
 		CleaningSpeedMultiplier = US->GetEquipmentUseTimeMultiplier();
 	}
+
+	SecondcleaningValue = cleaningValue * 2.0f;
 }
 void AEYS_DirtActor::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
@@ -104,7 +106,8 @@ void AEYS_DirtActor::Interact(AEYS_MyCharacter* myPlayer)
 	PlayCleaningAudio();
 	if (opacityValue <= 2.1f)
 	{
-		cleaningValue = 0.021f;
+		
+		cleaningValue = SecondcleaningValue;
 
 		if (opacityValue <= 0.2f)
 		{

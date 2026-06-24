@@ -7,6 +7,7 @@
 #include "EYS/EYS_MyCharacter.h"
 #include "EYS/EYS_MyCharacterController.h"
 #include "HeavyEquipment/EYS_Tray.h"
+#include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 // Sets default values
 AEYS_TrayHolder::AEYS_TrayHolder()
@@ -68,7 +69,7 @@ void AEYS_TrayHolder::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 	{
 		if (InstanceIndex >= 0)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Interact");
+		
 			DeleteTray();
 		}
 	}
@@ -147,10 +148,15 @@ void AEYS_TrayHolder::DeleteTray()
 		AEYS_Tray* SpawnedTray = GetWorld()->SpawnActor<AEYS_Tray>(CurrentTray, SpawnTransform);
 		if (SpawnedTray)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Spawned");
+			
 			SpawnedTray->AttachTray();
 			InstancedStaticMesh->RemoveInstance(InstanceIndex);
 			InstanceIndex--;
+		}
+
+		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())
+		{
+			TS->UpdateTutorialState(ETutorialStep::TakeTray, ETutorialStep::TakeFoodBag);
 		}
 	}
 }

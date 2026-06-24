@@ -164,11 +164,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tutorial Settings")
 	TArray<TSubclassOf<AActor>> RequiredOrderItems;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tutorial Settings")
-	TArray<TSubclassOf<AActor>> CurrentlyOrderedItems;
 
 	UFUNCTION(BlueprintCallable, Category = "Tutorial")
-	void RegisterNewOrder(TSubclassOf<AActor> OrderedItemClass);
+	void RegisterNewOrder(const TArray<TSubclassOf<AActor>>& OrderedItemClasses);
 
 	/*---------------------FoodBox Tutorial------------------------*/
 

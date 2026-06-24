@@ -42,18 +42,23 @@ protected:
 	UFUNCTION()void SetGuestMentalHealth();
 	UFUNCTION(BlueprintNativeEvent) void PlayCleaningAudio();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (AllowPrivateAccess = "true"))
-	float MentalReduceValue = 0.5f;
+	float MentalReduceValue = -0.5f;
 	FTimerHandle DirtTimerHandle;
 	UPROPERTY(BlueprintReadOnly)
 	float CleaningSpeedMultiplier = 1.0f;
+	float opacityValue = 3.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible", meta = (AllowPrivateAccess = "true"))
+	float cleaningValue = 0.016f;
+	UPROPERTY()
+	float SecondcleaningValue = 0.024f;
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) class AEYS_DirtTarget* MyDirtTarget;
 
-	float opacityValue = 3.0f;
-	float cleaningValue= 0.012f;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsEffectMental=true;
 

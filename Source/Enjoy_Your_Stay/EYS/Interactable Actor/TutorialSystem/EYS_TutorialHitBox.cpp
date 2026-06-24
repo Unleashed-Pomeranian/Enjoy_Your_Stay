@@ -167,7 +167,7 @@ void AEYS_TutorialHitBox::SpawnEquipment(TSubclassOf<AActor> EquipmentClass)
 
 void AEYS_TutorialHitBox::SetHitBoxLocation(const FVector& NewLocation)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "food");
+	
 	SetActorLocation(NewLocation,true);
 }
 

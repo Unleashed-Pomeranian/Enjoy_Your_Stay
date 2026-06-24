@@ -17,7 +17,6 @@ class ENJOY_YOUR_STAY_API AEYS_BossSpeaker : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* SpeakerMesh;
 
-	// Sesi Çalacak Olan Bile?en
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UAudioComponent* AudioComponent;
 	

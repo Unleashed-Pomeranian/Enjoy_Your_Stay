@@ -77,7 +77,7 @@ void  AEYS_InteractableActor_WP::Interact(AEYS_MyCharacter* myPlayer)
 				{
 					if (MissionSpawner)
 					{
-						for (int i = 0; i <= 5; i++)
+						for (int i = 0; i <= 3; i++)
 						{
 							MissionSpawner->SpawnMissionActor(ESurfaceType::Floor, ERoomID::None,true);
 						}

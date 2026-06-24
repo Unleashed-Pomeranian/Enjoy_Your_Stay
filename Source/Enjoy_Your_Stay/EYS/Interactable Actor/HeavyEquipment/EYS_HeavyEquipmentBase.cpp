@@ -68,6 +68,16 @@ void AEYS_HeavyEquipmentBase::PlaceOnRack(AEYS_MyCharacter* myPlayer, USceneComp
 	PlayHeavyAudio();
 }
 
+void AEYS_HeavyEquipmentBase::PlaceOnOrderSpawener(USceneComponent* TargetSlot)
+{
+	if (!TargetSlot) return;
+	StaticMesh->SetSimulatePhysics(false);
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	AttachToComponent(TargetSlot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
 
 
 void AEYS_HeavyEquipmentBase::DetachActor()

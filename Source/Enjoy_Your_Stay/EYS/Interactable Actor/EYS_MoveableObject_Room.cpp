@@ -94,7 +94,7 @@ void AEYS_MoveableObject_Room::OnDoorOverlapEnd(UPrimitiveComponent* OverlappedC
             }
             bIsDoorLocked = false;
             AssignedNPCs = nullptr;
-            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Oda Boşaltıldı."));
+          
           }
 
         }

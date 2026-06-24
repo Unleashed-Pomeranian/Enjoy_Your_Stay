@@ -41,7 +41,7 @@ public:
 	void SetUIVolume(float NewValue);
 
 public:
-	// Bu fonksiyonu UI veya GameMode bir kez çağırıp Data Asset'i teslim etmeli
+
 	UFUNCTION(BlueprintCallable, Category = "Settings")
 	void InitializeAudio(UEYS_AudioConfig* Config);
 

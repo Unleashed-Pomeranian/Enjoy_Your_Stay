@@ -24,10 +24,10 @@ class ENJOY_YOUR_STAY_API AEYS_BabaYaga : public ACharacter
 public:
 	AEYS_BabaYaga();
 
-	// Hız ve durum yönetim fonksiyonu ke gulum
+
 	void SetMovementState(EBabaYagaState NewState);
 
-	// Rastgele devriye döngüsü tetiği
+
 	void StartPatrol();
 
 	UFUNCTION() void PlayBabaYagaSound(int32 Index);

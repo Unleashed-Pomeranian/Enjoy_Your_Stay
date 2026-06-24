@@ -110,18 +110,17 @@ void UEYS_WorldSubsystem::RequestSpawnGuestCar(TSubclassOf<AEYS_GuestCar> GuestC
 
 void UEYS_WorldSubsystem::SetMentalSlate(const float ReduceValue)
 {
-	for (int32 i = ActiveNPCs.Num() - 1; i >= 0; --i)
-	{
-		if (!ActiveNPCs[i])
-		{
-			ActiveNPCs.RemoveAtSwap(i);
-			continue;
-		}
-		else
-		{
-			ActiveNPCs[i]->MentalSlateValue = FMath::Clamp(ActiveNPCs[i]->MentalSlateValue -= ReduceValue, 0, 100);
-		}
 
+	for (AEYS_GuestCharacter* Guest : ActiveNPCs)
+	{
+
+		if (!Guest) continue;
+
+		if (Guest->bIsHaveRoom)
+		{
+			Guest->SetMentalHealth(ReduceValue);
+		}
+		
 	}
 }
 
@@ -261,12 +260,13 @@ void UEYS_WorldSubsystem::RegisterSingleLight(AEYS_LightBase* NewLight)
 
 void UEYS_WorldSubsystem::ToggleAllOtelLights(bool bActivate)
 {
+	/*
 	if (GEngine)
 	{
 		FString DebugMsg = FString::Printf(TEXT("💡 ToggleAllOtelLights Çağrıldı! Array'deki Toplam Işık Sayısı: %d"), AllOtelLights.Num());
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, DebugMsg);
 	}
-
+	*/
 	for (int32 i = AllOtelLights.Num() - 1; i >= 0; --i)
 	{
 	

@@ -202,7 +202,7 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 		
 			
 			
-			float StaminaDropRate = 0.2f * SprintStaminaMultiplier;
+			float StaminaDropRate = 0.12f * SprintStaminaMultiplier;
 			Stamina = FMath::Clamp(Stamina - StaminaDropRate, 0.0f, 100.0f);
 			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
 			MyPC->OnStaminaChanged.Broadcast(Stamina, bCanSprinting);
