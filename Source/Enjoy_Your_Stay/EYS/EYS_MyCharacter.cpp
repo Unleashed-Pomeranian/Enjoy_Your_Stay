@@ -199,15 +199,6 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 		
 		if (bIsSprinting && bCanSprinting)
 		{
-		
-			
-			
-			float StaminaDropRate = 0.12f * SprintStaminaMultiplier;
-			Stamina = FMath::Clamp(Stamina - StaminaDropRate, 0.0f, 100.0f);
-			UKismetSystemLibrary::K2_PauseTimer(this, TEXT("StaminaRecovery"));
-			MyPC->OnStaminaChanged.Broadcast(Stamina, bCanSprinting);
-
-			
 			if (UserSettingsSubsystem)
 			{
 				float Scale = UserSettingsSubsystem->CameraShakeIntensity;
@@ -226,13 +217,7 @@ void AEYS_MyCharacter::Move(const FInputActionValue& Value)
 			}
 
 		}
-		if (Stamina <= 0)
-		{
-			if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-				MoveComp->MaxWalkSpeed = walkSpeed;
-			    bCanSprinting = false;
-				
-		}
+		
 
 	}
 }
@@ -277,23 +262,83 @@ void AEYS_MyCharacter::StopSneak(const FInputActionValue& Value)
 
 void AEYS_MyCharacter::StartSprint(const FInputActionValue& Value)
 {
-	if (bCanSprinting)
+	if (bCanSprinting && Stamina > 0.0f)
 	{
 		if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+		{
 			MoveComp->MaxWalkSpeed = sprintSpeed;
+		}
 
+		GetWorld()->GetTimerManager().ClearTimer(StaminaTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(	StaminaTimerHandle,	this,&AEYS_MyCharacter::StaminaReduce,0.1f,true);
 		bIsSprinting = true;
 	}
 }
 
+
 void AEYS_MyCharacter::StopSprint(const FInputActionValue& Value)
 {
-    
 	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
 		MoveComp->MaxWalkSpeed = walkSpeed;
-	  bIsSprinting = false;
-	  UKismetSystemLibrary::K2_SetTimer(this, TEXT("StaminaRecovery"), 0.1f, true, false, 0.0f, 0.0f);
+	}
+
+	bIsSprinting = false;
+
+	GetWorld()->GetTimerManager().ClearTimer(StaminaTimerHandle);
+
+	if (Stamina < 100.0f)
+	{
+		GetWorld()->GetTimerManager().SetTimer(StaminaTimerHandle,this,&AEYS_MyCharacter::StaminaRecovery,0.1f,true);
+	}
+	 
 	
+}
+void AEYS_MyCharacter::StaminaReduce()
+{
+	const float StaminaDropRate = 1.25f * SprintStaminaMultiplier;
+
+	Stamina = FMath::Clamp(Stamina - StaminaDropRate, 0.0f, 100.0f);
+
+	if (Stamina <= 0.0f)
+	{
+		if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+		{
+			MoveComp->MaxWalkSpeed = walkSpeed;
+		}
+
+		bCanSprinting = false;
+		bIsSprinting = false;
+
+		GetWorld()->GetTimerManager().ClearTimer(StaminaTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(StaminaTimerHandle,this,&AEYS_MyCharacter::StaminaRecovery,0.1f,true);
+	}
+
+	if (MyPC)
+	{
+		MyPC->OnStaminaChanged.Broadcast(Stamina, bCanSprinting);
+	}
+}
+
+void AEYS_MyCharacter::StaminaRecovery()
+{
+	Stamina = FMath::Clamp(Stamina + 1.0f, 0.0f, 100.0f);
+
+	if(Stamina >= 30.0f)
+	{
+		bCanSprinting = true;
+	}
+
+	if (Stamina >= 100.0f)
+	{
+		bCanSprinting = true;
+		GetWorld()->GetTimerManager().ClearTimer(StaminaTimerHandle);
+	}
+
+	if (MyPC)
+	{
+		MyPC->OnStaminaChanged.Broadcast(Stamina, bCanSprinting);
+	}
 }
 
 void AEYS_MyCharacter::DropObject(const FInputActionValue& Value)
@@ -320,17 +365,7 @@ void AEYS_MyCharacter::DetachHeavyEquipment()
 }
 
 
-void AEYS_MyCharacter::StaminaRecovery()
-{
-	Stamina = FMath::Clamp(Stamina + 1.0f, 0.0f, 100.0f);
-	
-	if (Stamina == 100)
-	{
-		bCanSprinting = true;
-		UKismetSystemLibrary::K2_ClearTimer(this, TEXT("StaminaRecovery"));
-	}
-	MyPC->OnStaminaChanged.Broadcast(Stamina,bCanSprinting);
-}
+
 
 void AEYS_MyCharacter::OpenNotebook(const FInputActionValue& Value)
 {

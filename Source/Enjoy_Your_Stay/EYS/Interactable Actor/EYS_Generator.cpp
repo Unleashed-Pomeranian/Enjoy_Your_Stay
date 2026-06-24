@@ -180,7 +180,7 @@ bool AEYS_Generator::BrokeGenerator()
 
 	float RawDiceRoll = DiceRoll;
 	DiceRoll *= GeneratorFailureMultiplier;
-	BreakdownChance = FMath::Clamp(BreakdownChance + 0.1f, 0.0f, 10.0f);
+	BreakdownChance = FMath::Clamp(BreakdownChance + 0.5f, 0.0f, 10.0f);
 	/*
 	if (GEngine)
 	{
@@ -232,7 +232,7 @@ void AEYS_Generator::ReduceFuel()
 		GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 	}
 
-	// 🎲 ZAR ATMA OPERASYONU KE! Her yakıt düştüğünde arıza riskini zar atarak sorguluyoruz gulum!
+	
 	if (BrokeGenerator())
 	{
 		return; 

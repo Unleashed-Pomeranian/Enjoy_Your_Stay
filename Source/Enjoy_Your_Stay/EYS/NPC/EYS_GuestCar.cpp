@@ -163,7 +163,12 @@ void AEYS_GuestCar::MoveCar()
 			{
 				GetWorld()->GetTimerManager().ClearTimer(CarTimerHandle);
 				AEYS_GuestSpawner* Spawner = Cast<AEYS_GuestSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_GuestSpawner::StaticClass()));
-				if (Spawner) Spawner->SetEmptyRoom();
+				
+				if (Spawner)
+				{
+					Spawner->SetEmptyRoom();
+					Spawner->bCanSpawnGuest = true;
+				}
 				Destroy();
 			}
 		}
@@ -234,6 +239,11 @@ void AEYS_GuestCar::DriveBack()
 	CharacterSkeletalMesh->SetVisibility(true);
 	SetCarPhysicsActive(true);
 	SetCarLight(true);
+	AEYS_GuestSpawner* Spawner = Cast<AEYS_GuestSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_GuestSpawner::StaticClass()));
+	if (Spawner)
+	{
+		Spawner->bCanSpawnGuest = false;
+	}
 	if (WheeledMovement)
 	{
 		CurrentState = EGuestCarState::Exiting;
@@ -249,6 +259,7 @@ void AEYS_GuestCar::DriveBack()
 	if (AssignedPath) AssignedPath->bIsOccupied = false;
 	if (ExitPath) GlobalLeavingPath = ExitPath->NextPath;
 	GetWorld()->GetTimerManager().SetTimer(CarTimerHandle, this, &AEYS_GuestCar::MoveCar, 0.02f, true);
+
 	
 }
 

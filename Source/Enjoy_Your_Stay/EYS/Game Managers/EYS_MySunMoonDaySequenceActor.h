@@ -36,5 +36,6 @@ public:
 	UFUNCTION() void SetDayHour(float TimeValue);
 	UFUNCTION() void StartNewDay();
 	UFUNCTION() void CheckTimeForTutorial();
+	UFUNCTION() void CheckTimeForHorror();
 	UPROPERTY() int32 DayNum=1;
 };

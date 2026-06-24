@@ -27,5 +27,17 @@ protected:
 
 	// Her tick çalıştığında Post Process ayarlarını delirtecek iç fonksiyon
 	void UpdateGlitchSettings();
+
+	/*Gecici*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "End Game")
+	TSubclassOf<class UUserWidget> EndGameWidgetClass;
+
+
+	UPROPERTY()
+	class UUserWidget* EndGameWidgetInstance;
+
+
+	FTimerHandle EndGameWidgetTimerHandle;
+	void ShowEndGameWidget();
 	
 };

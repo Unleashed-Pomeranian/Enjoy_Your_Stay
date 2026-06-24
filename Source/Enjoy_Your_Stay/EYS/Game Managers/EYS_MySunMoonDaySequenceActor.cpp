@@ -6,6 +6,7 @@
 #include "EYS/EYS_MyCharacterController.h"
 #include "EYS_WorldSubsystem.h"
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
+#include "EYS/Game Managers/EYS_HorrorSubsystem.h"
 
 void AEYS_MySunMoonDaySequenceActor::BeginPlay()
 {
@@ -37,6 +38,7 @@ void AEYS_MySunMoonDaySequenceActor::FDayTimer()
 if (PC) PC->SetHourWidget(GetTimeOfDay());
 
 CheckTimeForTutorial();
+CheckTimeForHorror();
 
 	if (!Director) return;
 	Director->Hour = GetTimeOfDay();
@@ -77,6 +79,20 @@ void AEYS_MySunMoonDaySequenceActor::CheckTimeForTutorial()
 		{
 			TS->UpdateTutorialState(ETutorialStep::WaitForUpdate, ETutorialStep::GoToComputer);
 		}
+	}
+}
+
+void AEYS_MySunMoonDaySequenceActor::CheckTimeForHorror()
+{
+	if (DayNum >= 4)
+	{
+		UWorld* World = GetWorld();
+		if (!World) return;
+
+		UEYS_HorrorSubsystem* HorrorSubsystem = World->GetSubsystem<UEYS_HorrorSubsystem>();
+		if (!HorrorSubsystem) return;
+
+		HorrorSubsystem->ActivateHorrorSystem(true);
 	}
 }
 

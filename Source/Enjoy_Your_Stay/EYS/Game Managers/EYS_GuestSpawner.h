@@ -23,6 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 	UPROPERTY() int32 EmptyRooms;
 	UPROPERTY()  int32 Rooms;
+	
 	UFUNCTION() void SpawnGuest();
 	UFUNCTION() void SpawnGuestTimer();
 	UFUNCTION() void StartGuestSpawning();
@@ -38,6 +39,8 @@ protected:
 
 public:	
 	UFUNCTION() void SetEmptyRoom();
+	UPROPERTY() bool bCanSpawnGuest = true;
+	
 	
 
 };

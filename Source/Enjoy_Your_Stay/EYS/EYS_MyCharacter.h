@@ -116,7 +116,7 @@ protected:
 	UFUNCTION() void StartSprint(const FInputActionValue& Value);
 	UFUNCTION() void StopSprint(const FInputActionValue& Value);
 	UFUNCTION() void DropObject(const FInputActionValue& Value);
-	UFUNCTION() void StaminaRecovery();
+
 	UFUNCTION() void OpenNotebook(const FInputActionValue& Value);
 	UFUNCTION() void CloseNotebook(const FInputActionValue& Value);
 	
@@ -133,8 +133,10 @@ protected:
 	UFUNCTION() void EnableMission(const FInputActionValue& Value);
 	UFUNCTION() void DisableMission(const FInputActionValue& Value);
 	UFUNCTION() void RequestPauseGame(const FInputActionValue& Value);
-
-	
+	/*Stamina*/
+	FTimerHandle StaminaTimerHandle;
+	UFUNCTION() void StaminaReduce();
+	UFUNCTION() void StaminaRecovery();
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anim")

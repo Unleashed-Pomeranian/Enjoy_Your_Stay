@@ -56,6 +56,8 @@ void AEYS_GuestSpawner::BeginPlay()
 void AEYS_GuestSpawner::SpawnGuest()
 {
 	
+	if (!bCanSpawnGuest) return;
+
 	if (EmptyRooms > 0)
 	{
 		UEYS_WorldSubsystem* Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();

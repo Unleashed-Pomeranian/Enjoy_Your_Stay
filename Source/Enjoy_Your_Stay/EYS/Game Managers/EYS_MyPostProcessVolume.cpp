@@ -2,7 +2,7 @@
 
 
 #include "EYS/Game Managers/EYS_MyPostProcessVolume.h"
-
+#include "Blueprint/UserWidget.h"
 AEYS_MyPostProcessVolume::AEYS_MyPostProcessVolume()
 {
 
@@ -60,7 +60,13 @@ void AEYS_MyPostProcessVolume::UpdateGlitchSettings()
 
 		PP.bOverride_VignetteIntensity = true;
 		PP.VignetteIntensity = Wave * 0.4f;
+		float BlindingBrightness = FMath::Lerp(1.0f, -4.0f, Wave);
+		PP.AutoExposureMinBrightness = BlindingBrightness;
+		PP.AutoExposureMaxBrightness = BlindingBrightness;
 
+		// Parlamanın etrafa ışık sızdırması (Glow hissi) için Bloom'u da dalgaya oranlıyoruz
+		PP.bOverride_BloomIntensity = true;
+		PP.BloomIntensity = Wave * 15.0f;
 	}
 
 	else if (CurrentGlitchIntensity > 3.5f && CurrentGlitchIntensity <= 5.0f)
@@ -88,8 +94,31 @@ void AEYS_MyPostProcessVolume::UpdateGlitchSettings()
 		}
 		PP.AutoExposureMinBrightness = 0.0f;
 		PP.AutoExposureMaxBrightness = 0.0f;
-		
+		if (GetWorld())
+		{
+			GetWorld()->GetTimerManager().SetTimer(	EndGameWidgetTimerHandle,this,&AEYS_MyPostProcessVolume::ShowEndGameWidget,2.0f,false);
+		}
 
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "BABA YAGA");
+
+	}
+}
+
+void AEYS_MyPostProcessVolume::ShowEndGameWidget()
+{
+	if (EndGameWidgetClass && GetWorld())
+	{
+		APlayerController* PC = GetWorld()->GetFirstPlayerController();
+		if (PC)
+		{
+			EndGameWidgetInstance = CreateWidget<UUserWidget>(PC, EndGameWidgetClass);
+
+			if (EndGameWidgetInstance)
+			{
+
+				EndGameWidgetInstance->AddToViewport();
+
+
+			}
+		}
 	}
 }

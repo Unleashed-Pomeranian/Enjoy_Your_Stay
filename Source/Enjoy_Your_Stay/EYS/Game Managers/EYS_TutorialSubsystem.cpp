@@ -166,7 +166,7 @@ void UEYS_TutorialSubsystem::RegisterCheckoutDirt()
 void UEYS_TutorialSubsystem::FinishTutorial()
 {
 	bIsTutorialFinished = true;
-
+	/*
 	UWorld* World = GetWorld();
 	if (!World) return;
 
@@ -174,4 +174,5 @@ void UEYS_TutorialSubsystem::FinishTutorial()
 	if (!HorrorSubsystem) return;
 
 	HorrorSubsystem->ActivateHorrorSystem(true);
+	*/
 }
