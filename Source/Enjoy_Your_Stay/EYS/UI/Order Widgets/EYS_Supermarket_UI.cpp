@@ -37,19 +37,46 @@ void UEYS_Supermarket_UI::PopulateMarketProducts()
 	// Veritabanındaki tüm satırları (Ürünleri) tek seferde hafızaya çekiyoruz gulum
 	TArray<FSupermarketProduct*> AllProducts;
 	MarketProductsTable->GetAllRows<FSupermarketProduct>(TEXT("Market UI Populate"), AllProducts);
-
-	for (const FSupermarketProduct* ProductPtr : AllProducts)
-	{
-		if (ProductPtr)
+	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+		for (const FSupermarketProduct* ProductPtr : AllProducts)
 		{
+			if (!ProductPtr) continue;
+
+			if (ProductPtr->ProductName.IsEmpty())
+			{
+				continue;
+			}
+
+			if (TS)
+			{
+
+				if (!TS->bIsTutorialFinished || TS->CurrentPhase != ETutorialPhase::ThirdPhase)
+				{
+					bool bIsAllowed = false;
+
+					for (const FString& Checked : TutorialProducts)
+					{
+						if (Checked == ProductPtr->ProductName)
+						{
+							bIsAllowed = true;
+							break; 
+						}
+					}
+
+				
+					if (!bIsAllowed)
+					{
+						continue;
+					}
+				}
+			}
+
 			if (UEYS_ProductButton_UI* ProductButton = CreateWidget<UEYS_ProductButton_UI>(GetWorld(), ProductButtonWidgetClass))
 			{
-				// Pointer'ı normal struct yapısına çevirip (*ProductPtr) butona paslıyoruz
 				ProductButton->InitButton(*ProductPtr, this);
 				WrapBox_ProductList->AddChild(ProductButton);
 			}
 		}
-	}
 }
 
 void UEYS_Supermarket_UI::AddProductToCart(FSupermarketProduct Product)

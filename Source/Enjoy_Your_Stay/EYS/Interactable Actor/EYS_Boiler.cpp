@@ -117,7 +117,7 @@ void AEYS_Boiler::SetCoalAmount(float FuelAddValue)
 	BoilerCoalValue =  FMath::Clamp(BoilerCoalValue + FuelAddValue, 0.0f, 100.0f);
 
 	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
-	if (BoilerCoalValue >= 99)
+	if (BoilerCoalValue >= 40)
 	{
 		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 		if (TS)

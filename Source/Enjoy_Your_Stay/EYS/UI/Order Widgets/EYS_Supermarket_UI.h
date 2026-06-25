@@ -65,7 +65,8 @@ protected:
 
 	void UpdateCartUI();
 	void PopulateMarketProducts();
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tutorial Products")
+	TArray<FString> TutorialProducts;
 public:
 	// Ürün butonuna basıldığında çağrılacak ortak sepet ekleme fonksiyonu
 	void AddProductToCart(FSupermarketProduct Product);

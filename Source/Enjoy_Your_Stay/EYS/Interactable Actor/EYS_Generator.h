@@ -70,7 +70,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Varible")
 	float GeneratorConsumptionMultiplier = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EYS | Generator")
-	float BreakdownChance = 0.5f;
+	float BreakdownChance = 0.05f;
 	bool bAnimFlip = true;
 	//Timers
 	FTimerHandle TimerHandle_ReduceFuel;

@@ -6,7 +6,7 @@
 #include "Components/PostProcessComponent.h"
 #include "Kismet/GameplayStatics.h" 
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
-
+#include "EYS/Game Managers/EYS_MissionSpawner.h"
 
 AEYS_TutorialHitBox::AEYS_TutorialHitBox()
 {
@@ -169,6 +169,18 @@ void AEYS_TutorialHitBox::SetHitBoxLocation(const FVector& NewLocation)
 {
 	
 	SetActorLocation(NewLocation,true);
+
+	UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
+	if (TS)
+	{
+		if (TS->CurrentStep != ETutorialStep::GoToSnowPile) return;
+		AEYS_MissionSpawner* MS = Cast<AEYS_MissionSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AEYS_MissionSpawner::StaticClass()));
+		if (MS)
+		{
+			MS->SpawnMissionActor(ESurfaceType::Exterior, ERoomID::None, false);
+		}
+	}
+
 }
 
 

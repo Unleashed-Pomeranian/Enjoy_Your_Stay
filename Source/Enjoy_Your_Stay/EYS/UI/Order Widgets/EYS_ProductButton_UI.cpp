@@ -38,6 +38,7 @@ void UEYS_ProductButton_UI::InitButton(FSupermarketProduct Data, UEYS_Supermarke
 		Image_Product->SetBrushFromTexture(ProductData.ProductImage);
 	}
 
+	
 	if (ProductData.ProductName == "Detergent")
 	{
 		if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())

@@ -229,7 +229,7 @@ void AEYS_MyCharacterController::PauseGame()
 		if (PauseWidgetInstance->IsInViewport())
 		{
 			PauseWidgetInstance->RemoveFromParent();
-
+			PauseWidgetInstance = nullptr;
 			SetPause(false);
 			SetInputMode(FInputModeGameOnly());
 			bShowMouseCursor = false;

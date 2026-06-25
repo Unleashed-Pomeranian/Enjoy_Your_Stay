@@ -180,7 +180,7 @@ bool AEYS_Generator::BrokeGenerator()
 
 	float RawDiceRoll = DiceRoll;
 	DiceRoll *= GeneratorFailureMultiplier;
-	BreakdownChance = FMath::Clamp(BreakdownChance + 0.5f, 0.0f, 10.0f);
+	BreakdownChance = FMath::Clamp(BreakdownChance + 0.05f, 0.0f, 10.0f);
 	/*
 	if (GEngine)
 	{

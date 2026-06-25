@@ -139,19 +139,20 @@ EFoodType UEYS_WorldSubsystem::GetRandomType(EItemType WantedItemType)
 
 	for (const FFoodDatabase* Row : Rows)
 	{
-		if (!Row)
-		{
-			continue;
-		}
+		if (!Row) continue;
+		if (!Row->IsActivated) continue;
+		if (Row->FoodType == EFoodType::None) continue;
 
-		if (!Row->IsActivated)
-		{
-			continue;
-		}
 
-		if (Row->FoodType == EFoodType::None)
+		if (FoodStage == 0)
 		{
-			continue;
+			if (Row->FoodType != EFoodType::Kasha &&
+				Row->FoodType != EFoodType::Vareniki &&
+				Row->FoodType != EFoodType::Kefir_Strawberry &&
+				Row->FoodType != EFoodType::Kefir_Peach)
+			{
+				continue;
+			}
 		}
 
 		if (Row->ItemType == WantedItemType)
@@ -165,7 +166,6 @@ EFoodType UEYS_WorldSubsystem::GetRandomType(EItemType WantedItemType)
 		return EFoodType::None;
 	}
 	return AvailableTypes[FMath::RandRange(0, AvailableTypes.Num() - 1)];
-
 }
 
 int32 UEYS_WorldSubsystem::GetFoodPrice(EFoodType WantedItemType)

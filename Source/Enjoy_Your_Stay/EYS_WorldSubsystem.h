@@ -43,11 +43,19 @@ public:
 	UPROPERTY() FVector LobyLocation;
 	UPROPERTY() FVector DiningHallLocation;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) float Hour;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UDataTable* FoodDatabase = nullptr;
+
 	UFUNCTION() EFoodType GetRandomType(EItemType WantedItemType);
+
 	UFUNCTION() int32 GetFoodPrice(EFoodType WantedItemType);
 
+	UFUNCTION(BlueprintCallable, Category = "EYS|Food System")
+	void CompleteTutorial() { FoodStage = 1; }
+protected:
+	UPROPERTY()
+	int32 FoodStage = 0;
 
 
 	/*--------Light Codes-------------*/

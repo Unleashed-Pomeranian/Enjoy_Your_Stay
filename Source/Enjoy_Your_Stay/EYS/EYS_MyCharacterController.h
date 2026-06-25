@@ -75,7 +75,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_MyCharacter_UI* MyCharacterUIInstance = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
 	class UUserWidget* PauseWidgetInstance = nullptr;
 
 	FOnStaminaChanged OnStaminaChanged;

@@ -43,7 +43,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
 	float BoilerCoalValue=100.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible")
-	float BoilerConsumptionValue = 1.3f;
+	float BoilerConsumptionValue = 1.2f;
 	UPROPERTY(BlueprintReadOnly, Category = "Varible")
 	float BoilerConsumptionMultiplier = 1.0f;
 	bool bAnimFlip=true;
