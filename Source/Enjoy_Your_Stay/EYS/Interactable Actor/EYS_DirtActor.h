@@ -48,9 +48,9 @@ protected:
 	float CleaningSpeedMultiplier = 1.0f;
 	float opacityValue = 3.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varible", meta = (AllowPrivateAccess = "true"))
-	float cleaningValue = 0.016f;
+	float cleaningValue = 0.02f;
 	UPROPERTY()
-	float SecondcleaningValue = 0.024f;
+	float SecondcleaningValue = 0.04f;
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

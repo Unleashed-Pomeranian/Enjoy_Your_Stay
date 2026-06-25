@@ -19,10 +19,10 @@ AEYS_TrayHolder::AEYS_TrayHolder()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetupAttachment(DefaultSceneRoot);
-	StaticMesh->SetCustomDepthStencilValue(5);
+
 	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("Instanced Static Mesh"));
 	InstancedStaticMesh->SetupAttachment(DefaultSceneRoot);
-
+	InstancedStaticMesh->SetCustomDepthStencilValue(5);
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
 	BoxCollision->SetupAttachment(DefaultSceneRoot);
 }
@@ -116,7 +116,9 @@ void AEYS_TrayHolder::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool
 			PC->SetInteractionWidget("No Trays Left.");
 		}
 	}
-	StaticMesh->SetRenderCustomDepth(bIsFocused);
+
+
+	InstancedStaticMesh->SetRenderCustomDepth(bIsFocused);
 }
 
 void AEYS_TrayHolder::Interact(AEYS_MyCharacter* myPlayer)

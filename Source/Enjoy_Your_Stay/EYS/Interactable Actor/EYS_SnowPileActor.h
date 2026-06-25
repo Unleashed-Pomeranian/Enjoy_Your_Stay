@@ -39,9 +39,9 @@ protected:
 	TArray<UStaticMesh*> SnowMeshes;
 	float PileValue = 1.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Varibles", meta = (AllowPrivateAccess = "true"))
-	float PlowValue = 0.005f;
+	float PlowValue = 0.004f;
 	UPROPERTY()
-	float SecondPlowValue = 0.010f;
+	float SecondPlowValue = 0.08f;
 	UPROPERTY(BlueprintReadOnly)
 	float PlowSpeedMultiplier = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snow Settings")

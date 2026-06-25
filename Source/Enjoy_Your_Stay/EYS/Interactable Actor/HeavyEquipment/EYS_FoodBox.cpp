@@ -3,7 +3,6 @@
 
 #include "EYS/Interactable Actor/HeavyEquipment/EYS_FoodBox.h"
 #include "EYS/EYS_MyCharacter.h"
-
 #include "EYS/Game Managers/EYS_TutorialSubsystem.h"
 
 void AEYS_FoodBox::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
@@ -25,9 +24,6 @@ void AEYS_FoodBox::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 	{
 		TS->UpdateTutorialState(ETutorialStep::TakeFoodBox, ETutorialStep::GoToFridge);
 	}
-	
-
-
 }
 
 void AEYS_FoodBox::RemoveFood()

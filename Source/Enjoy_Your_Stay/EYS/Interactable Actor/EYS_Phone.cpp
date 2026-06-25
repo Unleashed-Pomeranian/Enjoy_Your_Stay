@@ -22,6 +22,8 @@ AEYS_Phone::AEYS_Phone()
 	PhoneAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("PhoneAudio"));
 	PhoneAudio->SetupAttachment(RootComponent);
 	PhoneAudio->bAutoActivate = false;
+	StaticMesh->SetCustomDepthStencilValue(5);
+	StaticMesh2->SetCustomDepthStencilValue(5);
 }
 
 // Called when the game starts or when spawned
@@ -29,8 +31,10 @@ void AEYS_Phone::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-	PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
+	if (AEYS_MyCharacter* Myplayer = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
+	{
+		PC = Cast<AEYS_MyCharacterController>(Myplayer->GetController());
+	}
 
 	PhoneFirstTransform = StaticMesh2->GetRelativeTransform();
 }
@@ -44,10 +48,13 @@ void AEYS_Phone::Interact(AEYS_MyCharacter* myPlayer)
 void AEYS_Phone::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
    
-	if (bCanInteract&& !PC)
-	PC->SetInteractionWidget("[E] Talk");
-	else
-	PC->SetInteractionWidget("");
+	if (!bCanInteract && !PC) return;
+
+	
+		PC->SetInteractionWidget("[E] Talk");
+	
+		StaticMesh->SetRenderCustomDepth(bIsFocused);
+		StaticMesh2->SetCustomDepthStencilValue(bIsFocused);
 
 }
 

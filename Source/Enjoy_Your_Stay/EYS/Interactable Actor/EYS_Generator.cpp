@@ -89,7 +89,30 @@ void AEYS_Generator::BeginPlay()
 
 void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
-	PC->SetInteractionWidget("[E] Open");
+
+
+	if (!myPlayer&&PC) return;
+
+	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FuelTank::StaticClass()))
+	{
+		PC->SetInteractionWidget("[E] Fill");
+	}
+	else
+	{
+		if (CurrentFuelTank)
+		{
+			PC->SetInteractionWidget("[E] Take Tank");
+		}
+		else
+		{
+			if (!bIsWorking)
+			{
+				PC->SetInteractionWidget("[E] Start");
+			}
+
+		}
+	}
+
 }
 
 
@@ -180,7 +203,7 @@ bool AEYS_Generator::BrokeGenerator()
 
 	float RawDiceRoll = DiceRoll;
 	DiceRoll *= GeneratorFailureMultiplier;
-	BreakdownChance = FMath::Clamp(BreakdownChance + 0.05f, 0.0f, 10.0f);
+	BreakdownChance = FMath::Clamp(BreakdownChance + 0.005f, 0.0f, 10.0f);
 	/*
 	if (GEngine)
 	{
@@ -198,13 +221,11 @@ bool AEYS_Generator::BrokeGenerator()
 	if (DiceRoll <= BreakdownChance)
 	{
 		bIsWorking = false; 
-		BreakdownChance = 0.5f;
+		BreakdownChance = 0.02f;
 		if (WorldSubsystem) WorldSubsystem->ToggleAllOtelLights(bIsWorking);
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
 
 		
-		
-
 	
 		SetLightColor(0);
 		PlayNaturalSound(bIsWorking); 

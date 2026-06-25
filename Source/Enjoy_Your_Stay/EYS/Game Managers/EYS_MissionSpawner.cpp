@@ -77,7 +77,7 @@ void AEYS_MissionSpawner::SpawnFixActorTimer()
 {
 	SpawnFixActor();
 	SetStepOfTutorial();
-	float RandomDelay = FMath::RandRange(120.0f, 180.0f);
+	float RandomDelay = FMath::RandRange(200.0f, 240.0f);
 	float CurrentMultiplier = 1.0f;
 
 		if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
@@ -115,7 +115,7 @@ void AEYS_MissionSpawner::SpawnDirtActorTimer()
 
 	SpawnMissionActor(ESurfaceType::Floor, ERoomID::None,true);
 	float CurrentMultiplier = 1.0f;
-	float RandomDelay = FMath::RandRange(110.0f, 180.0f);
+	float RandomDelay = FMath::RandRange(150.0f, 240.0f);
 	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
 	{
 		CurrentMultiplier = UpgradeSys->GetDirtAccumulationMultiplier();
@@ -131,7 +131,7 @@ void AEYS_MissionSpawner::SpawnWallDirtActorTimer()
 {
 	SpawnMissionActor(ESurfaceType::Wall, ERoomID::None,true);
 	float CurrentMultiplier = 1.0f;
-	float RandomDelay = FMath::RandRange(120.0f, 180.0f);
+	float RandomDelay = FMath::RandRange(180.0f, 240.0f);
 	if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())
 	{
 		CurrentMultiplier = UpgradeSys->GetDirtAccumulationMultiplier();
@@ -143,7 +143,7 @@ void AEYS_MissionSpawner::SpawnWallDirtActorTimer()
 void AEYS_MissionSpawner::SpawnSnowPileActorTimer()
 {
 	SpawnMissionActor(ESurfaceType::Exterior, ERoomID::None,true);
-	float RandomDelay = FMath::RandRange(150.0f, 180.0f);
+	float RandomDelay = FMath::RandRange(200.0f, 240.0f);
 	GetWorld()->GetTimerManager().SetTimer(SnowPileTimerHandle, this, &AEYS_MissionSpawner::SpawnSnowPileActorTimer, RandomDelay, false);
 }
 

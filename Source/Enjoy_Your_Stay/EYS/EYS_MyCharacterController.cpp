@@ -68,7 +68,7 @@ void AEYS_MyCharacterController::BeginPlay()
 			if (TS) 
 			{ 
 				TS->MyCharacterUIIns = MyCharacterUIInstance; 
-				TS->SetTutorialStep(ETutorialStep::EndTutorial);
+				TS->SetTutorialStep(ETutorialStep::GoToEntrance);
 			}
 
 			MyCharacterUIInstance->AddToViewport();

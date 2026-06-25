@@ -23,5 +23,14 @@ class ENJOY_YOUR_STAY_API AEYS_Fridge : public AEYS_MoveableObject
 	UChildActorComponent* FridgeSlot_03;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UChildActorComponent* FridgeSlot_04;
+	
 	AEYS_Fridge();
+
+protected:
+	void InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "vARIBLE")
+	FString InteractionText;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "vARIBLE")
+	FString InteractionText_Close;
 };
