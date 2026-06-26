@@ -91,28 +91,34 @@ void AEYS_Generator::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool 
 {
 
 
-	if (!myPlayer&&PC) return;
+	if (!myPlayer || !PC) return;
 
+
+	int32 FuelPercentage = FMath::Clamp(FMath::RoundToInt(fuelAmount), 0, 100);
+	FString WidgetText;
 	if (myPlayer->HeldEquipment && myPlayer->HeldEquipment->IsA(AEYS_FuelTank::StaticClass()))
 	{
-		PC->SetInteractionWidget("[E] Fill");
+		WidgetText = FString::Printf(TEXT("[E] Fill(%%%d)"), FuelPercentage);
 	}
+
+	else if (CurrentFuelTank)
+	{
+
+		WidgetText = FString::Printf(TEXT("[E] Take Tank(%%%d)"), FuelPercentage);
+	}
+
 	else
 	{
-		if (CurrentFuelTank)
+		if (!bIsWorking)
 		{
-			PC->SetInteractionWidget("[E] Take Tank");
+			 WidgetText = "[E] Start";
 		}
 		else
 		{
-			if (!bIsWorking)
-			{
-				PC->SetInteractionWidget("[E] Start");
-			}
-
+		 WidgetText = FString::Printf(TEXT("Working.(%%%d)"), FuelPercentage);		
 		}
 	}
-
+	PC->SetInteractionWidget(WidgetText);
 }
 
 

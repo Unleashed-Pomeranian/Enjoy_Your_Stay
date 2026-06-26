@@ -14,9 +14,9 @@ void AEYS_MySunMoonDaySequenceActor::BeginPlay()
      PC =Cast<AEYS_MyCharacterController>(UGameplayStatics::GetPlayerController(this, 0));
 	 TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 	 Director = GetWorld()->GetSubsystem< UEYS_WorldSubsystem>();
-
+	 
 	 SetTimeOfDay(10.0f);
-	 SetTimePerCycle(1.0f);
+	 SetTimePerCycle(10.0f);
 	GetWorld()->GetTimerManager().SetTimer(DayTimerHandle, this, &AEYS_MySunMoonDaySequenceActor::FDayTimer, 10.0f, true);
 	if (TS)
 	{
@@ -38,7 +38,15 @@ void AEYS_MySunMoonDaySequenceActor::FDayTimer()
 if (PC) PC->SetHourWidget(GetTimeOfDay());
 
 CheckTimeForTutorial();
-CheckTimeForHorror();
+if (TS)
+	{
+		if (TS->bIsTutorialFinished || TS->CurrentPhase == ETutorialPhase::ThirdPhase)
+		{
+			CheckTimeForHorror();
+		}
+
+	}
+
 
 	if (!Director) return;
 	Director->Hour = GetTimeOfDay();
@@ -60,7 +68,6 @@ void AEYS_MySunMoonDaySequenceActor::StartNewDay()
 	DayNum++;
 	SetTimeOfDay(10.0f);
 	FDayTimer();
-
 	if (TS)
 	{
 		if (TS->bIsTutorialFinished || TS->CurrentPhase == ETutorialPhase::ThirdPhase)
@@ -84,7 +91,7 @@ void AEYS_MySunMoonDaySequenceActor::CheckTimeForTutorial()
 
 void AEYS_MySunMoonDaySequenceActor::CheckTimeForHorror()
 {
-	if (DayNum >= 4)
+	if (DayNum >= 5)
 	{
 		UWorld* World = GetWorld();
 		if (!World) return;

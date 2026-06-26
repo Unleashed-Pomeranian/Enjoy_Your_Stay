@@ -32,7 +32,6 @@ void AEYS_Boiler::BeginPlay()
 	//WidgetMesh->SetWidgetClass(BoilerWidgetClass);
 	//if (Widget)
 	
-		//NotebookWidgetInstance = Cast<UEYS_NotebookWidget>(Widget);
 	WidgetMesh->SetWidgetClass(BoilerWidgetClass);
 	UUserWidget* Widget = WidgetMesh->GetUserWidgetObject();
 		BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());

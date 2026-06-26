@@ -77,7 +77,7 @@ void AEYS_MissionSpawner::SpawnFixActorTimer()
 {
 	SpawnFixActor();
 	SetStepOfTutorial();
-	float RandomDelay = FMath::RandRange(200.0f, 240.0f);
+	float RandomDelay = FMath::RandRange(180.0f, 240.0f);
 	float CurrentMultiplier = 1.0f;
 
 		if (UEYS_UpgradeSubsystem* UpgradeSys = GetGameInstance()->GetSubsystem<UEYS_UpgradeSubsystem>())

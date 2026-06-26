@@ -81,7 +81,7 @@ void UEYS_TutorialSubsystem::SetTutorialStep(ETutorialStep NewStep)
 			CurrentPhase = ETutorialPhase::SecondPhase;
 			CheckTutorialPhase();
 		}
-		if (CurrentStep == ETutorialStep::WaitForUpdate)
+		if (CurrentStep == ETutorialStep::GoToBedThird)
 		{
 			CurrentPhase = ETutorialPhase::ThirdPhase;
 			CheckTutorialPhase();

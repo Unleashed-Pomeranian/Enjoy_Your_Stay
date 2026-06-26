@@ -31,6 +31,7 @@ class ENJOY_YOUR_STAY_API UEYS_ComputerLoading_UI : public UUserWidget
 	
 protected:
 	virtual void  NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	
 	UFUNCTION() void loadingto60();
 	UFUNCTION() void SetSecondTimer();

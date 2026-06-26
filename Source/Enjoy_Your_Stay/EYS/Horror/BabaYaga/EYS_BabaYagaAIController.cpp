@@ -183,22 +183,29 @@ void AEYS_BabaYagaAIController::CheckIfStuck()
 
 void AEYS_BabaYagaAIController::StartStuckCheck()
 {
-	GetWorld()->GetTimerManager().ClearTimer(StuckCheckTimerHandle);
+	UWorld* World = GetWorld();
+	if (!World || !MyBabaYagaPawn || !IsValid(MyBabaYagaPawn)) return;
+
+	World->GetTimerManager().ClearTimer(StuckCheckTimerHandle);
 	StuckCounter = 0;
+	LastCheckedLocation = MyBabaYagaPawn->GetActorLocation();
 
-	if (MyBabaYagaPawn)
-	{
-		LastCheckedLocation = MyBabaYagaPawn->GetActorLocation();
-	}
-
-
-	GetWorld()->GetTimerManager().SetTimer(StuckCheckTimerHandle, this, &AEYS_BabaYagaAIController::CheckIfStuck, 1.0f, true);
+	World->GetTimerManager().SetTimer(
+		StuckCheckTimerHandle,
+		this,
+		&AEYS_BabaYagaAIController::CheckIfStuck,
+		1.0f,
+		true
+	);
 }
 
 
 void AEYS_BabaYagaAIController::StopStuckCheck()
 {
-	GetWorld()->GetTimerManager().ClearTimer(StuckCheckTimerHandle);
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(StuckCheckTimerHandle);
+	}
 	StuckCounter = 0;
 }
 
@@ -206,6 +213,8 @@ void AEYS_BabaYagaAIController::OnMoveCompleted(FAIRequestID RequestID, const FP
 {
 	StopStuckCheck();
 	Super::OnMoveCompleted(RequestID, Result);
+	UWorld* World = GetWorld();
+	if (!World || !MyBabaYagaPawn || !IsValid(MyBabaYagaPawn)) return;
 
 	if (!MyBabaYagaPawn) return; 
 
@@ -273,4 +282,18 @@ void AEYS_BabaYagaAIController::OnMoveCompleted(FAIRequestID RequestID, const FP
 			GetWorld()->GetTimerManager().SetTimer(PatrolTimerHandle, MyBabaYagaPawn, &AEYS_BabaYaga::StartPatrol, FMath::RandRange(3.0f, 5.0f), false);
 		}
 	}
+}
+
+void AEYS_BabaYagaAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	StopMovement();
+
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(PatrolTimerHandle);
+		World->GetTimerManager().ClearTimer(LoseTargetTimerHandle);
+		World->GetTimerManager().ClearTimer(StuckCheckTimerHandle);
+	}
+
+	Super::EndPlay(EndPlayReason);
 }

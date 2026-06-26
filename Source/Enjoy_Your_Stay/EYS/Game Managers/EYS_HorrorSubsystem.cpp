@@ -77,12 +77,9 @@ void UEYS_HorrorSubsystem::OnMissionEnabled()
 	
 	UWorld* World = GetWorld();
 	UGameplayStatics::SetGlobalTimeDilation(World, 0.25f);
-	
-	if (SpawnedMissionBabaYaga) return;
-
-	bIsMissionActive = true;
-
 	if (!bIsSysemActive) return;
+	if (SpawnedMissionBabaYaga) return;
+	bIsMissionActive = true;
 	CurrentSpawnChance = FMath::Clamp(CurrentSpawnChance + 15.0f, 0.0f, 100.0f);
 	if (!GetWorld()->GetTimerManager().IsTimerActive(HorrorTickTimerHandle))
 	{
@@ -111,9 +108,18 @@ if (SpawnedMissionBabaYaga || !BabaYagaClass || !bIsMissionActive)
 void UEYS_HorrorSubsystem::SpawnBabaYaga()
 {
 	UWorld* World = GetWorld();
-	AEYS_MyCharacter* PlayerChar = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
-	if ( !PlayerChar) return;
+	if (!World) return;
 
+
+	if (!BabaYagaClass)
+	{
+
+		return;
+	}
+
+	AEYS_MyCharacter* PlayerChar = Cast<AEYS_MyCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+
+	if (!PlayerChar) return;
 
 	UGameplayStatics::SetGlobalTimeDilation(World, 0.25f);
 
@@ -127,12 +133,11 @@ void UEYS_HorrorSubsystem::SpawnBabaYaga()
 	CalculatedLocation.Z = PlayerLoc.Z;
 
 	FVector FinalSpawnLocation = CalculatedLocation;
-	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
 
-	if (NavSys)
+	if (UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World))
 	{
 		FNavLocation ProjectedLocation;
-		if (NavSys->ProjectPointToNavigation(CalculatedLocation, ProjectedLocation, FVector(300.0f, 300.0f, 300.0f)))
+		if (NavSys->ProjectPointToNavigation(CalculatedLocation, ProjectedLocation, FVector(500.0f, 500.0f, 500.0f)))
 		{
 			FinalSpawnLocation = ProjectedLocation.Location;
 		}
@@ -143,7 +148,8 @@ void UEYS_HorrorSubsystem::SpawnBabaYaga()
 	SpawnRotation.Roll = 0.0f;
 
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	AEYS_BabaYaga* SpawnedBabaYaga = World->SpawnActor<AEYS_BabaYaga>(BabaYagaClass, FinalSpawnLocation, SpawnRotation, SpawnParams);
 
@@ -153,15 +159,12 @@ void UEYS_HorrorSubsystem::SpawnBabaYaga()
 		SpawnedMissionBabaYaga = SpawnedBabaYaga;
 		SpawnedBabaYaga->SpawnDefaultController();
 
-
-	
-
 		if (AEYS_BabaYagaAIController* AICon = Cast<AEYS_BabaYagaAIController>(SpawnedBabaYaga->GetController()))
 		{
 			AICon->SetTargetPlayer(PlayerChar);
 			SpawnedBabaYaga->SetMovementState(EBabaYagaState::Chasing);
 			AICon->MoveToActor(PlayerChar, 20.0f);
-			SpawnedBabaYaga->PlayBabaYagaSound(2); 
+			SpawnedBabaYaga->PlayBabaYagaSound(2);
 		}
 	}
 }
@@ -275,13 +278,37 @@ void UEYS_HorrorSubsystem::SetHorrorTargets(const TArray<AEYS_DirtTarget*>& InTa
 void UEYS_HorrorSubsystem::SpawnMainBabaYaga()
 {
 	UWorld* World = GetWorld();
-	if (!World || !BabaYagaClass || HorrorTargets.Num() == 0)
+	if (!World) return;
+
+	if (!BabaYagaClass)
 	{
 		World->GetTimerManager().SetTimer(DataFetchTimerHandle, this, &UEYS_HorrorSubsystem::FetchAndProcessMainHotelData, 3.0f, true);
 		return;
 	}
-	World->GetTimerManager().ClearTimer(MainLifespanTimerHandle);
+	if (HorrorTargets.Num() <= 0)
+	{
+		TArray<AActor*> FoundActors;
+		UGameplayStatics::GetAllActorsOfClass(World, AEYS_DirtTarget::StaticClass(), FoundActors);
+		if (FoundActors.Num() > 0)
+		{
+			for (AActor* Actor : FoundActors)
+			{
+				if (AEYS_DirtTarget* Target = Cast<AEYS_DirtTarget>(Actor))
+				{
+					if (Target->SurfaceType == ESurfaceType::Horror)
+					{
+						HorrorTargets.Add(Target);
+					}
+				}
+			}
 
+		}
+	}
+	if (HorrorTargets.Num() <= 0)
+	{
+		World->GetTimerManager().SetTimer(DataFetchTimerHandle, this, &UEYS_HorrorSubsystem::FetchAndProcessMainHotelData, 3.0f, true);
+		return;
+	}
 	AEYS_DirtTarget* ChosenPoint = HorrorTargets[FMath::RandRange(0, HorrorTargets.Num() - 1)];
 	if (!ChosenPoint)
 	{

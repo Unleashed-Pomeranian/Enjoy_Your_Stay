@@ -12,7 +12,7 @@ AEYS_BabaYaga::AEYS_BabaYaga()
 	PrimaryActorTick.bCanEverTick = false;
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
-	AudioComponent->SetupAttachment(RootComponent);
+	AudioComponent->SetupAttachment(GetRootComponent());
 	AIControllerClass = AEYS_BabaYagaAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
@@ -21,6 +21,8 @@ AEYS_BabaYaga::AEYS_BabaYaga()
 void AEYS_BabaYaga::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!GetWorld()) return;
 
 	SetMovementState(EBabaYagaState::Patrolling);
 
