@@ -9,6 +9,7 @@
 #include "EYS/Game Managers/EYS_MissionSubsystem.h"
 #include "EYS/Game Managers/EYS_HorrorSubsystem.h"
 #include "EYS/Game Managers/EYS_UpgradeSubsystem.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AEYS_Boiler::AEYS_Boiler()
@@ -23,6 +24,9 @@ AEYS_Boiler::AEYS_Boiler()
 	BoxCollision->SetupAttachment(SkeletalMesh,FName("Kapak"));
 	WidgetMesh = CreateDefaultSubobject<UWidgetComponent>(TEXT("NoteBook Widget"));
 	WidgetMesh->SetupAttachment(DefaultSceneRoot);
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("WashingAudioComponent"));
+	AudioComponent->SetupAttachment(RootComponent);
+	AudioComponent->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -33,11 +37,14 @@ void AEYS_Boiler::BeginPlay()
 	//if (Widget)
 	
 	WidgetMesh->SetWidgetClass(BoilerWidgetClass);
-	UUserWidget* Widget = WidgetMesh->GetUserWidgetObject();
-		BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());
-		WidgetMesh->SetWidget(BoilerWidgetInstance);
+	WidgetMesh->InitWidget();
+	BoilerWidgetInstance = Cast<UEYS_Boiler_UI>(WidgetMesh->GetUserWidgetObject());
+
+	if (BoilerWidgetInstance && BoilerWidgetInstance->ProgressBar)
+	{
 		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
-		GetWorld()->GetTimerManager().SetTimer(BoilerTimerHandle,this,&AEYS_Boiler::ReduceCoalValue,5.0f,true);
+	}
+		
 		MissionSubsystem = GetGameInstance()->GetSubsystem<UEYS_MissionSubsystem>();
 
 		
@@ -46,7 +53,11 @@ void AEYS_Boiler::BeginPlay()
 		
 				HorrorSys->SetBoilerReference(this);
 			}
+			bool bPlayAudio = BoilerCoalValue > 0.0f;;
+			
+			PlayBoilerAudio(bPlayAudio);
 
+			if(bPlayAudio) GetWorld()->GetTimerManager().SetTimer(BoilerTimerHandle, this, &AEYS_Boiler::ReduceCoalValue, 5.0f, true);
 }
 
 
@@ -62,8 +73,10 @@ void AEYS_Boiler::ReduceCoalValue()
 
 	float FinalCalculatedConsumption = BoilerConsumptionValue * BoilerConsumptionMultiplier;
 	BoilerCoalValue = FMath::Clamp(BoilerCoalValue- FinalCalculatedConsumption, 0.0f, 100.0f);
-	if (BoilerWidgetInstance)
-	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
+	if (BoilerWidgetInstance && BoilerWidgetInstance->ProgressBar)
+	{
+		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
+	}
 
 	if (BoilerCoalValue <= 20.0f)
 	{
@@ -77,7 +90,20 @@ void AEYS_Boiler::ReduceCoalValue()
 			MissionSubsystem->UpdateMissionProgress(EMissionType::Boiler, FMath::RoundToInt(BoilerCoalValue));
 
 		}
+		if (BoilerCoalValue <= 0.0f)
+		{
+			GetWorld()->GetTimerManager().ClearTimer(BoilerTimerHandle);
+
+			if (AudioComponent)
+			{
+				PlayBoilerAudio(false);
+			}
+		}
 	}
+}
+void AEYS_Boiler::PlayBoilerAudio_Implementation(bool bIsPlaying)
+{
+
 }
 void   AEYS_Boiler::Interact(AEYS_MyCharacter* myPlayer)
 {
@@ -115,8 +141,30 @@ void AEYS_Boiler::SetCoalAmount(float FuelAddValue)
 {
 	BoilerCoalValue =  FMath::Clamp(BoilerCoalValue + FuelAddValue, 0.0f, 100.0f);
 
-	BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100);
-	if (BoilerCoalValue >= 40)
+	if (BoilerWidgetInstance && BoilerWidgetInstance->ProgressBar)
+	{
+		BoilerWidgetInstance->ProgressBar->SetPercent(BoilerCoalValue / 100.0f);
+	}
+
+	if (BoilerCoalValue >= 5.0f && AudioComponent && !AudioComponent->IsPlaying())
+	{
+		PlayBoilerAudio(true);
+
+		UWorld* World = GetWorld();
+		if (!World) return;
+		if (!GetWorld()->GetTimerManager().IsTimerActive(BoilerTimerHandle))
+		{
+			GetWorld()->GetTimerManager().SetTimer(
+				BoilerTimerHandle,
+				this,
+				&AEYS_Boiler::ReduceCoalValue,
+				5.0f,
+				true
+			);
+		}
+	}
+
+	if (BoilerCoalValue >= 40.0f)
 	{
 		UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>();
 		if (TS)

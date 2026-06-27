@@ -29,6 +29,8 @@ public:
 	UWidgetComponent* WidgetMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anim")
 	TArray<TObjectPtr<UAnimationAsset>> AnimAssets;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Washing Machine | Audio")
+	class UAudioComponent* AudioComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
 	FTimerHandle BoilerTimerHandle;
 protected:
@@ -58,4 +60,5 @@ public:
 	UFUNCTION(BlueprintCallable) void SetCoalAmount(float FuelAddValue);
 	UFUNCTION(BlueprintCallable) void ReduceCoalValue();
 	FORCEINLINE float GetBoilerFuel() const{return BoilerCoalValue;}
+	UFUNCTION(BlueprintNativeEvent) void PlayBoilerAudio(bool bIsPlaying);
 };

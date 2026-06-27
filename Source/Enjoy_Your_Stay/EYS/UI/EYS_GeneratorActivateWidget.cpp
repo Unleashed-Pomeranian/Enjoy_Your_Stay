@@ -90,7 +90,7 @@ void UEYS_GeneratorActivateWidget::FStopTimer()
 
 	const float CurrentValue = RadialValue;
 
-	if (RadialValue >= 0.4f && RadialValue <= 0.8f)
+	if (RadialValue >= 0.35f && RadialValue <= 0.7f)
 	{
 		Score++;
 

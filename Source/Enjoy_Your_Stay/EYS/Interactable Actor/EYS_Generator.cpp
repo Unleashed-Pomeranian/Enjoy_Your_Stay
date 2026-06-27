@@ -63,7 +63,7 @@ void AEYS_Generator::BeginPlay()
 	{
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReduceFuel, this, &AEYS_Generator::ReduceFuel, 5.0f, true);
 		SetLightColor(2);
-		PlayNaturalSound(bIsWorking);
+		PlayNaturalSound(bIsWorking,0);
 	}
 	else
 	{
@@ -151,6 +151,10 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 
 			GetWorld()->GetTimerManager().ClearTimer(TimerHandle_AddFuel);
 			CurrentFuelTank = nullptr;
+			if (AudioComponent && (AudioComponent->IsPlaying())&&!bIsWorking)
+			{
+				PlayNaturalSound(false, 1);
+			}
 		}
 		else
 		{
@@ -191,7 +195,10 @@ void AEYS_Generator::StartStopTimer()
 	if (WorldSubsystem) WorldSubsystem->ToggleAllOtelLights(bIsWorking);
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReduceFuel, this, &AEYS_Generator::ReduceFuel, 5.0f, true);
-	PlayNaturalSound(bIsWorking);
+	if (AudioComponent && !(AudioComponent->IsPlaying()))
+	{
+		PlayNaturalSound(bIsWorking, 0);
+	}
 }
 
 bool AEYS_Generator::BrokeGenerator()
@@ -234,7 +241,10 @@ bool AEYS_Generator::BrokeGenerator()
 		
 	
 		SetLightColor(0);
-		PlayNaturalSound(bIsWorking); 
+		if (AudioComponent && AudioComponent->IsPlaying())
+		{
+			PlayNaturalSound(bIsWorking, 0);
+		}
 
 		return true; 
 	}
@@ -283,7 +293,10 @@ void AEYS_Generator::ReduceFuel()
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceFuel);
 		bIsWorking = false;
 		SetLightColor(0);
-		PlayNaturalSound(bIsWorking);
+		if (AudioComponent && (AudioComponent->IsPlaying()))
+		{
+			PlayNaturalSound(bIsWorking, 0);
+		}
 		if (WorldSubsystem) WorldSubsystem->ToggleAllOtelLights(bIsWorking);
 	}
 
@@ -300,12 +313,19 @@ void AEYS_Generator::AddFuel()
 	{
 		GeneratorActivateWidgetInstance->FSetImageRotation(fuelAmount);
 	}
-
+	if (AudioComponent && !(AudioComponent->IsPlaying()))
+	{
+		PlayNaturalSound(true,1);
+	}
 	if (CurrentFuelTank->FuelValue <= 0.5f)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_AddFuel);
 		CurrentFuelTank->Destroy();
 		CurrentFuelTank = nullptr;
+		if (AudioComponent && (AudioComponent->IsPlaying())&&!bIsWorking)
+		{
+			PlayNaturalSound(false, 1);
+		}
 	}
 
 	if (bIsFuelMissionActive && MissionSubsystem)
@@ -328,7 +348,7 @@ void AEYS_Generator::PlayActivateSound_Implementation()
 {
 }
 
-void AEYS_Generator::PlayNaturalSound_Implementation(bool bIsWork)
+void AEYS_Generator::PlayNaturalSound_Implementation(bool bIsWork, int32 audioindex)
 {
 }
 

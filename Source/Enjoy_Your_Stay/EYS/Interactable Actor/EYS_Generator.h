@@ -82,6 +82,6 @@ protected:
 	class  UEYS_WorldSubsystem* WorldSubsystem;
 
 public:
-	UFUNCTION(BlueprintNativeEvent) void PlayNaturalSound(bool bIsWork);
+	UFUNCTION(BlueprintNativeEvent) void PlayNaturalSound(bool bIsWork,int32 audioindex);
 
 };
