@@ -23,7 +23,7 @@ void AEYS_KeyHolder::UpdateKeyDisplay(ERoomID TargetRoom,bool bNewVisibility)
     FString EnumName = EnumPtr->GetNameStringByValue((int64)TargetRoom);
     FName TargetTag = FName(*EnumName);
     
-      GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TargetTag.ToString());
+      //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TargetTag.ToString());
    
     TArray<UActorComponent*> ChildComps = GetComponentsByTag(UChildActorComponent::StaticClass(), TargetTag);
 

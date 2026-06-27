@@ -296,7 +296,7 @@ void AEYS_MyCharacter::StopSprint(const FInputActionValue& Value)
 }
 void AEYS_MyCharacter::StaminaReduce()
 {
-	const float StaminaDropRate = 1.25f * SprintStaminaMultiplier;
+	const float StaminaDropRate = 1.1f * SprintStaminaMultiplier;
 
 	Stamina = FMath::Clamp(Stamina - StaminaDropRate, 0.0f, 100.0f);
 

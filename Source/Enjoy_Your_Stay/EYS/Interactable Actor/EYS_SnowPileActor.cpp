@@ -113,7 +113,7 @@ void AEYS_SnowPileActor::Interact(AEYS_MyCharacter* myPlayer)
 	{
 		PlowValue = SecondPlowValue;
 
-		if (PileValue <= 0.4f)
+		if (PileValue <= 0.3f)
 		{
 			if (MySnowTarget) MySnowTarget->bIsOccupied = false;
 			if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())

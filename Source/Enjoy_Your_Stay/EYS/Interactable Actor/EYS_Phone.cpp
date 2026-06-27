@@ -22,7 +22,6 @@ AEYS_Phone::AEYS_Phone()
 	PhoneAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("PhoneAudio"));
 	PhoneAudio->SetupAttachment(RootComponent);
 	PhoneAudio->bAutoActivate = false;
-	StaticMesh->SetCustomDepthStencilValue(5);
 	StaticMesh2->SetCustomDepthStencilValue(5);
 }
 
@@ -52,9 +51,7 @@ void AEYS_Phone::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsF
 
 	
 		PC->SetInteractionWidget("[E] Talk");
-	
-		StaticMesh->SetRenderCustomDepth(bIsFocused);
-		StaticMesh2->SetCustomDepthStencilValue(bIsFocused);
+		StaticMesh2->SetRenderCustomDepth(bIsFocused);
 
 }
 
@@ -68,7 +65,8 @@ void AEYS_Phone::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 		PC->PlayerCameraManager->StartCameraFade(2.0f, 0.0f, 1.5f, FLinearColor::Black, false, true);
 		myPlayer->SetRoot(0);
 		FRotator Rotation = { -48,180,0 };
-		PC->SetCharacterPositon(GetActorLocation(), 10, 8, Rotation);
+		FVector NewLocation = GetActorLocation();
+		PC->SetCharacterPositon(NewLocation, 10, 8, Rotation);
 		PC->MobilizeCharacter(true, true, true);
 		PlayPhoneMontage(myPlayer);
 		bCanInteract = false;

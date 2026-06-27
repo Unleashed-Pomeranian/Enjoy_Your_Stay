@@ -33,6 +33,7 @@ void UEYS_QDialoguesSpeakerComponent::SetDialogueRuntime()
 
 void UEYS_QDialoguesSpeakerComponent::UpdateDialog(int32 dialogueindex)
 {
+
     if (DialoguePool.IsValidIndex(dialogueindex))
     {
         Dialogue = DialoguePool[dialogueindex];

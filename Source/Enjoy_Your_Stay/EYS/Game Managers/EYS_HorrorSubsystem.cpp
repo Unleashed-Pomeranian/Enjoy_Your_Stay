@@ -227,7 +227,7 @@ void UEYS_HorrorSubsystem::FetchAndProcessMainHotelData()
 
 	float HotelRatingWeight = FMath::Clamp(HotelRating / 100.0f, 0.0f, 1.0f);
 
-	float MainSpawnChance = (FuelUrgencyWeight + HotelRatingWeight) * 0.5f * 35.0f;
+	float MainSpawnChance = (FuelUrgencyWeight + HotelRatingWeight) * 0.5f * 20.0f;
 
 	float DangerDiceRoll = FMath::FRandRange(0.0f, 100.0f);
 

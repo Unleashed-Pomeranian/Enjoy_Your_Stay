@@ -164,8 +164,12 @@ void AEYS_Generator::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
 				{
 					if (!PC) return;
 					myPlayer->SetRoot(0);
-					PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
-					PC->SetCharacterPositon(GetActorLocation(), 30, 5, FRotator(-45, -90, 0));
+					PC->PlayerCameraManager->StartCameraFade(1.5f, 0.0f, 1.5f, FLinearColor::Black, false, true);
+					FVector NewLocation = GetActorLocation();
+
+					float NewZ = myPlayer->GetActorLocation().Z;
+					NewLocation.Z = NewZ;
+					PC->SetCharacterPositon(NewLocation, 30, 5, FRotator(-45, -90, 0));
 					PC->MobilizeCharacter(true, false, false);
 
 					if (UEYS_TutorialSubsystem* TS = GetGameInstance()->GetSubsystem<UEYS_TutorialSubsystem>())

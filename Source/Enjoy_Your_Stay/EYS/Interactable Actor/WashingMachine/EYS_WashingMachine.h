@@ -49,7 +49,7 @@ protected:
 	float DetergentAmount = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Washing Machine | States")
-	float WashingDuration = 30.0f;
+	float WashingDuration = 60.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Washing Machine | Audio")
 	TArray<class USoundBase*> WashingSounds;
 

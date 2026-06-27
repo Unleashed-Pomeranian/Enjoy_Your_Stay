@@ -42,6 +42,8 @@ void AEYS_GuestCharacter::BeginPlay()
 	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
 	CurrentStatus = EGuestStatus::Arriving;
+	
+	MoveTo(LobyLocation, 50);
 	bIsDriving = false;
 	MentalSlateValue = 100.0f;
 	
@@ -81,6 +83,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 			}	
 		
 		}
+		if (!DialogueComponent) return;
 		DialogueComponent->UpdateDialog(0);
 		PlayNPCAudio(0);
 	    	CurrentStatus = EGuestStatus::WaitingForCheckIn;
@@ -91,7 +94,8 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	case EGuestStatus::DirtyRoom:
 	{
 		GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, AbandonTime, false);
-		DialogueComponent->UpdateDialog(6);
+		if (!DialogueComponent) return;
+		DialogueComponent->UpdateDialog(7);
 		bCanInteract = true;
 		break;
 	}
@@ -109,6 +113,7 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	
 	case EGuestStatus::GoingToRoom:
 	{
+		if (!DialogueComponent) return;
 		DialogueComponent->UpdateDialog(1);
 		CurrentStatus = EGuestStatus::InRoom;
 		bCanInteract = true;
@@ -151,7 +156,16 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 			TS->UpdateTutorialState(ETutorialStep::WaitForCheckout, ETutorialStep::CheckoutGuest);
 		}
 		bIsHaveRoom = false;
-		DialogueComponent->UpdateDialog(5);
+		if(MentalSlateValue>=50.0f)
+		{ 
+			if (!DialogueComponent) return;
+			DialogueComponent->UpdateDialog(5);
+		}
+		else
+		{
+			if (!DialogueComponent) return;
+			DialogueComponent->UpdateDialog(6);
+		}
 		PlayNPCAudio(0);
 		CurrentStatus = EGuestStatus::ReadyToCheckOut;
 		bCanInteract = true;
@@ -163,6 +177,10 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 		{
 			TriggerHotelCheckOut();
 			AssignedCar->DriveBack();
+			Destroy();
+		}
+		else
+		{
 			Destroy();
 		}
 		break;
@@ -233,10 +251,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 		
 	case EGuestStatus::ReadyToCheckOut:
 	{
-		if (DialogueComponent)
-		{
-			DialogueComponent->UpdateDialog(5);
-		}
+		
 		GuestStartDialogue(myPlayer);
 		break;
 	}
@@ -438,16 +453,19 @@ void AEYS_GuestCharacter::CheckFood(AEYS_MyCharacter* myPlayer)
 	
 		if (OrderScore >= 2) 
 		{
+			if (!DialogueComponent) return;
 			DialogueComponent->UpdateDialog(2); 
 			CurrentStatus = EGuestStatus::TakeFood;
 		}
 		else if (OrderScore == 1) 
 		{
+			if (!DialogueComponent) return;
 			DialogueComponent->UpdateDialog(3); 
 			CurrentStatus = EGuestStatus::TakeFood;
 		}
 		else 
 		{
+			if (!DialogueComponent) return;
 			SetMentalHealth(-10.0f);
 			DialogueComponent->UpdateDialog(4);
 			CurrentStatus = EGuestStatus::WrongOrder;
