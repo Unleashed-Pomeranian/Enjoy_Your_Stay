@@ -79,7 +79,7 @@ enum class ETutorialStep: uint8
 	OpenComputer UMETA(DisplayName = "Open Computer"),
 	MakeAnyUpgrade   UMETA(DisplayName = "Make Any Update"),
 	CloseComputer     UMETA(DisplayName = "Close Computer"),
-	EndTutorial       UMETA(DisplayName = "Close Computer"),
+	EndTutorial       UMETA(DisplayName = "End Tutorial"),
 
 };
 UENUM(BlueprintType)

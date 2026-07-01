@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
+
 void AEYS_GuestAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -25,39 +26,6 @@ void AEYS_GuestAIController::MoveToPoint(const FVector& Destiniton, float Acccep
 	MoveTo(MoveReq, &NavPath);
    
 }
-
-/*void AEYS_GuestAIController::CorruptedNPC()
-{
-	if ((GuestCharacter->bIsCorrupted))
-	{
-		TArray<AActor*> FoundPipes;
-
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), PipeRef, FoundPipes);
-
-		if (FoundPipes.Num() == 0)
-		{
-			return;
-		}
-		const int32 RandomIndex = FMath::RandRange(0, FoundPipes.Num() - 1);
-		SinglePipeRef = FoundPipes[RandomIndex];
-		MoveToPoint(SinglePipeRef->GetActorLocation(), 10.0f);
-		Iscorrapted = true;
-		GuestCharacter->GetCharacterMovement()->MaxWalkSpeed = 400;
-	}
-	else
-	{
-		Iscorrapted = false;
-	}
-}
-*/
-/*void AEYS_GuestAIController::BrokePipe()
-{
-	if (BrokenPipeRef)
-		GetWorld()->SpawnActor<AActor>(BrokenPipeRef, SinglePipeRef->GetActorTransform());
-	SinglePipeRef->Destroy();
-	CorruptedNPC();
-
-}*/
 
 void AEYS_GuestAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
 {

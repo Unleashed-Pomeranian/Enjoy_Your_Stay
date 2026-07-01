@@ -41,9 +41,9 @@ void AEYS_GuestCharacter::BeginPlay()
 	CachedAIController = Cast<AEYS_GuestAIController>(GetController());
 	if(CachedAIController)
 	CachedAIController->OnAIMoveComplete.AddUObject(this, &AEYS_GuestCharacter::HandleMoveCompleted);
-	CurrentStatus = EGuestStatus::Arriving;
 	
-	MoveTo(LobyLocation, 50);
+	CurrentStatus = EGuestStatus::Arriving;
+	MoveTo(LobyLocation, 30.0f);
 	bIsDriving = false;
 	MentalSlateValue = 100.0f;
 	
@@ -53,10 +53,30 @@ void AEYS_GuestCharacter::BeginPlay()
 void AEYS_GuestCharacter::InteractUI_Implementation(AEYS_MyCharacter* myPlayer, bool bIsFocused)
 {
 	AEYS_MyCharacterController* PC = Cast<AEYS_MyCharacterController>(myPlayer->GetController());
-	if (PC&&bCanInteract)
+	if (!PC || !bCanInteract) return;
+	switch (CurrentStatus)
+	{
+	
+		
+	case EGuestStatus::DirtyRoom:
+		if (myPlayer->bIsHaveKey)
+		{
+			PC->SetInteractionWidget("Drop the key first.");
+		}
+		break;
+	
+		break;
+	case EGuestStatus::ReadyToCheckOut:
+		if (myPlayer->bIsHaveKey)
+		{
+			PC->SetInteractionWidget("Drop the key first.");
+		}
+		break;
+	
+	default:
 		PC->SetInteractionWidget("[E] Talk");
-
-
+		break;
+	}
 }
 
 void AEYS_GuestCharacter::eInteract_Implementation(AEYS_MyCharacter* myPlayer)
@@ -93,7 +113,6 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	}
 	case EGuestStatus::DirtyRoom:
 	{
-		GetWorld()->GetTimerManager().SetTimer(AbandonTimer, this, &AEYS_GuestCharacter::FGuestAbandon, AbandonTime, false);
 		if (!DialogueComponent) return;
 		DialogueComponent->UpdateDialog(7);
 		bCanInteract = true;
@@ -101,11 +120,19 @@ void AEYS_GuestCharacter::HandleMoveCompleted()
 	}
 	case EGuestStatus::AbandonHotel:
 	{
-		if (AssignedCar)
+		if (AssignedCar && IsValid(AssignedCar))
 		{
 			TriggerHotelCheckOut();
-			AssignedCar->DriveBack();
-			bCanInteract = true;
+
+			AEYS_GuestCar* CarRef = AssignedCar;
+			AssignedCar = nullptr;
+
+			CarRef->DriveBack();
+
+			Destroy();
+		}
+		else
+		{
 			Destroy();
 		}
 		break;
@@ -195,7 +222,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 {	
 	if (!bCanInteract) return;
 	
-
+	if (!MyCharacter) MyCharacter = myPlayer;
 	
 	
 	switch (CurrentStatus)
@@ -210,7 +237,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 			myPlayer->MyDialogueComponent->GetOnDialogueEndDelegate().AddDynamic(this, &AEYS_GuestCharacter::OnDialogueFinished);
 		}
 		GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
-		MyCharacter = myPlayer;
+		
 		break;
 	}
 	
@@ -231,6 +258,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 	}
 	case EGuestStatus::DirtyRoom:
 	{
+		if (myPlayer->bIsHaveKey) return;
 		GuestStartDialogue(myPlayer);
 		GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
 		break;
@@ -251,7 +279,7 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 		
 	case EGuestStatus::ReadyToCheckOut:
 	{
-		
+		if (myPlayer->bIsHaveKey) return;
 		GuestStartDialogue(myPlayer);
 		break;
 	}
@@ -265,7 +293,17 @@ void AEYS_GuestCharacter::Interact(AEYS_MyCharacter* myPlayer)
 
 void AEYS_GuestCharacter::MoveTo(FVector Target, float AccceptanceRadius)
 {
-	CachedAIController->MoveToPoint(Target,AccceptanceRadius);
+	if (!CachedAIController || !IsValid(CachedAIController))
+	{
+		CachedAIController = Cast<AEYS_GuestAIController>(GetController());
+	}
+
+	if (!CachedAIController || !IsValid(CachedAIController))
+	{
+		return;
+	}
+
+	CachedAIController->MoveToPoint(Target, AccceptanceRadius);
 	bCanInteract = false;
 	
 }
@@ -394,7 +432,7 @@ void AEYS_GuestCharacter::SetDinnerTime()
 	 float DayTime = Director->Hour;
 	 if (DayTime <= 21.0f&& !bIsCheckOut)
 	 {
-		 MoveTo(DiningHallLocation, 20.0f);
+		 MoveTo(DiningHallLocation, 60.0f);
 		 CurrentStatus = EGuestStatus::GoToDiningHall;
 
 	 }
@@ -646,6 +684,12 @@ void AEYS_GuestCharacter::FGuestAbandon()
 		}
 		
 		bCanInteract = false;
+		if (!AssignedCar || !IsValid(AssignedCar))
+		{
+			Destroy();
+			return;
+		}
+
 		FVector CarLoc = AssignedCar->GetActorLocation();
 		MoveTo(CarLoc, 50.0f);
 		CurrentStatus = EGuestStatus::AbandonHotel;
@@ -662,9 +706,22 @@ void AEYS_GuestCharacter::FGuestAbandon()
 			{
 				SetMentalHealth(DamageValue);
 			}
+
 		}
-	
+		if (MyCharacter)
+		{
+			MyCharacter->bIsHaveKey = true;
+
+			MyCharacter->MyRoomID = GuestRoomID;
+			MyCharacter->SetRoot(7);
+		}
 		bCanInteract = false;
+		if (!AssignedCar || !IsValid(AssignedCar))
+		{
+			Destroy();
+			return;
+		}
+
 		FVector CarLoc = AssignedCar->GetActorLocation();
 		MoveTo(CarLoc, 50.0f);
 		CurrentStatus = EGuestStatus::AbandonHotel;
@@ -752,9 +809,17 @@ void AEYS_GuestCharacter::TriggerHotelCheckOut()
 
 void AEYS_GuestCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	
-	GetWorld()->GetTimerManager().ClearTimer(OrderTimer);
-	GetWorld()->GetTimerManager().ClearTimer(AbandonTimer);
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(OrderTimer);
+		World->GetTimerManager().ClearTimer(AbandonTimer);
+		World->GetTimerManager().ClearTimer(SitTimer);
+	}
+
+	if (CachedAIController)
+	{
+		CachedAIController->StopMovement();
+	}
 
 	Super::EndPlay(EndPlayReason);
 }

@@ -37,7 +37,6 @@ void UEYS_HorrorSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 	UEYS_TutorialSubsystem* TS = GI->GetSubsystem<UEYS_TutorialSubsystem>();
 	if (!TS) return;
-
 	ActivateHorrorSystem(TS->bIsTutorialFinished);
 }
 

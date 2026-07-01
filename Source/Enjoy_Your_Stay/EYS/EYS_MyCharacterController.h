@@ -72,7 +72,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UEYS_EquipmentWheel* EquipmentWheelInstance = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
 	UEYS_MyCharacter_UI* MyCharacterUIInstance = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")

@@ -57,6 +57,15 @@ void AEYS_GuestCar::BeginPlay()
 	}
 	SetCarLight(true);
 }
+void AEYS_GuestCar::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(CarTimerHandle);
+	}
+
+	Super::EndPlay(EndPlayReason);
+}
 void AEYS_GuestCar::InitializeCar(AEYS_VehicleSplinePath* Path)
 {
 	AssignedPath = Path;
@@ -258,6 +267,7 @@ void AEYS_GuestCar::DriveBack()
 	
 	if (AssignedPath) AssignedPath->bIsOccupied = false;
 	if (ExitPath) GlobalLeavingPath = ExitPath->NextPath;
+	if (!GetWorld()) return;
 	GetWorld()->GetTimerManager().SetTimer(CarTimerHandle, this, &AEYS_GuestCar::MoveCar, 0.02f, true);
 
 	

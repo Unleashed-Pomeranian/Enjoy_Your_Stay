@@ -91,7 +91,7 @@ void AEYS_MySunMoonDaySequenceActor::CheckTimeForTutorial()
 
 void AEYS_MySunMoonDaySequenceActor::CheckTimeForHorror()
 {
-	if (DayNum >= 6)
+	if (DayNum >= 5)
 	{
 		UWorld* World = GetWorld();
 		if (!World) return;

@@ -27,6 +27,7 @@ protected:
 	UFUNCTION() void SpawnGuest();
 	UFUNCTION() void SpawnGuestTimer();
 	UFUNCTION() void StartGuestSpawning();
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite) FVector SpawnLock;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector LobyLoc;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector DiningHallLoc;
@@ -41,6 +42,6 @@ public:
 	UFUNCTION() void SetEmptyRoom();
 	UPROPERTY() bool bCanSpawnGuest = true;
 	
-	
+
 
 };

@@ -62,7 +62,7 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, Category = "EYS | Horror Config")
 	void FetchAndProcessMainHotelData();
-	void PlayMainSpawnHeraldSound();
+	
 	void SpawnMainBabaYaga();
 	void DestroyMainBabaYaga();
 
@@ -72,4 +72,6 @@ public:
 	void SetHorrorTargets(const TArray<AEYS_DirtTarget*>& InTargets);
 	UPROPERTY(EditAnywhere,BlueprintReadWrite ,Category = "EYS | Horror | Sound")
 	class USoundBase* SpawnSound;
+	UFUNCTION(BlueprintCallable, Category = "EYS | Horror | Main")
+	void PlayMainSpawnHeraldSound();
 };
